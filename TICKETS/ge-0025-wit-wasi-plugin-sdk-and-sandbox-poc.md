@@ -78,7 +78,7 @@ No registry before legal/trust policy.
 
 GitHub issue: **#23** — https://github.com/Jasowills/genesis-engine/issues/23
 - Files: `crates/genesis-core/src/plugins.rs`, `tests/plugins.rs`, `docs/developer/plugins.md`, lib.rs re-exports. Throwaway `prototype/plugin-sandbox/` evidence (GE-0005) is explicitly not imported.
-- `cargo test --workspace --locked` → **98 passed, 0 failed** (5 plugin tests: deny-by-default WIT world, deny-by-default grants, adversarial manifest rejection including seal tampering, atomic activation with rollback, structured invalid-state/serialisation checks; strict semver with no leading zeros and pinned-dependency format validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- `cargo test --workspace --locked` → **97 passed, 0 failed** (5 plugin tests: deny-by-default WIT world, deny-by-default grants, adversarial manifest rejection including seal tampering, atomic activation with rollback, structured invalid-state/serialisation checks; strict semver with no leading zeros and pinned-dependency format validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - NOT IMPLEMENTED: generated WIT bindings, live WASI 0.2 component execution, OS-enforced sandbox policy, asymmetric signature verification/key management, cross-process persistence. The manifest seal is SHA-256 tamper-evidence, not authentication.
 - Reviewer result: independent review **`APPROVED`** (session `ses_de1ef0ae9ffeqh2vE6j6TBQLE5`) with contract-only limitations; housekeeping conditions applied.
 

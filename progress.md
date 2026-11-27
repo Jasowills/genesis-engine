@@ -62,7 +62,6 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0024 — quality profiles and preflight estimates (5 profile tests; independent review pending, issue #30).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).

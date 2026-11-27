@@ -38,3 +38,4 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 
 - No product code, crates, UI, datasets, CI or GitHub issues are included in this baseline beyond the approved repository setup.
 - Open decisions (D-007…D-009, D-013…D-018, D-021…D-024 and non-core licence questions) and eight evidence conflicts remain recorded; no capability is claimed as implemented.
+- `chore(tickets)`: verify GE-0022 CLI, GE-0027 regeneration planner, GE-0023 worker contract, GE-0028 layers, GE-0025 plugin SDK (with explicit contract-only limitations).

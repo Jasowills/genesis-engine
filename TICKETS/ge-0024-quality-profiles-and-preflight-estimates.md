@@ -3,7 +3,7 @@ id: GE-0024
 title: Quality profiles and preflight estimates
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M2
 labels: [type:feature, area:quality]
 depends_on: [GE-0018, GE-0006]
@@ -79,9 +79,10 @@ Calibrate after fixtures exist.
 
 GitHub issue: **#30** — https://github.com/Jasowills/genesis-engine/issues/30
 - Files: `crates/genesis-core/src/profiles.rs`, `tests/profiles.rs`, `docs/developer/profiles.md`, lib.rs re-exports.
-- `cargo test --workspace --locked` → **92 passed, 0 failed** (6 profile tests: gate mapping across all four profiles with Unknown rejection everywhere and observed acceptance everywhere, range-only preflight output with survey warning, paid-cost metadata retained in preflight report, declared-not-probed capability reporting, paid consent gating including empty name, estimate bound validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- `cargo test --workspace --locked` → **97 passed, 0 failed** (6 profile tests: gate mapping across all four profiles with Unknown rejection everywhere and observed acceptance everywhere, range-only preflight output with survey warning, paid-cost metadata retained in preflight report, declared-not-probed capability reporting, paid consent gating including empty name, estimate bound validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - NOT IMPLEMENTED: calibrated benchmarks, measured performance, hardware probing, payment provider integration. Estimates are explicitly labelled `low-uncalibrated` and cost consent returns a token only.
-- Reviewer result: first pass `CHANGES_REQUESTED` (paid-cost metadata dropped from preflight, incomplete branch coverage); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED` (paid-cost metadata dropped from preflight, incomplete branch coverage); fixes applied; re-review confirmed all code findings resolved (count-only bookkeeping corrected).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified with estimate-only limitation.
