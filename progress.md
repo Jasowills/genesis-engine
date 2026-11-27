@@ -67,7 +67,7 @@ GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), inde
 GE-0017 (select/inspect/provenance display) after GE-0016 is verified. GE-0020 (E2E slice) still waits on GE-0016/GE-0017/GE-0019. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: Studio/CLI, worker/AI adapters, plugin runtime and game-engine integrations. GLB export, structural validation and procedural geometry are implemented.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with two crates — `crates/genesis-core` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; no CLI, worker/AI adapters, plugin runtime or game-engine integration yet.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
