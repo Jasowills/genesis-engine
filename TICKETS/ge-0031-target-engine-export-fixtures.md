@@ -3,7 +3,7 @@ id: GE-0031
 title: Target engine export fixtures
 type: integration
 priority: P3
-status: proposed
+status: blocked
 milestone: M4
 labels: [type:integration, area:export]
 depends_on: [GE-0030]
@@ -57,10 +57,10 @@ Each target is its own vertical-slice ticket if the diff is large.
 No proprietary SDK redistribution without licence review.
 
 ## Dependencies and risks
-D-009 open; owner chooses first target.
+D-009 resolved by D-030; owner selected Unreal as first target (D-034). Unreal Editor is not installed and Epic account login is a manual step only the owner can perform.
 
 ## Implementation notes
-Split per engine before implementation.
+Unreal first. Contract and external probe scaffolded; fixture cannot run until Unreal is installed and licensed.
 
 ## Reviewer checklist
 - [ ] Correctness
@@ -76,7 +76,10 @@ Split per engine before implementation.
 ## Verification evidence
 
 GitHub issue: **#32** — https://github.com/Jasowills/genesis-engine/issues/32
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files (scaffold only): `tools/unreal_import_probe.py`, `docs/developer/unreal-fixture.md`. No fixture report exists.
+- D-034 owner selection: Unreal is the first target engine. `ls /Applications | grep -iE 'unreal|epic'` → no Unreal/Epic app; `which UnrealEditor` → not found; no Homebrew cask. Installation requires Epic account login (manual owner step).
+- NOT MET: all four acceptance criteria. No engine version pinned, no imported-asset report, no cross-OS evidence, no metadata-loss measurement. **No Unreal support is claimed.**
+- Status: `blocked` pending manual Unreal Editor installation/licensing; independent review has not run and must not be requested until a fixture exists.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
