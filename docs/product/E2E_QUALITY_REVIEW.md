@@ -7,7 +7,7 @@ This review is about the **product journey**, not unit correctness. We drive the
 1. Create a project with an explicit CRS/datum.
 2. Import a lawful boundary and OSM features with real provenance (not defaults).
 3. Generate geometry, validate, inspect the report, export GLB.
-4. Re-import the GLB and check identity/provenance survive.
+4. Inspect the exported GLB header/meshes/extras. GLB re-import and provenance comparison are covered by `crates/genesis-core/tests/vertical_slice.rs`, not by the product harness.
 5. Open the built Studio shell, inspect hierarchy/inspector/viewport, select and transform a node, and use keyboard navigation.
 6. Exercise adverse journeys actually run: missing input file and unsupported profile. Other adverse cases (denied sources, corrupt IR, seed change, symlinked destinations, export before validation) are covered by product-code tests, not by this product journey; export after a valid report succeeds by design.
 
@@ -23,7 +23,7 @@ This review is about the **product journey**, not unit correctness. We drive the
 
 - Full command transcript and JSON envelopes from a fresh project.
 - Per-mesh metrics (vertices, triangles, bounds, evidence, provenance).
-- Validation report metrics and GLB re-import comparison.
+- Validation report metrics and exported-GLB structure; re-import comparison is Core-test coverage (`vertical_slice.rs`), not product-harness evidence.
 - Studio screenshots and interaction results.
 - Adverse-journey outcomes and whether errors are actionable.
 - A written verdict per rubric dimension: PASS / PARTIAL / FAIL, with reasons.
