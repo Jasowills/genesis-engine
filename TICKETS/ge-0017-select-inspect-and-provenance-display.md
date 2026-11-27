@@ -3,7 +3,7 @@ id: GE-0017
 title: Select, inspect and provenance display
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:studio]
 depends_on: [GE-0016]
@@ -84,7 +84,8 @@ GitHub issue: **#15** — https://github.com/Jasowills/genesis-engine/issues/15
 - `cd apps/studio && npx tsc --noEmit` clean; `cargo test --workspace --locked` still 64 passed (Core + Studio Rust).
 - No domain logic in React; selection/inspector present only presentation of Core snapshot fields. No network calls from UI.
 - Actual webview/visual verification remains UNVERIFIED (inherited from GE-0016).
-- Reviewer result: first pass `CHANGES_REQUESTED` (missing CI step, stale bookkeeping, non-discriminating ID test, weak provenance assertions, selectable ignored); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; CI step, bookkeeping, discriminating tests, evidence assertions and selectable handling fixed; re-review **`APPROVED`** (session `ses_de23ba900ffeH7BbTS5p2KVWUj`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.

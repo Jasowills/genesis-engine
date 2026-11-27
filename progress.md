@@ -47,6 +47,7 @@ GE-0018 — structural validation gates (53 Core tests pass; independent review 
 GE-0019 — GLB export with 0-error glTF-Validator result (57 Core tests pass; independent review `APPROVED`).
 GE-0021 — contributor/governance documentation sweep (independent review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
+GE-0017 — select/inspect/provenance display (6 component tests; independent re-review `APPROVED`).
 GE-0016 — Studio Core-backed scene snapshot + React shell (64 Core+Studio tests; independent review pending).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
@@ -66,7 +67,7 @@ None.
 GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), independent re-review previously APPROVED; in-review for final bookkeeping (issue #22).
 
 ## Ready next tickets
-GE-0017 (select/inspect/provenance display) — now ready. GE-0020 (E2E slice) still waits on GE-0016/GE-0017/GE-0019. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
+GE-0020 (E2E vertical slice + benchmark harness) — now ready. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with two crates — `crates/genesis-core` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; no CLI, worker/AI adapters, plugin runtime or game-engine integration yet.
