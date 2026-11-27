@@ -3,7 +3,7 @@ id: GE-0016
 title: Studio shell and viewport scene rendering
 type: feature
 priority: P1
-status: proposed
+status: in-progress
 milestone: M1
 labels: [type:feature, area:studio, area:viewport]
 depends_on: [GE-0004, GE-0011]

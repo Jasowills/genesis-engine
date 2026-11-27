@@ -58,7 +58,7 @@ GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, ind
 None.
 
 ## Blocked tickets
-GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
+GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), independent re-review previously APPROVED; in-review for final bookkeeping (issue #22).
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets

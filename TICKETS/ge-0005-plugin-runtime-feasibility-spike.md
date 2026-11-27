@@ -3,7 +3,7 @@ id: GE-0005
 title: Plugin runtime feasibility spike
 type: spike
 priority: P1
-status: blocked
+status: in-review
 milestone: M0
 labels: [spike, area:plugins, type:security]
 depends_on: []
@@ -42,7 +42,7 @@ Validates A05 before any plugin SDK work; establishes adversarial fixtures.
 Throwaway PoC; record measured overhead, cap behaviour and lifecycle design inference separately from sourced facts.
 
 ## Acceptance criteria
-- [ ] Evil plugins are terminated within timeout on all three OSes — **PARTIAL:** macOS x86_64 only (epoch trap ~48–68 ms inside 5 s backstop); Windows/Linux pending cross-platform CI (GE-0009)
+- [x] Evil plugins are terminated within timeout on all three OSes — CI run `46000916440`: 6/6 plugin tests pass on ubuntu-latest, macos-latest and windows-latest (epoch trap observed locally ~48–68 ms inside the 5 s backstop)
 - [x] Zero preopens/env demonstrated; **network-policy runtime denial UNVERIFIED** (wasm32-wasip1 std has no sockets/DNS; permissive control gave identical results)
 - [x] Component overhead explicitly UNVERIFIED (core Wasm/WASIp1 path used, not typed WASI 0.2 components)
 - [x] Tests and documentation updated
@@ -88,3 +88,4 @@ GitHub issue: **#22** — https://github.com/Jasowills/genesis-engine/issues/22
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Evidence recorded; reviewer approved; partially complete pending cross-platform verification.
+- 2026-11-27: Cross-platform CI evidence recorded; ticket moved from blocked to in-review.
