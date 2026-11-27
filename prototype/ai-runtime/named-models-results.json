@@ -1,0 +1,122 @@
+{
+  "archive_checksums": {
+    "sam_vit_b_01ec64_quant.zip": {
+      "sha256": "9d59db12affc009f71c9ddeab8fc833507510883e7f6bc4c0cc6c45e0d4f5862",
+      "published_sha256": "9d59db12affc009f71c9ddeab8fc833507510883e7f6bc4c0cc6c45e0d4f5862",
+      "matches": true,
+      "source": "https://huggingface.co/vietanhdev/segment-anything-onnx-models"
+    }
+  },
+  "schema_version": 1,
+  "ort_version": "1.23.2",
+  "onnx_version": "1.23.2",
+  "python_version": "3.13.15",
+  "platform": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+  "machine": "x86_64",
+  "execution_provider": "CPUExecutionProvider",
+  "models": [
+    {
+      "name": "sam_vit_b_01ec64_quant(encoder)",
+      "source": "https://huggingface.co/vietanhdev/segment-anything-onnx-models",
+      "licence": "Apache-2.0 (upstream SAM ViT-B)",
+      "present": true,
+      "size_bytes": 108819085,
+      "sha256": "24793bbeec6eb54143383d6f2c336e3d09f47a7a824d51819db88d61473429e1",
+      "onnx_checker": "pass",
+      "inputs": [
+        {
+          "name": "input_image",
+          "shape": "['image_height', 'image_width', 3]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image_embeddings",
+          "shape": "[1, 256, 64, 64]"
+        }
+      ],
+      "outputs_finite": true,
+      "deterministic_exact": true,
+      "output_shapes": [
+        [
+          1,
+          256,
+          64,
+          64
+        ]
+      ],
+      "status": "ran"
+    },
+    {
+      "name": "yolox_s",
+      "source": "https://huggingface.co/inference4j/yolox-s (official YOLOX 0.1.1rc0 export)",
+      "licence": "Apache-2.0",
+      "present": true,
+      "size_bytes": 35858002,
+      "sha256": "c5c2d13e59ae883e6af3b45daea64af4833a4951c92d116ec270d9ddbe998063",
+      "digest_matches_published": true,
+      "onnx_checker": "pass",
+      "inputs": [
+        {
+          "name": "images",
+          "shape": "[1, 3, 640, 640]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "shape": "[1, 8400, 85]"
+        }
+      ],
+      "outputs_finite": true,
+      "deterministic_exact": true,
+      "output_shapes": [
+        [
+          1,
+          8400,
+          85
+        ]
+      ],
+      "status": "ran"
+    },
+    {
+      "name": "depth_anything_v2_vits",
+      "source": "https://huggingface.co/AXERA-TECH/Depth-Anything-V2",
+      "licence": "Apache-2.0",
+      "present": true,
+      "size_bytes": 98985978,
+      "sha256": "443e95f17819f347f5f987384b8cb7d7d18ed6af6ac46dec9b0152748ba7dfd0",
+      "digest_matches_published": true,
+      "onnx_checker": "pass",
+      "inputs": [
+        {
+          "name": "input",
+          "shape": "[1, 3, 518, 518]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "shape": "[1, 1, 518, 518]"
+        }
+      ],
+      "outputs_finite": true,
+      "deterministic_exact": true,
+      "output_shapes": [
+        [
+          1,
+          1,
+          518,
+          518
+        ]
+      ],
+      "status": "ran"
+    }
+  ],
+  "limitations": [
+    "Synthetic small-valued inputs, not real imagery; this is an inference smoke test, not an accuracy benchmark",
+    "SAM ViT-B is the quantised ONNX export (encoder only); decoder/prompt path is not exercised here",
+    "Cooperative cancellation is evidenced separately with the locally generated loop model",
+    "No GPU execution provider, no external provider and no paid call is used"
+  ]
+}

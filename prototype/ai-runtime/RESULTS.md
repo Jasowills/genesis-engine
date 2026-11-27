@@ -274,3 +274,22 @@ written.
 * Single macOS x86_64 host; no Linux/Windows **local** evidence; Ubuntu CI is recorded in run `46001781425`, Windows CI not executed for this spike.
 * This is a throwaway prototype; no product code, no commit, no documentation
   changes outside `prototype/ai-runtime/`.
+
+
+## Named model execution (2026-11-27, D-033)
+
+Owner approved use of named open weights. Commands and machine-readable results
+are in `named_models_smoke.py` and `named-models-results.json`:
+
+```
+.venv/bin/python named_models_smoke.py
+{"ort_version": "1.23.2", "models": [["sam_vit_b_01ec64_quant(encoder)", "ran"], ["yolox_s", "ran"], ["depth_anything_v2_vits", "ran"]]}
+```
+
+Published digests matched local SHA-256 for YOLOX (`c5c2d13e…`) and Depth
+Anything V2 Small (`443e95f1…`); the SAM archive digest matched
+`9d59db12…` from the Hugging Face blobs API. All three `onnx.checker` checks
+passed; outputs were finite and bit-exact across two runs. The SAM quantised
+encoder was exercised only — the prompt encoder/decoder path is not part of
+this smoke test. No ORT 1.32.0 claim is made for named weights on macOS x86_64
+(no wheel exists); 1.32.0 runtime evidence remains the Ubuntu CI run.
