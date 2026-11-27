@@ -1,19 +1,19 @@
 # Genesis Engine — Live Progress
 
 ## Current phase
-Phase 7 — GitHub project setup. Phase 8 owner checkpoint completed 2026-11-27; foundational plan approved.
+Phase 8 owner checkpoint approved; M1–M4 dependency-ready work implemented and independently reviewed. M5 release work awaits owner decisions.
 
 ## Current milestone
-M1 — Foundation and first vertical slice. Research, architecture, repository setup and GitHub issues are complete; Core primitives are implemented and independently verified.
+M4 — 30 of 32 tickets verified. M1–M4 contracts, CI and the Blender round-trip are complete; only owner-gated M5/signing, named model weights, first target engine and the WASIp1 network-policy UNVERIFIED item remain.
 
 ## Current objective
-Advance M1 tickets in dependency order: Studio shell/viewport, E2E vertical slice, and remaining foundation tickets. Each code-changing ticket must pass tests, lint, formatting and independent review before `verified`. No release or deployment without owner approval.
+No dependency-ready implementation work remains. Each code-changing ticket passed tests, lint, formatting and independent review before `verified`. No release, publication, purchase or deployment without owner approval.
 
 ## Overall status
 M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; a headless CLI, but no worker pipeline or game-engine integration yet.
 
 ## Last updated
-2026-11-27 (Phase 8 approvals recorded; GitHub setup executed; post-execution documentation reconciliation).
+2026-11-27 (all dependency-ready tickets verified; adversarial audit remediated and independently confirmed; Blender round-trip measured; final cross-platform CI pending).
 
 ## Approved product decisions
 D-001 engine + platform progressively; D-002 desktop-first Studio; D-003 local-first, cloud optional; D-004 bundled open models + optional external providers; D-005 game developers and technical artists equally; D-006 Windows/macOS/Linux (spec Part III). **Owner-approved 2026-11-27:** D-025 seven ADRs; D-026 Apache-2.0 **core only**; D-027 public `Jasowills/genesis-engine`; D-028 hard source deny. See `DECISIONS.md`.
@@ -94,7 +94,7 @@ Close the 8 conflicts via their linked tickets; obtain owner answers to open que
 ## Tests and verification
 - Last full test run: `cargo test --workspace --locked` → 117 passed, 0 failed (Core incl. 6 incremental + 11 job + 6 layer + 6 profile + 5 plugin + 5 AI + 2 Blender + 3 optimization tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
-- Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
+- Known failures: historical CI runs `45979438978`/`45979776607` failed on prototype workspace formatting (fixed by `4a78f0e`, re-run `45980065945` green). CI run `46046257230` (intermediate GE-0030 commit `cf874c5`) failed the lint gate on two one-line Clippy findings; both fixed in `e0abbe6` and `66f44da`, with `46046601712`/`46046663754` green. Latest commit `d29a07a` CI run `46047346586` pending. No product-code test failures.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
 
 ## Known bugs and technical debt
