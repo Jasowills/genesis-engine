@@ -10,7 +10,7 @@ M1 — Foundation and first vertical slice. Research, architecture, repository s
 Advance M1 tickets in dependency order: Studio shell/viewport, E2E vertical slice, and remaining foundation tickets. Each code-changing ticket must pass tests, lint, formatting and independent review before `verified`. No release or deployment without owner approval.
 
 ## Overall status
-M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. No Studio UI, CLI, worker pipeline or game-engine integration yet.
+M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; no CLI, worker pipeline or game-engine integration yet.
 
 ## Last updated
 2026-11-27 (Phase 8 approvals recorded; GitHub setup executed; post-execution documentation reconciliation).
@@ -82,7 +82,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 64 passed, 0 failed (57 Core + 5 Studio unit + 2 Studio integration (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 5 validation + 4 GLB + 7 project + 9 World IR; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 64 passed, 0 failed (57 Core + 5 Studio unit + 2 Studio integration; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
