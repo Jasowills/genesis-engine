@@ -200,3 +200,37 @@ async fn report_hostcall_is_bounded() {
     );
     assert_eq!(outcome.reports, (0..REPORT_CAP as i32).collect::<Vec<_>>());
 }
+
+/// Negative evidence for GE-0005: Wasmtime's Preview 1 adapter does not
+/// define `sock_connect`, so a wasm32-wasip1 guest cannot exercise the host
+/// TCP policy at all. The resulting link error is recorded; it is NOT proof
+/// that a connect attempt was denied.
+#[tokio::test]
+async fn wasi_preview1_lacks_sock_connect_import() {
+    let engine = build_engine().unwrap();
+    let _ticker = EpochTicker::start(&engine);
+    let linker = build_linker(&engine).unwrap();
+    let module = Module::from_file(&engine, fixture_path("socket_call")).unwrap();
+    let (_listener, port) = bind_probe_listener().unwrap();
+    let config = RunConfig {
+        probe_port: Some(port),
+        ..RunConfig::default()
+    };
+
+    let error = match run_module(&engine, &linker, &module, &config).await {
+        Err(error) => error,
+        Ok(outcome) => panic!(
+            "unexpectedly ran a guest importing sock_connect: reports={:?}",
+            outcome.reports
+        ),
+    };
+    let message = error.to_string();
+    println!("socket_call: WASI p1 link error: {message}");
+    assert!(
+        message.contains("wasi_snapshot_preview1::sock_connect"),
+        "expected the Preview 1 adapter to lack sock_connect, got: {message}"
+    );
+    // This is why GE-0005's network-policy denial stays UNVERIFIED: even an
+    // explicit WASI import cannot reach a host TCP policy decision on this
+    // target. Do not reinterpret this as proof of denial.
+}

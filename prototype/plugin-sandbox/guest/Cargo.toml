@@ -33,3 +33,7 @@ codegen-units = 1
 panic = "abort"
 
 [workspace]
+
+[[bin]]
+name = "socket_call"
+path = "src/bin/socket_call.rs"

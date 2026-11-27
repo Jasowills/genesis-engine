@@ -228,3 +228,20 @@ bounded runaway Wasm and denied a 64 MiB allocation, and the hostcall report
 buffer is now hard-capped. Env/preopen/stdio denial is supported by guest
 observations. Network-policy denial is configured but not runtime-proven on
 this WASIp1 path. No final architecture decision is made here.
+
+## GE-0005 follow-up (2026-11-27): why network-policy denial stays UNVERIFIED
+
+A seventh fixture (`guest/src/bin/socket_call.rs`) declares the WASI Preview 1
+`sock_connect` import **explicitly**, bypassing Rust std (which has no sockets
+on `wasm32-wasip1`). Wasmtime's Preview 1 adapter does not define that import:
+
+```
+unknown import: `wasi_snapshot_preview1::sock_connect` has not been defined
+```
+
+Test `wasi_preview1_lacks_sock_connect_import` records this link error. So no
+`wasm32-wasip1` guest can reach a host TCP policy decision — through std or
+through a raw WASI import. This **confirms** the UNVERIFIED label; it must not
+be read as proof that a connect attempt was denied. Closing the gap needs the
+typed WASI 0.2 component path (`wasi:sockets`) on a supported target, which is
+separate follow-up work (ADR-0006 PoC gate).

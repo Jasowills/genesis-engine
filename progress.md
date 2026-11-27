@@ -68,7 +68,7 @@ None.
 ## In-review tickets
 
 ## Blocked tickets
-GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).
+GE-0005 — plugin sandbox spike: deliverable evidence `APPROVED`, cross-platform CI green (6/6 per OS), 7 prototype tests pass. Explicit WASI p1 `sock_connect` import is undefined in Wasmtime, confirming that network-policy denial is infeasible to verify on this target; remains UNVERIFIED, not `verified` (issue #22).
 GE-0006 — ORT 1.32.0 smoke test passes in CI; named model weights (SAM/YOLOX/Depth Anything) not loaded — requires owner cost/licence decision (issue #9).
 GE-0031 — target engine export fixtures: blocked on GE-0030 verification AND owner selection of the first target engine/version (D-009/D-030); no support may be claimed without a fixture.
 GE-0032 — signed release/auto-update: signing identities and budget require owner approval (D-022, issue #21).

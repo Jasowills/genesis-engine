@@ -17,6 +17,7 @@ cancellation. The guest fixtures are built separately for `wasm32-wasip1`:
 | `infinite_loop` | Never returns; must be stopped by epoch interruption / timeout. |
 | `memory_grow` | Requests 64 MiB in one `memory.grow`; the 8 MiB cap must deny it. |
 | `report_flood` | Sends 100 hostcall reports; host must retain at most 64. |
+| `socket_call` | Explicit `wasi_snapshot_preview1::sock_connect` import; demonstrates the import is undefined in this adapter (negative evidence for GE-0005). |
 
 Host design points:
 
