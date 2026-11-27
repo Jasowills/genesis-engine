@@ -1,0 +1,12 @@
+{
+  "name": "genesis-gltf-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node validate.mjs"
+  },
+  "dependencies": {
+    "gltf-validator": "2.0.0-dev.3.10"
+  }
+}

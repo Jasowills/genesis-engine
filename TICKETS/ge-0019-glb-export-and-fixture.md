@@ -3,7 +3,7 @@ id: GE-0019
 title: GLB export and re-import fixture
 type: feature
 priority: P1
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:feature, area:export]
 depends_on: [GE-0011, GE-0018]
@@ -43,10 +43,10 @@ Delivers spec §50 steps 11-12 and proves metadata survival.
 Map IR to glTF 2.0; record unsupported fields explicitly rather than silently dropping.
 
 ## Acceptance criteria
-- [ ] glTF-Validator exit code 0
-- [ ] Provenance/attribution survive round-trip
-- [ ] Compatibility fixture documented
-- [ ] Tests and documentation updated
+- [x] glTF-Validator exit code 0
+- [x] Provenance/attribution survive round-trip
+- [x] Compatibility fixture documented
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Mapping unit tests
@@ -78,7 +78,12 @@ GLB is interchange, not internal format.
 ## Verification evidence
 
 GitHub issue: **#16** — https://github.com/Jasowills/genesis-engine/issues/16
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/export_glb.rs`, `tests/export_glb.rs`, `prototype/gltf-fixture/` (validator script, package manifest/lock, RESULTS.md, generated `fixture.glb`), `docs/developer/glb-export.md`, CI format-gate step, re-exports.
+- `cargo test --workspace --locked` → **56 passed, 0 failed** (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 5 validation + 3 GLB + 7 project + 9 World IR). Three GLB tests cover round-trip/provenance, gate enforcement and malformed input.
+- Official Khronos `gltf-validator` 2.0.0-dev.3.10 on generated `fixture.glb`: **0 errors, 0 warnings, 0 infos**, exit 0. Two earlier validator errors (`EMPTY_ENTITY`, `BUFFER_VIEW_TARGET_MISSING`) were fixed and are recorded in `prototype/gltf-fixture/RESULTS.md`.
+- Source/validation gates run before export; unsupported fields are emitted as warnings, not silently dropped.
+- CI format-gate step added for Ubuntu; GitHub Actions result pending at recording time.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

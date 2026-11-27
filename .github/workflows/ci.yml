@@ -77,6 +77,15 @@ jobs:
         run: cargo test --workspace --locked
       - name: Genesis Core lint
         run: cargo clippy --workspace --locked -- -D warnings
+      - name: glTF format gate (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: |
+          GENESIS_GLB_FIXTURE=$PWD/prototype/gltf-fixture/fixture.glb \
+            cargo test -p genesis-core --locked --test export_glb glb_round_trip
+          cd prototype/gltf-fixture
+          npm ci --ignore-scripts
+          node validate.mjs fixture.glb
       - name: Native GPU capability probe (informational)
         shell: bash
         run: cargo run --locked --quiet --manifest-path prototype/viewport-capability/Cargo.toml
