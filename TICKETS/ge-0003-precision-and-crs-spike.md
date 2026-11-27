@@ -77,6 +77,8 @@ Prototype is evidence, not product code; do not mark verified without independen
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#1** — https://github.com/Jasowills/genesis-engine/issues/1
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

@@ -75,6 +75,8 @@ Continuously maintained, not a one-off dump.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#29** — https://github.com/Jasowills/genesis-engine/issues/29
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

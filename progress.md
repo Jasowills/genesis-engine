@@ -25,10 +25,10 @@ All seven: thin versioned World IR + adapters (`adr/0002`); Tauri + React/TS + t
 D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration; **D-013 first-slice layer scope** (PRD §5 remains proposed); D-015 cloud; D-016 collaboration; D-017 skill identity (not explicitly answered; `to-tickets` was used); D-018 setup-skill tracker (not explicitly answered; GitHub Issues adopted via D-027); D-021 Ikeja benchmark boundary; D-022 signing budget; D-023 Rust MSRV; D-024 ODbL publication legal review; SDK/docs/fixture/model-weight licences under D-014. Questions Q1–Q8 are in `engineering/ARCHITECTURE_DISCOVERY.md` §7.
 
 ## Current repository state
-- Repository URL: approved `https://github.com/Jasowills/genesis-engine`; **not yet created**
-- Branch: n/a (no Git history)
-- Latest commit: n/a
-- Working tree: specification, 8 research notes, 5 research deliverables, 7 engineering docs, 8 ADR files, PRD/ARCHITECTURE/ROADMAP/DECISIONS, 32 tickets, root docs, LICENSE/NOTICE, .gitignore/.editorconfig, .github templates. No product code.
+- Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
+- Branch: `main`, tracking `origin/main`
+- Latest commit: `aa728fd9a9aa5e0bf2ca05b94006434816be973d` — `docs: add Genesis Engine specification, research and approved plan` (81 files, documentation only)
+- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. No product code.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
 
@@ -78,7 +78,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-Close the reviewer's remaining findings (Phase 7 approval checklist in `DECISIONS.md`, licence scope via `NOTICE`, re-review), then create/verify/push the approved public repository, add labels/milestones/issues from the 32 tickets with native blocking links, and report URL, branch, commit hash and issue count.
+Confirm all 32 GitHub issues were created with native `--blocked-by` links, record the issue count in this file and GE-0008's verification evidence, commit the small bookkeeping update, and report URL/branch/hash/issue count to the owner. Then begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of each code-changing ticket.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.

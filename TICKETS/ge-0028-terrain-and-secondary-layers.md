@@ -75,6 +75,8 @@ Split by layer if review diff is too large.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#24** — https://github.com/Jasowills/genesis-engine/issues/24
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

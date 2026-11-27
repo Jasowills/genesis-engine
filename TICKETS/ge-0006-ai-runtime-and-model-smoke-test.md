@@ -75,6 +75,8 @@ No paid cloud inference.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

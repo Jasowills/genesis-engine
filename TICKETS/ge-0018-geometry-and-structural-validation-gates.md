@@ -76,6 +76,8 @@ Validation thresholds are project policy, not standards claims.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#8** — https://github.com/Jasowills/genesis-engine/issues/8
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

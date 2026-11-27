@@ -75,6 +75,8 @@ Split further if the diff becomes too large.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#28** — https://github.com/Jasowills/genesis-engine/issues/28
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

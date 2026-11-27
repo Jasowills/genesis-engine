@@ -75,6 +75,8 @@ Already largely produced in this session; ticket formalises the deliverable and 
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#31** — https://github.com/Jasowills/genesis-engine/issues/31
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

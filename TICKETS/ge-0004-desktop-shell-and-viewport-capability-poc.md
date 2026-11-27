@@ -75,6 +75,8 @@ Electron is the fallback only if consistent Chromium proves necessary.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#2** — https://github.com/Jasowills/genesis-engine/issues/2
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

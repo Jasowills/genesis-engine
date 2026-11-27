@@ -78,6 +78,8 @@ Do not compare outputs from different source data as an objective benchmark.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#17** — https://github.com/Jasowills/genesis-engine/issues/17
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

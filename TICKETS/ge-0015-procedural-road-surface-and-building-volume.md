@@ -76,6 +76,8 @@ Selective regeneration design belongs to GE-0027.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#13** — https://github.com/Jasowills/genesis-engine/issues/13
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

@@ -75,6 +75,8 @@ Do not defer: hard blocker for any data import.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#10** — https://github.com/Jasowills/genesis-engine/issues/10
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

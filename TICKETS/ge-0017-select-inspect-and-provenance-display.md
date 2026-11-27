@@ -77,6 +77,8 @@ axe and keyboard tests planned.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#15** — https://github.com/Jasowills/genesis-engine/issues/15
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

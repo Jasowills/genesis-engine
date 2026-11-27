@@ -75,6 +75,8 @@ Manifest/signing/rollback are design inference, not sourced standards.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#22** — https://github.com/Jasowills/genesis-engine/issues/22
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

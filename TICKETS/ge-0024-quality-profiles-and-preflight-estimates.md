@@ -76,6 +76,8 @@ Calibrate after fixtures exist.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#30** — https://github.com/Jasowills/genesis-engine/issues/30
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

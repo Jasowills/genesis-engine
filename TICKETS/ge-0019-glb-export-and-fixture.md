@@ -76,6 +76,8 @@ GLB is interchange, not internal format.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#16** — https://github.com/Jasowills/genesis-engine/issues/16
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog

@@ -76,6 +76,8 @@ Fixture must be small and redistributable.
 - [ ] No unrelated scope creep
 
 ## Verification evidence
+
+GitHub issue: **#11** — https://github.com/Jasowills/genesis-engine/issues/11
 Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
 
 ## Changelog
