@@ -3,7 +3,7 @@ id: GE-0011
 title: World IR schema v0 with migrations
 type: feature
 priority: P0
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0003, GE-0007]
@@ -84,7 +84,8 @@ GitHub issue: **#5** — https://github.com/Jasowills/genesis-engine/issues/5
 - `cargo clippy --workspace --locked -- -D warnings` → clean (derived Default and collapsed conditionals fixed).
 - `cargo fmt --all -- --check` → clean.
 - Schema v2 current / v1 legacy; migration verified both directions **without losing dimensions fields**. Raw version gate now precedes deserialization. StableId validated on deserialization.
-- Reviewer result: first pass `CHANGES_REQUESTED` (dimensions loss in backward migration, forward height drop, version-gate bypass, ID-validation bypass, overstated golden-vector evidence, stale issue label); all fixed, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; all seven findings fixed; narrow re-review **`APPROVED`** (session `ses_de3a47cb7ffe9a5qFka0n3jsaV`) with 16 tests, clippy and fmt re-run.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.

@@ -37,6 +37,7 @@ GE-0008 — GitHub repository and issue setup (independent post-execution review
 GE-0009 — cross-platform CI skeleton (review `APPROVED`; all 4 jobs green on Windows/macOS/Ubuntu, final `--locked` run `45968210802`).
 GE-0007 — ADR set and decision register (D-025…D-031 recorded; governance review `APPROVED`).
 GE-0010 — project model and portable layout (7 tests pass; independent re-review `APPROVED`).
+GE-0011 — World IR v2 with v1 migrations (16 Core tests pass; independent re-review `APPROVED`).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -45,14 +46,14 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0011 — World IR schema v2 with v1 migrations; first review found data-loss/validation defects, fixes applied (16 tests pass), re-review assigned (issue #5).
+None.
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0012 (lawful-source gate + provenance) becomes ready once GE-0011 is verified. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
+GE-0012 (lawful-source gate + provenance record) — now ready. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model and versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations). Not yet implemented: lawful-source gate, geospatial/worker/AI adapters, Studio/CLI, validation gates, exports, plugin runtime.
