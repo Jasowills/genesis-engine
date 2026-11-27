@@ -86,4 +86,4 @@ GitHub issue: **#7** — https://github.com/Jasowills/genesis-engine/issues/7
 - Reviewer result: pending independent review.
 
 ## Changelog
-- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`. Pending owner approval of scope and independent review where required.

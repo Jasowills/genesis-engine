@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # pinned commit (2026-07)
       - name: Required documents present
         shell: bash
         run: |
@@ -44,14 +44,14 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # pinned commit (2026-07)
       - name: Rust toolchain
         uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc
         with:
           toolchain: stable
           targets: wasm32-wasip1
       - name: Cache cargo artefacts
-        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca # v4
+        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca # pinned commit (2026-07)
         with:
           path: |
             ~/.cargo/registry
@@ -68,11 +68,11 @@ jobs:
           cargo fmt --manifest-path prototype/plugin-sandbox/Cargo.toml -- --check
           cargo fmt --manifest-path prototype/plugin-sandbox/guest/Cargo.toml -- --check
       - name: Build WASM fixtures
-        run: cargo build --target wasm32-wasip1 --release --manifest-path prototype/plugin-sandbox/guest/Cargo.toml
+        run: cargo build --locked --target wasm32-wasip1 --release --manifest-path prototype/plugin-sandbox/guest/Cargo.toml
       - name: Precision/CRS golden vectors
-        run: cargo test --manifest-path prototype/precision-crs/Cargo.toml
+        run: cargo test --locked --manifest-path prototype/precision-crs/Cargo.toml
       - name: Plugin sandbox feasibility
-        run: cargo test --manifest-path prototype/plugin-sandbox/Cargo.toml
+        run: cargo test --locked --manifest-path prototype/plugin-sandbox/Cargo.toml
 
   # GPU lanes and signed release builds are intentionally absent: they require
   # paid larger runners/identities and explicit owner approval (D-022).
