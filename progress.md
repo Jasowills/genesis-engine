@@ -34,12 +34,13 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 
 ## Completed and verified tickets
 GE-0008 — GitHub repository and issue setup (independent post-execution review `APPROVED`; evidence recorded in its ticket).
+GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 
 ## In-progress tickets
-GE-0002 — resolving eight evidence conflicts with primary sources (issue #3).
+None.
 
 ## In-review tickets
-GE-0003 — precision/CRS golden-vector prototype; 5 unit tests pass; independent reviewer assigned (issue #1).
+GE-0002 — eight evidence conflicts resolved against primary sources (7 resolved, 1 partial); independent review assigned (issue #3).
 
 ## Blocked tickets
 GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result.
