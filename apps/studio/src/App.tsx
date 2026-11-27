@@ -20,8 +20,8 @@ export function App({ snapshot }: AppProps) {
         <h1>Genesis Studio</h1>
         <p role="status">
           No scene loaded. Inject a versioned scene snapshot at{' '}
-          <code>window.__GENESIS_SNAPSHOT__</code> or open one through the Rust
-          command bridge.
+          <code>window.__GENESIS_SNAPSHOT__</code>. The Core snapshot bridge is
+          implemented in the Rust crate; this UI currently accepts injected JSON.
         </p>
       </main>
     );

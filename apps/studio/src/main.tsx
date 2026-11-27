@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import './styles.css';
 import { isSceneSnapshot } from './types';
 import type { SceneSnapshot } from './types';
 

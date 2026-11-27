@@ -66,10 +66,24 @@ export function isSceneSnapshot(value: unknown): value is SceneSnapshot {
     candidate.nodes.every(
       (node) =>
         typeof node.id === 'string' &&
+        typeof node.label === 'string' &&
+        typeof node.kind === 'string' &&
+        typeof node.selectable === 'boolean' &&
+        typeof node.method === 'string' &&
+        typeof node.evidence === 'string' &&
+        Array.isArray(node.translation) &&
+        node.translation.length === 3 &&
+        node.translation.every((v) => typeof v === 'number' && Number.isFinite(v)) &&
         Array.isArray(node.mesh?.vertices) &&
+        node.mesh.vertices.every((v) => Array.isArray(v) && v.length === 3) &&
         Array.isArray(node.mesh?.indices) &&
+        node.mesh.indices.every((i) => typeof i === 'number' && Number.isInteger(i)) &&
         typeof node.provenance === 'object' &&
-        node.provenance !== null,
+        node.provenance !== null &&
+        typeof node.provenance.source_id === 'string' &&
+        typeof node.provenance.attribution === 'string' &&
+        typeof node.provenance.licence_elected === 'string' &&
+        Array.isArray(node.provenance.derivation_chain),
     )
   );
 }

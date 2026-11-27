@@ -1,4 +1,4 @@
-import type { ChangeEvent } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 import type { SceneNode, Vec3 } from './types';
 
 interface InspectorProps {
@@ -10,6 +10,11 @@ interface InspectorProps {
 const AXES = ['East (m)', 'North (m)', 'Up (m)'] as const;
 
 export function Inspector({ node, translation, onTranslationChange }: InspectorProps) {
+  const [raw, setRaw] = useState<[string, string, string]>(['0', '0', '0']);
+  useEffect(() => {
+    if (node && translation) setRaw([String(translation[0]), String(translation[1]), String(translation[2])]);
+  }, [node?.id, translation]);
+
   if (!node || !translation) {
     return (
       <aside aria-label="Inspector">
@@ -19,10 +24,27 @@ export function Inspector({ node, translation, onTranslationChange }: InspectorP
   }
 
   const handleChange = (axis: number, event: ChangeEvent<HTMLInputElement>) => {
-    const next = [...translation] as Vec3;
-    const value = Number(event.target.value);
-    next[axis] = Number.isFinite(value) ? value : 0;
-    onTranslationChange(node.id, next);
+    const text = event.target.value;
+    const nextRaw = [...raw] as [string, string, string];
+    nextRaw[axis] = text;
+    setRaw(nextRaw);
+    // Keep intermediate states ('-', '.', '1e') editable; commit only finite values.
+    if (text.trim() !== '') {
+      const value = Number(text);
+      if (Number.isFinite(value)) {
+        const next = [...translation] as Vec3;
+        next[axis] = value;
+        onTranslationChange(node.id, next);
+      }
+    }
+  };
+
+  const handleBlur = (axis: number) => {
+    if (raw[axis].trim() === '' || !Number.isFinite(Number(raw[axis]))) {
+      const nextRaw = [...raw] as [string, string, string];
+      nextRaw[axis] = String(translation[axis]);
+      setRaw(nextRaw);
+    }
   };
 
   return (
@@ -40,9 +62,10 @@ export function Inspector({ node, translation, onTranslationChange }: InspectorP
               type="number"
               step="0.1"
               inputMode="decimal"
-              value={translation[axis]}
+              value={raw[axis]}
               aria-label={`${label} for ${node.label}`}
               onChange={(event) => handleChange(axis, event)}
+              onBlur={() => handleBlur(axis)}
             />
           </label>
         ))}

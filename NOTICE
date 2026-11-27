@@ -9,3 +9,8 @@ Licence scope (owner-approved 2026-11-27, D-026):
 - No OSM-derived database, restricted imagery, private data or large model weights are distributed with this repository.
 
 The standard Apache License 2.0 text in LICENSE is reproduced unmodified. The bracketed placeholders in its Appendix are intentionally left as published by the Apache Software Foundation; copyright and scope information for this project is provided in this NOTICE file.
+
+Fixture carve-out (recorded 2026-11-27, D-032):
+
+- `fixtures/ikeja-small.geojson` is an OSM-derived test fixture licensed under ODbL-1.0 with attribution `© OpenStreetMap contributors`. It is not relicensed by the core Apache-2.0 grant.
+- Generated world data remains subject to the separate ODbL publication question D-024.

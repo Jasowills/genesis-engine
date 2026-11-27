@@ -23,7 +23,7 @@ Date of run: 2026-11-27. Host: macOS 26.5.2, x86_64, Python 3.13.15 venv.
 * Static inspection of the real 1.32.0 wheel (downloaded for Linux x86_64,
   never executed here) found `RunOptions` and a `terminate` attribute with a
   docstring about terminating running calls; no Python `set_terminate` method
-  was found. Runtime cancellation on 1.32.0 stays **UNVERIFIED**.
+  was found. Runtime cancellation on 1.32.0 is verified in Ubuntu CI run `46001781425`; macOS x86_64 remains unverified (no wheel).
 
 ## Files
 
