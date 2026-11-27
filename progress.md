@@ -74,7 +74,7 @@ Close the 8 conflicts via their linked tickets; obtain owner answers to open que
 ## Tests and verification
 - Last full test run: `cargo test --workspace --locked` → 22 passed, 0 failed (macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
-- Known failures: none outstanding. Independent reviewer returned `CHANGES_REQUESTED` twice on governance/reconciliation defects; all findings corrected and final verdict `APPROVED` (2026-11-27).
+- Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` pending. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
 
 ## Known bugs and technical debt
