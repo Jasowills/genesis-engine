@@ -27,7 +27,7 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 ## Current repository state
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
-- Latest commit: `5fb68abba2f1ec801d2c887f63b4c30f4360f545` — `docs: link 32 GitHub issues to local tickets and record setup evidence`; previous commit `aa728fd9a9aa5e0bf2ca05b94006434816be973d` — `docs: add Genesis Engine specification, research and approved plan` (81 files, documentation only)
+- Latest commit: **read live with `git rev-parse HEAD`** (this file is itself committed after each update, so a hard-coded hash would always lag by one commit). Reconciliation baseline: `15e5b4548c180cc4cf4160cf81a837c50efa04ef`; earlier commits `5fb68abba2f1ec801d2c887f63b4c30f4360f545` (issue links) and `aa728fd9a9aa5e0bf2ca05b94006434816be973d` (initial 81-file documentation-only commit).
 - Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. No product code.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
@@ -78,7 +78,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-Commit and push the post-execution documentation corrections (this file, GE-0008 evidence, issue #6 body), then have the independent verifier recheck and mark GE-0008 `verified`. After that, begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of every code-changing ticket. Report final URL/branch/hash/issue count to the owner.
+All post-execution documentation corrections are committed and pushed; GitHub-side setup remains unchanged and verified. Record the verifier's final `APPROVED` verdict and mark GE-0008 `verified`, then begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of every code-changing ticket. Report final URL/branch/hash/issue count to the owner.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.
