@@ -78,12 +78,11 @@ fn project_is_portable_after_move() -> CoreResult<()> {
     let reopened = open_project(&moved)?;
     assert_eq!(reopened.manifest(), original.manifest());
     assert!(moved.join("payloads").is_dir());
-    assert!(
-        !reopened
-            .manifest()
-            .layout
-            .iter()
-            .any(|p| Path::new(p).is_absolute())
+    // Real portability evidence: the manifest opens from a different absolute
+    // root, and a project-relative path resolves under that new root.
+    assert_eq!(
+        reopened.resolve(Path::new("worlds/world.json"))?,
+        moved.join("worlds/world.json")
     );
 
     fs::remove_dir_all(&moved)?;
@@ -120,10 +119,7 @@ fn malformed_manifest_is_structured_error() -> CoreResult<()> {
     assert!(matches!(open_project(dir.path()), Err(CoreError::Json(_))));
 
     fs::write(dir.path().join(MANIFEST_PATH), b"{\"schema_version\":1}")?;
-    assert!(matches!(
-        open_project(dir.path()),
-        Err(CoreError::Json(_)) | Err(CoreError::InvalidManifest(_))
-    ));
+    assert!(matches!(open_project(dir.path()), Err(CoreError::Json(_))));
 
     fs::remove_file(dir.path().join(MANIFEST_PATH))?;
     assert!(matches!(
@@ -148,6 +144,20 @@ fn path_containment_rejects_traversal_and_absolute_paths() {
         validate_relative_path(Path::new("C:secret")),
         Err(CoreError::PathEscapesProject(_))
     ));
+    for evil in [
+        "worlds\\..\\secret",
+        "\\\\server\\share",
+        "C:\\secret",
+        "C:/abs",
+    ] {
+        assert!(
+            matches!(
+                validate_relative_path(Path::new(evil)),
+                Err(CoreError::PathEscapesProject(_))
+            ),
+            "backslash/drive path not rejected: {evil}"
+        );
+    }
     assert!(matches!(
         validate_relative_path(Path::new("")),
         Err(CoreError::PathEscapesProject(_))
@@ -165,6 +175,47 @@ fn duplicate_project_and_empty_name_are_errors() -> CoreResult<()> {
     let other = TestDir::new("empty-name");
     assert!(matches!(
         create_project(other.path(), "  ", crs()),
+        Err(CoreError::InvalidManifest(_))
+    ));
+    Ok(())
+}
+
+#[test]
+fn layout_and_crs_validation_on_open_is_strict() -> CoreResult<()> {
+    let dir = TestDir::new("layout-validation");
+    create_project(dir.path(), "Strict", crs())?;
+    let path = dir.path().join(MANIFEST_PATH);
+    let original: serde_json::Value = serde_json::from_slice(&fs::read(&path)?)?;
+
+    let mut duplicate = original.clone();
+    let first = duplicate["layout"][0].clone();
+    duplicate["layout"].as_array_mut().unwrap().push(first);
+    fs::write(&path, serde_json::to_vec_pretty(&duplicate)?)?;
+    assert!(matches!(
+        open_project(dir.path()),
+        Err(CoreError::InvalidManifest(_))
+    ));
+
+    let mut mismatch = original.clone();
+    mismatch["layout"] = serde_json::json!(["metadata", "worlds"]);
+    fs::write(&path, serde_json::to_vec_pretty(&mismatch)?)?;
+    assert!(matches!(
+        open_project(dir.path()),
+        Err(CoreError::InvalidManifest(_))
+    ));
+
+    let mut empty_unit = original.clone();
+    empty_unit["crs"]["unit"] = serde_json::json!("");
+    fs::write(&path, serde_json::to_vec_pretty(&empty_unit)?)?;
+    assert!(matches!(
+        open_project(dir.path()),
+        Err(CoreError::InvalidManifest(_))
+    ));
+
+    fs::write(&path, serde_json::to_vec_pretty(&original)?)?;
+    fs::remove_dir_all(dir.path().join("exports"))?;
+    assert!(matches!(
+        open_project(dir.path()),
         Err(CoreError::InvalidManifest(_))
     ));
     Ok(())

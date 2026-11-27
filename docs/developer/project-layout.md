@@ -21,7 +21,7 @@ my-project/
 
 - `create_project(root, name, crs) -> Result<Project>` — creates the layout and manifest.
 - `open_project(root) -> Result<Project>` — validates schema version and manifest; never reads a global cache.
-- `Project::save()` — atomic manifest write (temp file + rename; Windows uses a documented non-atomic fallback).
+- `Project::save()` — atomic manifest write (temp file + rename). On Windows, where rename cannot replace an existing file, the original is first renamed to a `.bak`, the replacement is renamed into place, and the backup is restored if that second rename fails — the only valid manifest is never deleted.
 - `Project::resolve(relative)` — resolves a project-relative path after rejecting traversal, absolute paths, Windows drive prefixes and backslashes.
 - `CoreError` — structured errors including `UnsupportedSchemaVersion`, `InvalidManifest`, `PathEscapesProject` and `AlreadyExists`.
 

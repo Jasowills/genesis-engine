@@ -241,14 +241,25 @@ pub fn open_project(root: &Path) -> Result<Project> {
         ));
     }
     let expected: BTreeSet<&str> = LAYOUT_DIRECTORIES.iter().copied().collect();
-    let actual: BTreeSet<&str> = manifest.layout.iter().map(String::as_str).collect();
+    let mut seen = BTreeSet::new();
+    for entry in &manifest.layout {
+        validate_relative_path(Path::new(entry))?;
+        if !seen.insert(entry.as_str()) {
+            return Err(CoreError::InvalidManifest(
+                "layout directory list contains duplicates".to_string(),
+            ));
+        }
+        if !root.join(entry).is_dir() {
+            return Err(CoreError::InvalidManifest(format!(
+                "layout directory missing on disk: {entry}"
+            )));
+        }
+    }
+    let actual: BTreeSet<&str> = seen;
     if expected != actual {
         return Err(CoreError::InvalidManifest(
             "layout directory list does not match the supported layout".to_string(),
         ));
-    }
-    for entry in &manifest.layout {
-        validate_relative_path(Path::new(entry))?;
     }
     Ok(Project {
         root: root.to_path_buf(),
@@ -278,10 +289,17 @@ fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
     match fs::rename(&tmp, path) {
         Ok(()) => Ok(()),
         Err(_e) if cfg!(windows) && path.exists() => {
-            // Windows rename cannot replace an existing file. Remove then
-            // rename; documented as a non-atomic fallback on that platform.
-            fs::remove_file(path)?;
-            fs::rename(&tmp, path)?;
+            // Windows rename cannot replace an existing file. Preserve the
+            // only valid manifest as a backup, then restore it if the
+            // replacement rename fails. Never delete the original first.
+            let backup = path.with_extension("json.bak");
+            let _ = fs::remove_file(&backup);
+            fs::rename(path, &backup)?;
+            if let Err(e) = fs::rename(&tmp, path) {
+                let _ = fs::rename(&backup, path);
+                return Err(CoreError::Io(e));
+            }
+            let _ = fs::remove_file(&backup);
             Ok(())
         }
         Err(e) => Err(CoreError::Io(e)),

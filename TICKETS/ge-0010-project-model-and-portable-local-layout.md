@@ -79,12 +79,12 @@ Headless-drivable is the test that this is a Core capability.
 
 GitHub issue: **#27** — https://github.com/Jasowills/genesis-engine/issues/27
 - Files: root `Cargo.toml` (minimal workspace), `crates/genesis-core/` (Cargo.toml, src/lib.rs, tests/project.rs), `docs/developer/project-layout.md`, `Cargo.lock`, CI Core test/lint steps.
-- `cargo test --workspace --locked` → **6 passed, 0 failed** (round-trip, portability after move, unknown schema version, malformed/missing manifest, path containment, duplicate project).
+- `cargo test --workspace --locked` → **7 passed, 0 failed** (round-trip, portability after move, unknown schema version, malformed/missing manifest, path containment incl. backslash/drive prefixes, duplicate project, strict layout/CRS validation).
 - `cargo clippy --workspace --locked -- -D warnings` → clean after fixing a collapsible-if warning.
 - Path validator hardened after a failing test: `C:secret` and backslash paths are rejected on Unix too, not only where Rust reports a Prefix component.
 - Atomic manifest write via temp file + rename; Windows fallback documented as non-atomic in code.
 - Documentation: `docs/developer/project-layout.md` describes layout, API and schema version 1.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (destructive Windows fallback, backslash test gap, permissive assertion, stale issue label, weak portability assertion); all fixed, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
