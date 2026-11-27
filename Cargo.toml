@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/genesis-core", "crates/genesis-studio"]
+members = ["crates/genesis-cli", "crates/genesis-core", "crates/genesis-studio"]
 exclude = [
   "prototype/precision-crs",
   "prototype/plugin-sandbox",

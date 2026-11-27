@@ -3,7 +3,7 @@ id: GE-0022
 title: Headless CLI command surface
 type: feature
 priority: P1
-status: proposed
+status: in-review
 milestone: M2
 labels: [type:feature, area:core]
 depends_on: [GE-0020]
@@ -43,10 +43,10 @@ Spec §8 requires the first slice to use the architecture later CLI/headless pat
 Thin adapter over Core commands; no duplicated domain logic.
 
 ## Acceptance criteria
-- [ ] Every E2E step reachable headlessly
-- [ ] Output schema versioned and documented
-- [ ] Same results as Studio
-- [ ] Tests and documentation updated
+- [x] Every E2E step reachable headlessly
+- [x] Output schema versioned and documented
+- [x] Same results as Studio (CLI scene descriptor compared with Core/GLB re-import; Studio uses the same Core snapshot source)
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Command parsing tests
@@ -78,7 +78,12 @@ Do not fork Core logic into the CLI.
 ## Verification evidence
 
 GitHub issue: **#18** — https://github.com/Jasowills/genesis-engine/issues/18
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-cli/` (Cargo.toml, src/main.rs, tests/cli.rs), workspace member, `docs/developer/cli.md`.
+- `cargo test --workspace --locked` → **67 passed, 0 failed** (65 previous + 2 CLI integration tests). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- CLI integration test drives project create → boundary → features → generate → validate → export → scene → job status through the binary, asserts versioned JSON `status: ok`, and verifies the exported GLB with Core `import_glb` (2 meshes, 14 triangles, attribution preserved).
+- Structured error test asserts `status: error` with `schema_version: 1` on an invalid profile.
+- Job status/cancel return structured `unsupported` (no fake success); worker orchestration is GE-0023.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
