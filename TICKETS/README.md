@@ -53,7 +53,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0009 | [#7](https://github.com/Jasowills/genesis-engine/issues/7) | Cross-platform CI skeleton | engineering | P0 | M0 | verified | [GE-0008] |
 | GE-0010 | [#27](https://github.com/Jasowills/genesis-engine/issues/27) | Project model and portable local layout | feature | P0 | M1 | verified | [GE-0007] |
 | GE-0011 | [#5](https://github.com/Jasowills/genesis-engine/issues/5) | World IR schema v0 with migrations | feature | P0 | M1 | verified | [GE-0003, GE-0007] |
-| GE-0012 | [#10](https://github.com/Jasowills/genesis-engine/issues/10) | Lawful-source gate and provenance record | feature | P0 | M1 | in-review | [GE-0002, GE-0011] |
+| GE-0012 | [#10](https://github.com/Jasowills/genesis-engine/issues/10) | Lawful-source gate and provenance record | feature | P0 | M1 | verified | [GE-0002, GE-0011] |
 | GE-0013 | [#11](https://github.com/Jasowills/genesis-engine/issues/11) | GeoJSON boundary import and CRS validation | feature | P0 | M1 | proposed | [GE-0011, GE-0012] |
 | GE-0014 | [#12](https://github.com/Jasowills/genesis-engine/issues/12) | OSM footprint and road feature ingestion | feature | P1 | M1 | proposed | [GE-0013] |
 | GE-0015 | [#13](https://github.com/Jasowills/genesis-engine/issues/13) | Procedural road surface and building volume | feature | P1 | M1 | proposed | [GE-0014] |
