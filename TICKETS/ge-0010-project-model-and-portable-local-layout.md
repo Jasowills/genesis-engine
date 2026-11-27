@@ -3,7 +3,7 @@ id: GE-0010
 title: Project model and portable local layout
 type: feature
 priority: P0
-status: proposed
+status: ready
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0007]

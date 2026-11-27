@@ -19,12 +19,12 @@
 | ID | Area | Current state | Notes |
 | --- | --- | --- | --- |
 | D-007 | Full platform boundaries: Studio, Core, SDK, CLI, headless | **Open** | Not resolved by D-025; scope still to be decided (Q1). |
-| D-008 | CLI release timing | **Open** | Can defer; CLI tickets remain milestone-gated. |
-| D-009 | First engine/DCC integration | **Open** | Blocks export milestone (Q4). |
+| D-008 | CLI release timing | **Resolved by D-030** | CLI/headless in M2 (early preview), not first public release. |
+| D-009 | First engine/DCC integration | **Resolved by D-030** | GLB in the first slice; Blender first DCC fixture afterwards. |
 | D-010 | World IR and project storage | **Settled for the IR direction by D-025** (`adr/0002`, `adr/0008`) | Exact project storage layout and schema fields remain engineering work; full platform boundary still open. |
 | D-011 | Viewport technology | **Settled by D-025** (`adr/0003`) | three.js + R3F/drei direction accepted; PoC gate retained (GE-0004). |
 | D-012 | GPU backend strategy | **Partly settled by D-025** (`adr/0003`, `adr/0008`) | Capability detection + CPU fallback accepted; exact GPU backend promise remains open (Q8). |
-| D-013 | First-release layer scope | **Open — owner approval required** | D-025 approves ADRs, **not** the PRD §5 first-slice boundary. MVP layers must be explicitly approved. |
+| D-013 | First-release layer scope | **Resolved by D-029** | PRD §5 approved as-is; no extra layers in the first slice. |
 | D-014 | Core and plugin licence | **Core settled by D-026 (Apache-2.0); partially open** | Plugin SDK, docs, fixtures, sample assets and model-weight licences remain separate decisions; D-024 legal review open. |
 | D-015 | Cloud execution model | **Open** | Optional cloud; no topology promised. |
 | D-016 | Collaboration and asset marketplace scope | **Deferred** | No scope expansion. |
@@ -37,7 +37,7 @@
 | D-018 | Issue tracker for the setup skill: GitHub Issues, GitLab, or local markdown? | `setup-matt-pocock-skills` requires this choice. | **Not explicitly answered.** GitHub Issues is now the project tracker by D-027; the setup skill itself was not run. |
 | D-019 | Repository name, visibility, description and licence direction for GitHub creation. | Spec Phase 7. | **Resolved** by D-026 + D-027 (public `genesis-engine`, Apache-2.0 core). |
 | D-020 | Acknowledge a hard deny-list: Google Maps/Street View/Photorealistic 3D Tiles content and Cesium ion-hosted content cannot be reconstruction inputs. | Research verified ToS prohibitions. | **Resolved** by D-028 (hard deny acknowledged). |
-| D-021 | Exact Ikeja, Lagos benchmark boundary (~500 m–1 km), frozen input revisions and available ground truth. | Spec §49 requires owner selection before any comparative benchmark. | Needs owner input before GE-0020 |
+| D-021 | Exact Ikeja, Lagos benchmark boundary (~500 m–1 km), frozen input revisions and available ground truth. | Spec §49 requires owner selection before any comparative benchmark. | **Resolved by D-031** — agent-selected boundary in `research/BENCHMARK_AREA.md` |
 | D-022 | Approval of signing identities and budgets: Apple $99/yr plus one Windows path (~$9.99/mo or $150–400+/yr), and updater key custody. | `engineering/RELEASE_PROCESS.md`; no purchase may occur without approval. | Needed before M5 |
 | D-023 | Rust MSRV baseline: 1.90 (covers `rstar`, Tauri updater, likely `geo`) vs 1.95 (needed by `geoparquet`/`geoarrow` 0.10). | Local toolchain is 1.98.1; contributor machines vary. | Needed before M2 |
 | D-024 | Legal review of whether exported GLBs / project files are ODbL Derivative Databases and whether Genesis will publish a §4.6 machine-readable offer. | `research/LICENCE_AND_DATA_RIGHTS.md` §3a; cannot be settled by engineering alone. | Needed before publication |
@@ -68,7 +68,11 @@ GE-0008 (`GitHub repository and issue setup`) has `depends_on: [GE-0007]`, and G
 - [ ] Branch protection / repository settings: **not explicitly approved — do not enable.** Record as a remaining action for owner decision
 - [x] Reviewer gate: independent reviewer subagent returned **`APPROVED`** on 2026-11-27 after four passes (first two `CHANGES_REQUESTED` on governance/reconciliation defects, all findings corrected and reverified). The reviewer explicitly cleared GitHub setup under D-027. Evidence: reviewer session `ses_de59f7bffffeZu5LcI2JsshkFy`, final verdict `APPROVED`.
 
-These answers satisfy the Phase 8 checkpoint for the foundational plan. **Still open:** D-007, D-008, D-009, D-013, D-015, D-016, D-017, D-018, D-021, D-022, D-023, D-024 and the non-core licence questions under D-014. Approval of the ADR set does not silently resolve any of them; in particular PRD §5 first-slice scope (D-013) remains proposed.
+| D-029 | First vertical slice scope | **Approved as-is (PRD §5)** | Project create → small GeoJSON boundary → documented OSM extract → roads + simple buildings → World IR → viewport inspect → basic validation → GLB export/re-import. Photogrammetry, AI, splats, LOD, cloud and marketplace stay deferred. Unblocks M1 tickets. |
+| D-030 | CLI timing and first integration | **CLI in early preview; GLB then Blender** | D-008: CLI/headless in M2, not the first public release; Core seams remain headless-drivable from M1. D-009: GLB re-import fixture in the slice (GE-0019), Blender as the first DCC fixture afterwards (GE-0029). Target game-engine integrations remain open. |
+| D-031 | Ikeja benchmark boundary | **Agent may select and record** | D-021 delegated to the agent; boundary frozen in `research/BENCHMARK_AREA.md` with source, rationale and licence. No independent ground truth is assumed. |
+
+These answers satisfy the Phase 8 checkpoint for the foundational plan. **Resolved by later owner answers:** D-008, D-009, D-013 and D-021 (D-029…D-031). **Still open:** D-007 (platform boundaries), D-015 (cloud), D-016 (collaboration), D-017 (skill identity), D-018 (setup-skill tracker), D-022 (signing budget), D-023 (MSRV), D-024 (ODbL legal review) and the non-core licence questions under D-014. None of these blocks the approved first slice; they are tracked here rather than assumed.
 
 ## 4. Decision-record rules
 

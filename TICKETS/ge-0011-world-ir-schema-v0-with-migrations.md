@@ -3,7 +3,7 @@ id: GE-0011
 title: World IR schema v0 with migrations
 type: feature
 priority: P0
-status: proposed
+status: ready
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0003, GE-0007]

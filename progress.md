@@ -22,7 +22,7 @@ D-001 engine + platform progressively; D-002 desktop-first Studio; D-003 local-f
 All seven: thin versioned World IR + adapters (`adr/0002`); Tauri + React/TS + three.js with shell/viewport as two PoC-gated decisions (`0003`); external-process workers with normalised progress (`0004`); ONNX Runtime primary behind swappable adapter (`0005`); Wasmtime/WASI 0.2 sandbox (`0006`); lawful-source gate + provenance-first metadata (`0007`); floating-origin/ENU precision (`0008`). PoC and spike gates are retained; acceptance of direction is not a waiver of verification.
 
 ## Open owner questions
-D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration; **D-013 first-slice layer scope** (PRD §5 remains proposed); D-015 cloud; D-016 collaboration; D-017 skill identity (not explicitly answered; `to-tickets` was used); D-018 setup-skill tracker (not explicitly answered; GitHub Issues adopted via D-027); D-021 Ikeja benchmark boundary; D-022 signing budget; D-023 Rust MSRV; D-024 ODbL publication legal review; SDK/docs/fixture/model-weight licences under D-014. Questions Q1–Q8 are in `engineering/ARCHITECTURE_DISCOVERY.md` §7.
+D-007 platform boundaries; D-015 cloud; D-016 collaboration; D-017 skill identity; D-018 setup-skill tracker; D-022 signing budget; D-023 MSRV; D-024 ODbL legal review; non-core licences. Resolved: D-008, D-009, D-013, D-021 (see D-029…D-031). D-015 cloud; D-016 collaboration; D-017 skill identity (not explicitly answered; `to-tickets` was used); D-018 setup-skill tracker (not explicitly answered; GitHub Issues adopted via D-027); D-021 Ikeja benchmark boundary; D-022 signing budget; D-023 Rust MSRV; D-024 ODbL publication legal review; SDK/docs/fixture/model-weight licences under D-014. Questions Q1–Q8 are in `engineering/ARCHITECTURE_DISCOVERY.md` §7.
 
 ## Current repository state
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
@@ -35,6 +35,7 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 ## Completed and verified tickets
 GE-0008 — GitHub repository and issue setup (independent post-execution review `APPROVED`; evidence recorded in its ticket).
 GE-0009 — cross-platform CI skeleton (review `APPROVED`; all 4 jobs green on Windows/macOS/Ubuntu, final `--locked` run `45968210802`).
+GE-0007 — ADR set and decision register (D-025…D-031 recorded; governance review `APPROVED`).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -46,12 +47,11 @@ None.
 GE-0009 — cross-platform CI skeleton (`.github/workflows/ci.yml`); independent review assigned (issue #7).
 
 ## Blocked tickets
-GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result.
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0001 (environment/workflow records), GE-0005 (plugin feasibility spike), GE-0006 (AI runtime smoke test). GE-0004 is proposed pending GE-0003.
+GE-0010 (project model and portable layout) and GE-0011 (World IR schema v0) — M1 foundation, both unblocked by GE-0007. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Thin versioned World IR with binary payload references; authoritative geodetic coordinates + local ENU frames; lawful-source gate on every import/inference/export; external-process workers with normalised progress; swappable AI adapter; Wasmtime/WASI plugin sandbox.

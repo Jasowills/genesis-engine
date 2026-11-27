@@ -1,8 +1,8 @@
 # Genesis Engine — Product Requirements Document
 
-**Date:** 2026-11-27. **Status:** Requirements baseline accepted with the foundational plan (D-025). **Not approved:** the §5 first-slice boundary (D-013) and the open decisions in §8. **Authority:** `GENESIS_ENGINE_SPEC.md`. **Evidence:** the eight research briefs and five consolidated research documents.
+**Date:** 2026-11-27. **Status:** Requirements baseline accepted with the foundational plan (D-025). **Approved:** the §5 first-slice boundary (D-013/D-029, 2026-11-27); CLI timing and first integration resolved by D-030. **Still open:** the decisions listed in §8. **Authority:** `GENESIS_ENGINE_SPEC.md`. **Evidence:** the eight research briefs and five consolidated research documents.
 
-This PRD specifies what Genesis must do and for whom. Architecture is accepted in `ARCHITECTURE.md` / `adr/0002`–`0008`; core licence is Apache-2.0 (D-026). The first-release boundary in §5 remains a **recommendation pending explicit owner approval** — approving the ADRs did not approve MVP layers.
+This PRD specifies what Genesis must do and for whom. Architecture is accepted in `ARCHITECTURE.md` / `adr/0002`–`0008`; core licence is Apache-2.0 (D-026). The first-release boundary in §5 is **approved as-is** (owner decision 2026-11-27); approving the ADRs alone did not approve MVP layers, but D-029 did.
 
 ## 1. Product definition
 
