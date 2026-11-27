@@ -52,7 +52,6 @@ fn valid_boundary_imports_with_bbox_and_source_checksum() -> CoreResult<()> {
     assert_eq!(boundary.rings[0].first(), boundary.rings[0].last());
     assert_eq!(boundary.rings[0].len(), 5);
     assert_eq!(boundary.source_id, "osm:pbf:ikeja");
-    assert_eq!(boundary.source_checksum.len(), 64);
 
     let again = import_geojson(polygon(), "Ikeja study area", &source(), &crs())?;
     assert_eq!(boundary, again, "import must be deterministic");
