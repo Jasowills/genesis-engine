@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. Format foll
 
 ## [Unreleased]
 
+### Added — M1 foundation
+
+- `feat(core)`: portable project model and layout (GE-0010).
+- `feat(core)`: versioned World IR v2 with v1 migrations (GE-0011).
+- `feat(core)`: lawful-source gate and provenance export sidecar (GE-0012).
+- `feat(geodata)`: GeoJSON boundary import with CRS/epoch validation (GE-0013).
+- `chore(ci)`: cross-platform test matrix, later fixed for workspace excludes.
+
 ### Added — 2026-11-27 (planning baseline, not product functionality)
 
 Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002`–`0008`), Apache-2.0 for **core source only**, a public `Jasowills/genesis-engine` repository, and a hard source deny-list. PRD first-slice scope, CLI timing, first engine integration, cloud/collaboration scope and asset licences remain proposed or open.

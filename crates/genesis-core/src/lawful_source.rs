@@ -125,13 +125,17 @@ const DENIED_PATTERNS: [&str; 15] = [
 pub fn check_source(source: &SourceDescriptor) -> Result<()> {
     source.validate()?;
     let haystack = format!(
-        "{} {} {} {} {} {}",
+        "{} {} {} {} {} {} {} {} {} {}",
         source.publisher,
         source.url,
         source.id,
         source.version,
         source.attribution,
-        source.filters.join(" ")
+        source.filters.join(" "),
+        source.licence_url.as_deref().unwrap_or(""),
+        source.vintage.as_deref().unwrap_or(""),
+        source.source_feature_ids.join(" "),
+        source.derivation_chain.join(" ")
     )
     .to_lowercase();
     for pattern in DENIED_PATTERNS {

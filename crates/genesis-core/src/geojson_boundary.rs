@@ -52,6 +52,11 @@ fn position(value: &Value) -> Result<[f64; 2]> {
 
 fn geometry(value: &Value) -> Result<&Value> {
     if let Some(features) = value.get("features").and_then(Value::as_array) {
+        if value.get("type").and_then(Value::as_str) != Some("FeatureCollection") {
+            return Err(CoreError::InvalidManifest(
+                "GeoJSON FeatureCollection type mismatch".to_string(),
+            ));
+        }
         if features.len() != 1 {
             return Err(CoreError::InvalidManifest(
                 "import expects exactly one GeoJSON feature".to_string(),
@@ -61,12 +66,20 @@ fn geometry(value: &Value) -> Result<&Value> {
             CoreError::InvalidManifest("GeoJSON feature has no geometry".to_string())
         });
     }
-    value
-        .get("geometry")
-        .or_else(|| value.get("coordinates").map(|_| value))
-        .ok_or_else(|| {
-            CoreError::InvalidManifest("GeoJSON Feature or Geometry expected".to_string())
-        })
+    if let Some(geometry) = value.get("geometry") {
+        if value.get("type").and_then(Value::as_str) != Some("Feature") {
+            return Err(CoreError::InvalidManifest(
+                "GeoJSON Feature type mismatch".to_string(),
+            ));
+        }
+        return Ok(geometry);
+    }
+    if value.get("coordinates").is_some() {
+        return Ok(value);
+    }
+    Err(CoreError::InvalidManifest(
+        "GeoJSON Feature or Geometry expected".to_string(),
+    ))
 }
 
 /// Validate that the project CRS metadata is sufficient for a reconstruction.
@@ -92,11 +105,30 @@ pub fn validate_crs(crs: &CrsMetadata) -> Result<()> {
             "CRS unit and up-axis must be recorded".to_string(),
         ));
     }
-    if let Some(epoch) = crs.epoch
-        && !epoch.is_finite()
-    {
+    let Some(epoch) = crs.epoch else {
+        return Err(CoreError::InvalidManifest(
+            "coordinate epoch must be recorded for GeoJSON WGS84/CRS84 import".to_string(),
+        ));
+    };
+    if !epoch.is_finite() {
         return Err(CoreError::InvalidManifest(
             "CRS epoch must be finite".to_string(),
+        ));
+    }
+    // GeoJSON is implicitly WGS84 lon/lat in degrees. A projected CRS over
+    // those coordinates is a mismatch, not a silent transformation.
+    let reference = format!(
+        "{} {}",
+        crs.wkt2.as_deref().unwrap_or(""),
+        crs.projjson.as_deref().unwrap_or("")
+    );
+    let lower = reference.to_lowercase();
+    if lower.contains("projcrs")
+        || lower.contains("projectedcrs")
+        || lower.contains("\"projected\"")
+    {
+        return Err(CoreError::InvalidManifest(
+            "declared CRS is projected; GeoJSON coordinates are WGS84 lon/lat degrees".to_string(),
         ));
     }
     Ok(())
@@ -154,6 +186,11 @@ pub fn import_geojson(
                 "Polygon ring is not closed".to_string(),
             ));
         }
+        if ring.iter().all(|p| p == &ring[0]) {
+            return Err(CoreError::InvalidManifest(
+                "Polygon ring is degenerate (zero area)".to_string(),
+            ));
+        }
         for p in &ring {
             west = west.min(p[0]);
             south = south.min(p[1]);
@@ -164,7 +201,7 @@ pub fn import_geojson(
     }
     if east - west > 180.0 {
         return Err(CoreError::InvalidManifest(
-            "boundary crosses the antimeridian; explicit cut policy required (GE-0011 follow-up)"
+            "longitude span exceeds 180 degrees (antimeridian heuristic); explicit cut policy required (GE-0011 follow-up)"
                 .to_string(),
         ));
     }
