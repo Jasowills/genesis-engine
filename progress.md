@@ -50,6 +50,7 @@ GE-0022 — headless CLI over Core (72 tests; final independent confirmation `AP
 GE-0027 — selective regeneration planner (planning seam only; independent confirmation `APPROVED`).
 GE-0023 — external worker supervision contract (contract only; independent re-review `APPROVED`).
 GE-0028 — terrain/secondary layer generators (5 layer tests; independent re-review `APPROVED`).
+GE-0025 — plugin SDK contract (contract only; independent review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
 GE-0017 — select/inspect/provenance display (6 component tests; independent re-review `APPROVED`).
 GE-0020 — E2E vertical slice + frozen benchmark harness (65 tests; independent review `APPROVED`).

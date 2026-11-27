@@ -50,7 +50,7 @@ fn evil_plugin_fixtures_are_rejected() {
     bad.wit_world_version = "99.0.0".to_string();
     assert!(matches!(bad.verify(), Err(CoreError::InvalidManifest(m)) if m.contains("WIT world")));
 
-    let mut bad = manifest("evil", "not-semver");
+    let bad = manifest("evil", "not-semver");
     assert!(bad.verify().is_err());
 
     let mut bad = manifest("evil", "1.0.0");

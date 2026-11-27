@@ -303,7 +303,7 @@ mod tests {
     #[test]
     fn snapshot_preserves_ids_provenance_evidence_and_presentation_fields() -> Result<()> {
         let (world, mesh) = world_and_mesh();
-        let snapshot = build_scene_snapshot(&world, &[mesh.clone()])?;
+        let snapshot = build_scene_snapshot(&world, std::slice::from_ref(&mesh))?;
 
         assert_eq!(snapshot.snapshot_version, SNAPSHOT_SCHEMA_VERSION);
         assert_eq!(snapshot.world_id, world.world_id.to_string());

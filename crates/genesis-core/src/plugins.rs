@@ -100,9 +100,16 @@ fn is_hex64(value: &str) -> bool {
 }
 
 fn is_semver(value: &str) -> bool {
-    let mut parts = value.split('.');
+    // SemVer 2.0.0 core: numeric identifiers with no leading zeros. Optional
+    // prerelease/build suffixes are permitted but not validated here.
+    let core = value.split(['-', '+']).next().unwrap_or("");
+    let mut parts = core.split('.');
     let take = |p: Option<&str>| -> bool {
-        p.is_some_and(|s| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()))
+        p.is_some_and(|s| {
+            !s.is_empty()
+                && s.bytes().all(|b| b.is_ascii_digit())
+                && !(s.len() > 1 && s.starts_with('0'))
+        })
     };
     take(parts.next()) && take(parts.next()) && take(parts.next()) && parts.next().is_none()
 }
@@ -159,7 +166,9 @@ impl PluginManifest {
         }
         if self.dependency_pins.iter().any(|pin| {
             let mut parts = pin.split('@');
-            !is_semver(parts.nth(1).unwrap_or(""))
+            let name = parts.next().unwrap_or("");
+            let version = parts.next().unwrap_or("");
+            name.is_empty() || parts.next().is_some() || !is_semver(version)
         }) {
             return Err(CoreError::InvalidManifest(
                 "dependency pins must be name@semver".to_string(),
