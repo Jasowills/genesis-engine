@@ -50,6 +50,7 @@ GE-0022 — headless CLI over Core (72 tests; final independent confirmation `AP
 GE-0027 — selective regeneration planner (planning seam only; independent confirmation `APPROVED`).
 GE-0023 — external worker supervision contract (contract only; independent re-review `APPROVED`).
 GE-0026 — AI adapter contract (adapter only; independent review `APPROVED`).
+GE-0024 — quality profiles and preflight estimates (6 tests; independent re-review `APPROVED`, estimate-only limitation).
 GE-0029 — Blender 4.5.17 LTS round-trip (2 tests; review findings remediated, `verified` with recorded limitations).
 GE-0028 — terrain/secondary layer generators (5 layer tests; independent re-review `APPROVED`).
 GE-0025 — plugin SDK contract (contract only; independent review `APPROVED`).
@@ -69,14 +70,14 @@ GE-0030 — LOD/collision/compression allowlist (3 tests; independent review pen
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).
 GE-0006 — ORT 1.32.0 smoke test passes in CI; named model weights (SAM/YOLOX/Depth Anything) not loaded — requires owner cost/licence decision (issue #9).
-GE-0031 — target engine export fixtures: blocked on GE-0030.
+GE-0031 — target engine export fixtures: blocked on GE-0030 verification AND owner selection of the first target engine/version (D-009/D-030); no support may be claimed without a fixture.
 GE-0032 — signed release/auto-update: signing identities and budget require owner approval (D-022, issue #21).
 
 ## Ready next tickets
-GE-0025 (WIT/WASI plugin SDK PoC) is dependency-ready. GE-0024 is in review.
+None. All dependency-ready tickets are implemented and independently reviewed; remaining items require owner decisions (named model weights, first target engine, signing identities) or an infeasible local verification (WASIp1 network-policy denial).
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), a worker supervision contract (no process execution), no AI adapters, plugin runtime or game-engine integration yet.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), worker/plugin/AI/optimization **contracts** (no process execution, real model inference, codec binaries or game-engine integration), plus a pinned Blender round-trip fixture.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
@@ -112,4 +113,4 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 Finish GE-0024/GE-0025 reviews; blocked tickets require owner/tooling decisions. Every code-changing ticket needs tests, lint, formatting and independent review before `verified`. GitHub: https://github.com/Jasowills/genesis-engine, branch `main`, 32 issues.
 
 ## Session handoff notes
-Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.
+Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Foundation implementation is complete; no release, publication or purchase without owner approval. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.
