@@ -62,7 +62,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0018 | [#8](https://github.com/Jasowills/genesis-engine/issues/8) | Geometry and structural validation gates | feature | P1 | M1 | proposed | [GE-0011, GE-0009] |
 | GE-0019 | [#16](https://github.com/Jasowills/genesis-engine/issues/16) | GLB export and re-import fixture | feature | P1 | M1 | verified | [GE-0011, GE-0018] |
 | GE-0020 | [#17](https://github.com/Jasowills/genesis-engine/issues/17) | End-to-end vertical slice and benchmark harness | test | P1 | M1 | proposed | [GE-0013, GE-0014, GE-0015, GE-0016, GE-0017, GE-0018, GE-0019] |
-| GE-0021 | [#29](https://github.com/Jasowills/genesis-engine/issues/29) | Contributor and governance documentation | documentation | P1 | M1 | in-review | [GE-0007] |
+| GE-0021 | [#29](https://github.com/Jasowills/genesis-engine/issues/29) | Contributor and governance documentation | documentation | P1 | M1 | verified | [GE-0007] |
 | GE-0022 | [#18](https://github.com/Jasowills/genesis-engine/issues/18) | Headless CLI command surface | feature | P1 | M2 | proposed | [GE-0020] |
 | GE-0023 | [#19](https://github.com/Jasowills/genesis-engine/issues/19) | External worker adapter framework | engineering | P1 | M2 | proposed | [GE-0007, GE-0022] |
 | GE-0024 | [#30](https://github.com/Jasowills/genesis-engine/issues/30) | Quality profiles and preflight estimates | feature | P1 | M2 | proposed | [GE-0018, GE-0006] |
