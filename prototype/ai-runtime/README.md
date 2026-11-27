@@ -59,4 +59,5 @@ No model weights were downloaded. No external AI provider, paid API, or GitHub
 repository was used for evidence. No secrets were created. No EP/CoreML/DirectML/
 GPU/ARM64 tests were run — CPU provider only. Timing values are local
 measurements, **not** performance budgets or benchmarks. The venv and wheel
-cache are ignored by the local `.gitignore`; nothing here was committed.
+cache are ignored by the local `.gitignore`; the source and evidence files are
+committed in this repository (commit `b53d0c2`).

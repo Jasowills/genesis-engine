@@ -39,14 +39,15 @@ GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
 
 ## In-progress tickets
-GE-0006 — AI runtime smoke test; offline ONNX Runtime 1.32.0 prototype implementation in progress (issue #9).
+None.
 
 ## In-review tickets
 None.
 
 ## Blocked tickets
 GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result.
-GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" acceptance criterion only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
+GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
+GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
 GE-0001 (environment/workflow records), GE-0005 (plugin feasibility spike), GE-0006 (AI runtime smoke test). GE-0004 is proposed pending GE-0003.

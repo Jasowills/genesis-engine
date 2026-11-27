@@ -3,7 +3,7 @@ id: GE-0006
 title: AI runtime and model smoke test
 type: spike
 priority: P1
-status: in-progress
+status: blocked
 milestone: M0
 labels: [spike, area:ai]
 depends_on: []
@@ -44,8 +44,8 @@ Small headless harness; no desktop dependency; record per-run evidence fields.
 ## Acceptance criteria
 - [ ] Each model loads and produces typed output
 - [ ] Cancellation demonstrated
-- [ ] Checksum/licence record complete for each artefact
-- [ ] Tests and documentation updated
+- [x] Checksum/licence record complete for locally generated artefacts and PyPI metadata
+- [x] Prototype scripts, README and RESULTS.md updated (committed in `b53d0c2`)
 
 ## Test plan
 - Unit: n/a
@@ -77,7 +77,15 @@ No paid cloud inference.
 ## Verification evidence
 
 GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `prototype/ai-runtime/` (`smoke.py`, `smoke-results.json`, `RESULTS.md`, `README.md`, PyPI metadata, model checksums; `.venv/`/`wheels/` ignored).
+- `pip install onnxruntime==1.32.0 onnx` → **FAILED**: PyPI 1.32.0 publishes macOS **arm64** wheels only; no macOS x86_64 wheel. PyPI registry reports version 1.32.0 and `license: MIT License`; GitHub repo was not used (404, RESEARCH_REGISTER §4 #4).
+- Fallback `onnxruntime==1.23.2 onnx` installed; `smoke.py` re-run by the independent reviewer → exact output match, deterministic inference, cooperative cancellation via `RunOptions.terminate`.
+- Model SHA-256 verified by reviewer: `model_add4.onnx` `c8bdea77…eed2b8`, `model_loop.onnx` `45b3491d…742ac33`.
+- Static inspection of the downloaded 1.32.0 Linux wheel found `RunOptions.terminate` but no Python `set_terminate`; labelled static, never executed.
+- Reviewer verdict **`APPROVED`** for evidence recording (session `ses_de3db3b9affemBI3BQCzIZcj4i`), with an explicit instruction: **do not mark verified** — ORT 1.32.0 and the named models were never executed.
+- Residual UNVERIFIED: all 1.32.0 runtime behaviour; SAM/YOLOX/DA-V2 Small weights; CoreML/DirectML/GPU/EP fallback; ARM64/Linux/Windows hosts.
+- **Status rationale:** `blocked` pending a host/CI lane with 1.32.0 wheels and licensed model weights; not `verified`.
 
 ## Changelog
-- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `blocked`; ORT 1.32.0 wheel unavailable on this host.
+- 2026-11-27: Independent review APPROVED for evidence; ticket partially complete and blocked on a compatible host.

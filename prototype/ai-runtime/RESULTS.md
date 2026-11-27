@@ -1,8 +1,9 @@
 # GE-0006 — AI runtime smoke test: RESULTS (throwaway evidence)
 
 Run date: **2026-11-27**. Host: **macOS 26.5.2, x86_64**, `uname -m` = `x86_64`.
-Python venv: **3.13.15** (an initial 3.15.2 venv was also tried). Nothing was
-committed; the venv and downloaded wheels are ignored by the local `.gitignore`.
+Python venv: **3.13.15** (an initial 3.15.2 venv was also tried). The prototype
+source, scripts and evidence files are committed (commit `b53d0c2`); only the
+`.venv/` and wheel cache are ignored by the local `.gitignore`.
 
 ## Verdict summary
 
