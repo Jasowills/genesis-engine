@@ -77,11 +77,11 @@ Split by layer if review diff is too large.
 ## Verification evidence
 
 GitHub issue: **#24** — https://github.com/Jasowills/genesis-engine/issues/24
-- Files: `crates/genesis-core/src/layers.rs`, `tests/layers.rs`, `docs/developer/layers.md`, `fixtures/ikeja-dem.json`, `fixtures/ikeja-markings.geojson`, `fixtures/ikeja-vegetation.geojson`, semantic `GeneratedKind` variants propagated to Studio.
-- `cargo test --workspace --locked` → **85 passed, 0 failed** (4 new layer tests: 3×3 DEM → 9 vertices/24 indices with recorded 30 m resolution and 12 m accuracy, invalid DEM rejection, markings/sidewalks/vegetation with separate fixtures and evidence, source-gate enforcement).
+- Files: `crates/genesis-core/src/layers.rs`, `tests/layers.rs`, `docs/developer/layers.md`, `fixtures/ikeja-dem.json`, `fixtures/ikeja-markings.geojson`, `fixtures/ikeja-vegetation.geojson`, `fixtures/ikeja-sidewalks.geojson`, semantic `GeneratedKind` variants propagated to Studio.
+- `cargo test --workspace --locked` → **86 passed, 0 failed** (5 layer tests: 3×3 DEM → 9 vertices/24 indices with recorded 30 m resolution and 12 m accuracy, invalid DEM rejection, markings/sidewalks/vegetation with separate fixtures and evidence, source-gate enforcement, +Z winding and true frame origins across all layers, observed-marking evidence branch and OSM attribution retention).
 - `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - No high-resolution or survey claim; resolution/claim recorded as parameters; all layer evidence is observed/derived/inferred explicitly.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (inverted winding, false frame origins, misattributed commit, hardcoded vegetation origin, overstated fixture/attribution claims); fixes applied, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

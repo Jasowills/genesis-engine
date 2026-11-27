@@ -35,6 +35,12 @@ impl DemGrid {
             || grid.cell_size_degrees <= 0.0
             || grid.source_resolution_m <= 0.0
             || grid.vertical_accuracy_m <= 0.0
+            || !grid.origin_lon_lat.iter().all(|v| v.is_finite())
+            || !grid.source_resolution_m.is_finite()
+            || !grid.vertical_accuracy_m.is_finite()
+            || grid.crs.trim().is_empty()
+            || grid.vertical_datum.trim().is_empty()
+            || grid.attribution.trim().is_empty()
             || grid.elevations_m.len() < 2
             || grid
                 .elevations_m
@@ -54,27 +60,35 @@ fn provenance(source: &SourceDescriptor) -> crate::Provenance {
     p
 }
 
+struct MeshMeta {
+    evidence: EvidenceKind,
+    origin_lon_lat: [f64; 2],
+    source_feature_ids: Vec<String>,
+    parameters: std::collections::BTreeMap<String, String>,
+}
+
 fn mesh(
     kind: GeneratedKind,
     key: &str,
     vertices: Vec<[f64; 3]>,
     indices: Vec<u32>,
-    evidence: EvidenceKind,
     source: &SourceDescriptor,
-    parameters: std::collections::BTreeMap<String, String>,
+    meta: MeshMeta,
 ) -> Result<GeneratedGeometry> {
+    let mut provenance = provenance(source);
+    provenance.source_feature_ids = meta.source_feature_ids;
     let geometry = GeneratedGeometry {
         asset_id: derive_id("mesh", key),
         kind,
         vertices,
         indices,
-        evidence,
+        evidence: meta.evidence,
         generation_seed: 0,
         generator_version: "layers-v0.1".to_string(),
-        origin_lon_lat: [0.0, 0.0],
+        origin_lon_lat: meta.origin_lon_lat,
         source_object_ids: Vec::new(),
-        provenance: provenance(source),
-        parameters,
+        provenance,
+        parameters: meta.parameters,
     };
     verify_mesh(&geometry)?;
     Ok(geometry)
@@ -105,7 +119,7 @@ pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<Gen
             let b = a + 1;
             let c = a + cols as u32;
             let d = c + 1;
-            indices.extend_from_slice(&[a, c, b, b, c, d]);
+            indices.extend_from_slice(&[a, b, c, b, d, c]);
         }
     }
     let mut parameters = std::collections::BTreeMap::new();
@@ -127,9 +141,13 @@ pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<Gen
         &format!("terrain:{}", grid.name),
         vertices,
         indices,
-        EvidenceKind::Measured,
         source,
-        parameters,
+        MeshMeta {
+            evidence: EvidenceKind::Measured,
+            origin_lon_lat: grid.origin_lon_lat,
+            source_feature_ids: Vec::new(),
+            parameters,
+        },
     )
 }
 
@@ -204,7 +222,7 @@ fn strip(
             b[1] + ny * (offset - half_width),
             0.01,
         ]);
-        indices.extend_from_slice(&[base, base + 1, base + 2, base, base + 2, base + 3]);
+        indices.extend_from_slice(&[base + 1, base, base + 3, base + 1, base + 3, base + 2]);
     }
     (vertices, indices)
 }
@@ -256,13 +274,23 @@ pub fn generate_markings(
             ),
             vertices,
             indices,
-            if observed {
-                EvidenceKind::Measured
-            } else {
-                EvidenceKind::InferredByRule
-            },
             source,
-            parameters,
+            MeshMeta {
+                evidence: if observed {
+                    EvidenceKind::Measured
+                } else {
+                    EvidenceKind::InferredByRule
+                },
+                origin_lon_lat: origin,
+                source_feature_ids: vec![
+                    feature
+                        .get("id")
+                        .and_then(Value::as_str)
+                        .unwrap_or("unknown")
+                        .to_string(),
+                ],
+                parameters,
+            },
         )?);
     }
     Ok(out)
@@ -308,16 +336,26 @@ pub fn generate_sidewalks(
                 &format!("sidewalk:{index}:{side}"),
                 vertices,
                 indices,
-                EvidenceKind::InferredByRule,
                 source,
-                parameters,
+                MeshMeta {
+                    evidence: EvidenceKind::InferredByRule,
+                    origin_lon_lat: origin,
+                    source_feature_ids: vec![
+                        feature
+                            .get("id")
+                            .and_then(Value::as_str)
+                            .unwrap_or("unknown")
+                            .to_string(),
+                    ],
+                    parameters,
+                },
             )?);
         }
     }
     Ok(out)
 }
 
-/// Basic vegetation proxies: one crossed quad per tree point.
+/// Basic vegetation proxies: one one-sided billboard quad per tree point.
 pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<GeneratedGeometry> {
     check_source(source)?;
     let root: Value = serde_json::from_slice(bytes)?;
@@ -329,7 +367,25 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
         })?;
     let mut vertices = Vec::new();
     let mut indices = Vec::new();
-    let origin = [3.3480_f64, 6.5985_f64];
+    let first = features
+        .first()
+        .and_then(|f| f.get("geometry"))
+        .and_then(|g| g.get("coordinates"))
+        .and_then(Value::as_array);
+    let origin = first
+        .and_then(|a| a.first())
+        .and_then(Value::as_f64)
+        .map(|lon| {
+            (
+                lon,
+                first
+                    .and_then(|a| a.get(1))
+                    .and_then(Value::as_f64)
+                    .unwrap_or(6.5985),
+            )
+        })
+        .unwrap_or((3.3480, 6.5985));
+    let origin = [origin.0, origin.1];
     let east_scale = 111_320.0 * origin[1].to_radians().cos();
     let north_scale = 110_540.0;
     for feature in features {
@@ -353,20 +409,24 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
             [x + 1.0, y, 5.0],
             [x - 1.0, y, 5.0],
         ]);
-        indices.extend_from_slice(&[base, base + 1, base + 2, base, base + 2, base + 3]);
+        indices.extend_from_slice(&[base + 1, base, base + 3, base + 1, base + 3, base + 2]);
     }
     let mut parameters = std::collections::BTreeMap::new();
     parameters.insert(
         "proxy".to_string(),
-        "single crossed quad per tree".to_string(),
+        "single one-sided billboard quad per tree".to_string(),
     );
     mesh(
         GeneratedKind::Vegetation,
         "vegetation:proxy",
         vertices,
         indices,
-        EvidenceKind::InferredByRule,
         source,
-        parameters,
+        MeshMeta {
+            evidence: EvidenceKind::InferredByRule,
+            origin_lon_lat: origin,
+            source_feature_ids: Vec::new(),
+            parameters,
+        },
     )
 }

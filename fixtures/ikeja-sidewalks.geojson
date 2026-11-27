@@ -1,0 +1,12 @@
+{
+  "type": "FeatureCollection",
+  "name": "ikeja-sidewalks-source",
+  "attribution": "© OpenStreetMap contributors — data available under the Open Database License (ODbL) 1.0; see https://www.openstreetmap.org/copyright.",
+  "licence": "ODbL-1.0",
+  "features": [{
+    "type": "Feature",
+    "id": "way/102",
+    "properties": {"osm_id": "way/102", "highway": "residential"},
+    "geometry": {"type": "LineString", "coordinates": [[3.3485, 6.5990], [3.3545, 6.6040]]}
+  }]
+}
