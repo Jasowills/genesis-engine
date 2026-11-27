@@ -88,3 +88,7 @@ GitHub issue: **#7** — https://github.com/Jasowills/genesis-engine/issues/7
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Independent review APPROVED and all cross-platform CI jobs green; ticket marked verified.
+
+### Post-M1 regression and fix (2026-11-27)
+
+Adding the root Rust workspace for `crates/genesis-core` made the throwaway prototype crates believe they were workspace members, breaking the `cargo fmt --manifest-path ...` steps. Runs `45979438978` (`5626277`) and `45979776607` (`be8d359`) failed on all three OSes at the formatting step; no product-code test failure was reported. Fix: explicit `exclude` entries for `prototype/precision-crs`, `prototype/plugin-sandbox` and `prototype/plugin-sandbox/guest` in root `Cargo.toml` (commit `4a78f0e`). Re-run `45980065945` on commit `4a78f0e`: **completed / success**, all jobs green on Ubuntu, Windows and macOS. This regression is recorded here rather than hidden.
