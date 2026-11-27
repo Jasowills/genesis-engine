@@ -2,7 +2,7 @@
 
 An open-source, cross-platform platform for reconstructing real-world environments into editable, validated, game-ready 3D worlds.
 
-> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a small Rust Core crate implementing the project model, World IR, lawful-source gate, geospatial import primitives and deterministic procedural geometry. There is no Studio, CLI, worker or export pipeline yet. Do not interpret planning documents as shipped features.
+> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a Rust Core crate implementing the portable project model, versioned World IR, lawful-source gate, geospatial import, deterministic procedural geometry, structural validation gates and a validated GLB export. There is no Studio UI, CLI, worker pipeline or game-engine integration yet. Do not interpret planning documents as shipped features.
 
 ## What Genesis is
 
@@ -26,6 +26,7 @@ Local-first with optional cloud; desktop-first; Windows, macOS and Linux; game d
 | [research/](research/) | Ecosystem, competitive, licence, format and standards evidence |
 | [engineering/](engineering/) | Environment, workflow, architecture discovery, test/security/performance/release plans |
 | [TICKETS/](TICKETS/) | 32 tracer-bullet tickets with blocking edges |
+| [docs/developer/](docs/developer/) | Implemented Core primitives: project layout, World IR, lawful sources, boundary/OSM import, procedural meshes, validation, GLB export |
 
 ## Accepted architecture foundation (2026-11-27)
 

@@ -3,7 +3,7 @@ id: GE-0021
 title: Contributor and governance documentation
 type: documentation
 priority: P1
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:documentation]
 depends_on: [GE-0007]
@@ -42,10 +42,10 @@ Enables external contribution and safe disclosure.
 Documentation agent checks commands and examples against implemented behaviour.
 
 ## Acceptance criteria
-- [ ] All required root docs exist
-- [ ] Examples verified
-- [ ] No planned feature documented as shipped
-- [ ] Tests and documentation updated
+- [x] All required root docs exist
+- [x] Examples verified
+- [x] No planned feature documented as shipped
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: n/a
@@ -77,7 +77,11 @@ Continuously maintained, not a one-off dump.
 ## Verification evidence
 
 GitHub issue: **#29** — https://github.com/Jasowills/genesis-engine/issues/29
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Root docs present: README.md, LICENSE, NOTICE, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, CHANGELOG.md, DECISIONS.md, PRD.md, ARCHITECTURE.md, ROADMAP.md, progress.md, .gitignore, .editorconfig, .github templates/workflows.
+- Verified examples: `cargo test --workspace --locked` (56 passed), `cargo clippy --workspace --locked -- -D warnings`, `cd prototype/gltf-fixture && node validate.mjs fixture.glb` (0 errors), `cargo run --locked --quiet --manifest-path prototype/viewport-capability/Cargo.toml` (native adapter report).
+- Doc sweep removed stale claims: README now says GLB export exists and no Studio/CLI/worker; SECURITY no longer says pre-implementation; README links `docs/developer/`.
+- `docs/developer/` documents only implemented primitives; deferred features are labelled as such in PRD/ROADMAP.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

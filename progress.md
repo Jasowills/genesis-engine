@@ -52,6 +52,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0021 — contributor/governance documentation sweep; independent review pending (issue #29).
 GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, independent review pending (issue #16).
 None.
 

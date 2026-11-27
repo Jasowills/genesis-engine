@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-No stable release exists yet (pre-implementation as of 2026-11-27). Once releases begin, supported versions will be listed here with dates.
+No stable release exists yet. The repository is in the M1 foundation phase (2026-11-27) with Core library functionality under independent review; no signed release has been published. Once releases begin, supported versions will be listed here with dates.
 
 ## Reporting a vulnerability
 
