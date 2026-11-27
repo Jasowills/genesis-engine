@@ -3,7 +3,7 @@ id: GE-0002
 title: Resolve licence and source-rights conflicts
 type: research
 priority: P0
-status: in-review
+status: verified
 milestone: M0
 labels: [research, area:infra]
 depends_on: []
@@ -83,8 +83,9 @@ GitHub issue: **#3** — https://github.com/Jasowills/genesis-engine/issues/3
 - `research/RESEARCH_REGISTER.md` §4 now contains a dated "Resolution block — 2026-11-27 (GE-0002 research subagent)" with per-conflict VERDICT, primary-source URLs, residual UNVERIFIED caveats and affected ticket/ADR. The original eight-entry list is retained as history.
 - Outcome: 7 resolved, 1 partially resolved (3D Tiles royalty-free to implement from OGC spec, but repo-derived code / quantized-mesh terms unverified).
 - No architecture or licence decision was made; resolutions are evidence only.
-- Reviewer result: first pass `CHANGES_REQUESTED` on stale local ticket state (read before sync); local sync corrected, fresh review requested.
+- Reviewer result: first pass `CHANGES_REQUESTED` on stale local ticket state; sync corrected; fresh independent review **`APPROVED`** (session `ses_de3fc152bffe3Shl4r4LiQ43uv`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`; owner approval of scope recorded at Phase 8. Independent review requested.
 - 2026-11-27: Eight conflicts resolved against primary sources; status moved to in-review.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.
