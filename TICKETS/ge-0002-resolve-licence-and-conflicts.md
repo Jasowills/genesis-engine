@@ -3,7 +3,7 @@ id: GE-0002
 title: Resolve licence and source-rights conflicts
 type: research
 priority: P0
-status: ready
+status: in-progress
 milestone: M0
 labels: [research, area:infra]
 depends_on: []

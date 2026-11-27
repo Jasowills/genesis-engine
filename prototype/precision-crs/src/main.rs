@@ -6,14 +6,18 @@ const WGS84_A: f64 = 6_378_137.0;
 const WGS84_F: f64 = 1.0 / 298.257_223_563;
 
 /// ULP of a value when stored as IEEE-754 binary32.
+/// Uses `next_up`/`next_down` so negative binades and `f32::MAX` are handled correctly.
 fn f32_ulp(x: f64) -> f64 {
     let v = x as f32;
     if !v.is_finite() {
         return f64::NAN;
     }
-    let bits = v.to_bits();
-    let neighbour = if v.is_sign_positive() { bits + 1 } else { bits - 1 };
-    (f32::from_bits(neighbour) as f64 - v as f64).abs()
+    let neighbour = if v.is_sign_positive() {
+        v.next_up()
+    } else {
+        v.next_down()
+    };
+    (neighbour as f64 - v as f64).abs()
 }
 
 fn geodetic_to_ecef(lat_deg: f64, lon_deg: f64, height_m: f64) -> (f64, f64, f64) {
@@ -64,9 +68,8 @@ fn cut_antimeridian(lon0: f64, lon1: f64) -> Vec<(f64, f64)> {
 
 fn main() {
     println!("GE-0003 precision/CRS prototype — throwaway evidence, not product code");
-    println!("toolchain: {}", rustc_version());
 
-    for coord in [6_370_000.0_f64, 10_000_000.0, 123_456.0] {
+    for coord in [6_370_000.0_f64, 10_000_000.0, 123_456.0, 20_037_508.0] {
         println!("f32_ulp({coord:.1}) = {:.6} m", f32_ulp(coord));
     }
 
@@ -116,10 +119,6 @@ fn main() {
     }
 }
 
-fn rustc_version() -> String {
-    "version recorded in RESULTS.md (run `rustc --version`)".to_string()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -128,6 +127,30 @@ mod tests {
     fn f32_ulp_matches_derived_metre_scale_values() {
         assert!((f32_ulp(6_370_000.0) - 0.5).abs() < 1e-9);
         assert!((f32_ulp(10_000_000.0) - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn absolute_geodetic_and_enu_golden_vectors() {
+        let (x, y, z) = geodetic_to_ecef(0.0, 0.0, 0.0);
+        assert!((x - WGS84_A).abs() < 1e-9 && y.abs() < 1e-9 && z.abs() < 1e-9);
+        let (x, y, z) = geodetic_to_ecef(0.0, 90.0, 0.0);
+        assert!(x.abs() < 1e-6 && (y - WGS84_A).abs() < 1e-6 && z.abs() < 1e-6);
+        let (x, y, z) = geodetic_to_ecef(90.0, 0.0, 0.0);
+        let b = WGS84_A * (1.0 - WGS84_F);
+        assert!(x.abs() < 1e-6 && y.abs() < 1e-6 && (z - b).abs() < 1e-6);
+
+        // ENU basis at (lat=0, lon=0): dX -> Up, dY -> East, dZ -> North.
+        let up = ecef_delta_to_enu(0.0, 0.0, (1.0, 0.0, 0.0));
+        let east = ecef_delta_to_enu(0.0, 0.0, (0.0, 1.0, 0.0));
+        let north = ecef_delta_to_enu(0.0, 0.0, (0.0, 0.0, 1.0));
+        assert!((up.2 - 1.0).abs() < 1e-12 && up.0.abs() < 1e-12 && up.1.abs() < 1e-12);
+        assert!((east.0 - 1.0).abs() < 1e-12 && east.1.abs() < 1e-12 && east.2.abs() < 1e-12);
+        assert!((north.1 - 1.0).abs() < 1e-12 && north.0.abs() < 1e-12 && north.2.abs() < 1e-12);
+    }
+
+    #[test]
+    fn f32_ulp_handles_negative_values() {
+        assert!((f32_ulp(-10_000_000.0) - 1.0).abs() < 1e-9);
     }
 
     #[test]

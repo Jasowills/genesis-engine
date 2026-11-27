@@ -36,14 +36,16 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 GE-0008 — GitHub repository and issue setup (independent post-execution review `APPROVED`; evidence recorded in its ticket).
 
 ## In-progress tickets
-None.
-GE-0008 (GitHub repository and issue setup) — **verified**: executed under D-027; independent post-execution verification `APPROVED` after documentation corrections.
+GE-0002 — resolving eight evidence conflicts with primary sources (issue #3).
+
+## In-review tickets
+GE-0003 — precision/CRS golden-vector prototype; 5 unit tests pass; independent reviewer assigned (issue #1).
 
 ## Blocked tickets
-GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result. GE-0008 is `in-progress` under the explicit owner authorisation D-027; the lifecycle exception is recorded in `DECISIONS.md` §3a (Phase 7 checklist), not waived.
+GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result.
 
 ## Ready next tickets
-GE-0001 (environment/workflow records), GE-0002 (licence conflict resolution), GE-0003 (precision/CRS golden-vector spike), GE-0005 (plugin feasibility spike), GE-0006 (AI runtime smoke test). GE-0004 is proposed pending GE-0003.
+GE-0001 (environment/workflow records), GE-0005 (plugin feasibility spike), GE-0006 (AI runtime smoke test). GE-0004 is proposed pending GE-0003.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Thin versioned World IR with binary payload references; authoritative geodetic coordinates + local ENU frames; lawful-source gate on every import/inference/export; external-process workers with normalised progress; swappable AI adapter; Wasmtime/WASI plugin sandbox.

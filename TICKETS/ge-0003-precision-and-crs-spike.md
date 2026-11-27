@@ -79,12 +79,13 @@ Prototype is evidence, not product code; do not mark verified without independen
 ## Verification evidence
 
 GitHub issue: **#1** — https://github.com/Jasowills/genesis-engine/issues/1
-- `cd prototype/precision-crs && cargo test` → **5 passed, 0 failed** (rustc 1.98.1).
-- `cargo run --quiet` → f32 ULP 0.5 m @ 6.37e6 m, 1.0 m @ 1e7 m; naive 1 cm offset at 1e7 m lost (stored delta 0.0 m); f64 origin + f32 local ENU error 1.92e-6 m; ECEF↔ENU round trip 0.0 m; antimeridian cuts at ±180°.
+- `cd prototype/precision-crs && cargo test` → **7 passed, 0 failed** (rustc 1.98.1), including absolute WGS84→ECEF/ENU-basis golden vectors and negative-ULP coverage.
+- `cargo run --quiet` → f32 ULP 0.5 m @ 6.37e6 m, 1.0 m @ 1e7 m, 2.0 m @ 2.00375e7 m; naive 1 cm offset at 1e7 m lost (stored delta 0.0 m); f64 origin + f32 local ENU error 1.92e-6 m; ECEF↔ENU round trip 0.0 m; antimeridian cuts at ±180°.
 - Evidence files: `prototype/precision-crs/src/main.rs`, `prototype/precision-crs/RESULTS.md`, `prototype/precision-crs/README.md`.
 - `adr/0008-floating-origin-local-frame-precision-strategy.md` Verification plan updated with measured results.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` on test strength (inverse-only round trip) and a one-character transcript error; both fixed, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Prototype implemented and tested; status moved to in-review pending independent review.
+- 2026-11-27: Added absolute golden vectors, verbatim transcript and known limits; re-review requested.
