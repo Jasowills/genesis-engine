@@ -45,17 +45,17 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0009 — cross-platform CI skeleton (`.github/workflows/ci.yml`); independent review assigned (issue #7).
+GE-0011 — World IR schema v2 with v1 migrations; 12 tests pass, independent review assigned (issue #5).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0012 (lawful-source gate + provenance) — unblocked by GE-0002 and GE-0011. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
+GE-0012 (lawful-source gate + provenance) becomes ready once GE-0011 is verified. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Thin versioned World IR with binary payload references; authoritative geodetic coordinates + local ENU frames; lawful-source gate on every import/inference/export; external-process workers with normalised progress; swappable AI adapter; Wasmtime/WASI plugin sandbox.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model and versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations). Not yet implemented: lawful-source gate, geospatial/worker/AI adapters, Studio/CLI, validation gates, exports, plugin runtime.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
