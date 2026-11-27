@@ -46,7 +46,7 @@ Small headless harness; no desktop dependency; record per-run evidence fields.
 - [x] SAM ViT-B (quantised encoder), YOLOX-S and Depth Anything V2 Small are loaded, checksum-verified and run deterministically on ORT 1.23.2 (owner approval D-033). SAM prompt decoder path remains a documented follow-up.
 - [x] Cancellation demonstrated via `RunOptions.terminate` on ORT 1.23.2 locally and ORT 1.32.0 in Ubuntu CI (`46001781425`).
 - [x] Checksum/licence record complete for locally generated artefacts and PyPI metadata
-- [x] Prototype scripts, README and RESULTS.md updated (committed in `b53d0c2`)
+- [x] Prototype scripts, README and RESULTS.md updated (scripts in `b53d0c2`; named-model additions in `f14ed73`)
 
 ## Test plan
 - Unit: n/a
@@ -85,6 +85,7 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - Static inspection of the downloaded 1.32.0 Linux wheel found `RunOptions.terminate` but no Python `set_terminate`; labelled static, never executed.
 - Reviewer verdict for the original macOS evidence: `APPROVED` for recording only (session `ses_de3db3b9affemBI3BQCzIZcj4i`), explicitly **not** `verified`. Ubuntu CI run **`46001781425`** (step "ONNX Runtime 1.32 smoke test (Ubuntu)", conclusion success) later executed ORT 1.32.0: `onnxruntime_actual: 1.32.0`, `is_1_32_0: true`, `exact_match: true`, `deterministic: true`, `verdict: CANCELLED (cooperative terminate via RunOptions.terminate)`. Named models were still never executed.
 - Named-model evidence 2026-11-27 (D-033 owner approval): downloaded SAM ViT-B quantised ONNX encoder (`24793bbeec6e…`, archive `9d59db12…` matching published HF digest), YOLOX-S official ONNX (`c5c2d13e…`, matching published HF digest) and Depth Anything V2 Small (`443e95f1…`, matching published HF digest) into git-ignored `prototype/ai-runtime/weights/`. `named_models_smoke.py` on ORT 1.23.2 / onnx 1.23.2 / Python 3.13.15 / macOS x86_64: all three `onnx.checker` pass; all three ran with finite and bit-exact deterministic outputs (SAM `[1,256,64,64]`, YOLOX `[1,8400,85]`, Depth `[1,1,518,518]`). Machine-readable evidence: `named-models-results.json`. No external provider or cost.
+- Licence correction 2026-11-27: the Depth Anything V2 Small ONNX artefact is **BSD-3-Clause** at `AXERA-TECH/Depth-Anything-V2` (upstream base model Apache-2.0). D-033's owner acceptance covers the artefacts' actual licences; both terms are permissive. Recorded in `named-models-results.json` and `RESULTS.md`.
 - Residual UNVERIFIED: SAM prompt decoder path; CoreML/DirectML/GPU/EP fallback; Windows and named-model macOS ARM hosts; ORT 1.32.0 with named weights (1.32.0 runtime itself is MEASURED on Ubuntu CI; named weights were executed locally on 1.23.2).
 - **Status rationale:** all four acceptance criteria are now met with documented limitations; independent review pending before `verified`.
 

@@ -287,7 +287,11 @@ are in `named_models_smoke.py` and `named-models-results.json`:
 ```
 
 Published digests matched local SHA-256 for YOLOX (`c5c2d13e…`) and Depth
-Anything V2 Small (`443e95f1…`); the SAM archive digest matched
+Anything V2 Small (`443e95f1…`). Licence provenance: the Depth Anything V2
+Small ONNX artefact comes from `AXERA-TECH/Depth-Anything-V2`, declared
+**BSD-3-Clause**; the upstream base model is Apache-2.0. This is a licence
+divergence worth recording — both terms are permissive and D-033's acceptance
+covers the artefacts' actual licences. the SAM archive digest matched
 `9d59db12…` from the Hugging Face blobs API. All three `onnx.checker` checks
 passed; outputs were finite and bit-exact across two runs. The SAM quantised
 encoder was exercised only — the prompt encoder/decoder path is not part of

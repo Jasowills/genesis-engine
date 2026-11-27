@@ -47,7 +47,7 @@ MODELS = [
         "name": "depth_anything_v2_vits",
         "path": WEIGHTS / "depth_anything_v2_vits.onnx",
         "source": "https://huggingface.co/AXERA-TECH/Depth-Anything-V2",
-        "licence": "Apache-2.0",
+        "licence": "BSD-3-Clause (AXERA-TECH ONNX/NPU conversion); upstream Depth-Anything-V2-Small is Apache-2.0",
         "expected_sha256": "443e95f17819f347f5f987384b8cb7d7d18ed6af6ac46dec9b0152748ba7dfd0",
     },
 ]

@@ -30,8 +30,8 @@ Date of run: 2026-11-27. Host: macOS 26.5.2, x86_64, Python 3.13.15 venv.
 | File | Purpose |
 | --- | --- |
 | `smoke.py` | Self-contained test: generates two ONNX graphs, checks exact output, determinism, cooperative cancellation; writes `smoke-results.json`. |
-| `named_models_smoke.py`, `named-models-results.json`, `named-models-output.log` | Owner-approved named-weight inference evidence (D-033): checksum-verified SAM ViT-B quantised encoder, YOLOX-S and Depth Anything V2 Small run deterministically on ORT 1.23.2. |
-| `weights/` | Git-ignored downloaded weights and extracted SAM zip. Never commit binaries; digests and source URLs are in the report. |
+| `named_models_smoke.py`, `named-models-results.json` (transcript embedded in `RESULTS.md`) | Owner-approved named-weight inference evidence (D-033): checksum-verified SAM ViT-B quantised encoder, YOLOX-S and Depth Anything V2 Small run deterministically on ORT 1.23.2. |
+| `weights/` | Directory is tracked; `*.onnx`, `*.zip` and extracted binaries are git-ignored (only the text `config.yaml` is tracked). Never commit binaries; digests and source URLs are in the report. |
 | `model_add4.onnx` | Locally generated 4-element float32 `Add` graph (106 bytes). |
 | `model_loop.onnx` | Locally generated 20 000-node `Add` chain (used only to make cancellation observable). |
 | `smoke-output.log`, `smoke-results.json` | Smoke run transcript and machine-readable measured results. |
@@ -57,8 +57,10 @@ shasum -a 256 model_add4.onnx model_loop.onnx
 
 ## Boundaries
 
-No model weights were downloaded. No external AI provider, paid API, or GitHub
-repository was used for evidence. No secrets were created. No EP/CoreML/DirectML/
+The original locally-generated-model lane downloaded no weights. Named weights
+were added separately under owner approval D-033 (see `named-models-results.json`).
+No external AI provider or paid API was used; model source URLs are recorded in
+the evidence. No secrets were created. No EP/CoreML/DirectML/
 GPU/ARM64 tests were run — CPU provider only. Timing values are local
 measurements, **not** performance budgets or benchmarks. The venv and wheel
 cache are ignored by the local `.gitignore`; the source and evidence files are
