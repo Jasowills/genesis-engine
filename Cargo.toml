@@ -1,5 +1,10 @@
 [workspace]
 members = ["crates/genesis-core"]
+exclude = [
+  "prototype/precision-crs",
+  "prototype/plugin-sandbox",
+  "prototype/plugin-sandbox/guest",
+]
 resolver = "2"
 
 # Minimal workspace implementing Genesis Core for the first vertical slice.
