@@ -25,13 +25,34 @@ pub enum JobState {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JobEvent {
-    StageStarted { id: String, expected_steps: u32 },
-    Progress { stage: String, progress: u32, units: String },
-    Log { level: String, message: String },
-    Checkpoint { id: String, hash: String },
-    Done { output_manifest: String },
-    Error { code: String, provider_error: String },
-    Cancelled { stage: String, reason: String },
+    StageStarted {
+        id: String,
+        expected_steps: u32,
+    },
+    Progress {
+        stage: String,
+        progress: u32,
+        units: String,
+    },
+    Log {
+        level: String,
+        message: String,
+    },
+    Checkpoint {
+        id: String,
+        hash: String,
+    },
+    Done {
+        output_manifest: String,
+    },
+    Error {
+        code: String,
+        provider_error: String,
+    },
+    Cancelled {
+        stage: String,
+        reason: String,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -83,7 +104,12 @@ pub struct JobRecord {
 }
 
 impl JobRecord {
-    pub fn new(job_type: &str, job_version: &str, seed: u64, worker: WorkerDescriptor) -> Result<Self, CoreError> {
+    pub fn new(
+        job_type: &str,
+        job_version: &str,
+        seed: u64,
+        worker: WorkerDescriptor,
+    ) -> Result<Self, CoreError> {
         worker.validate()?;
         Ok(Self {
             schema_version: JOB_RECORD_SCHEMA_VERSION,
@@ -116,12 +142,16 @@ pub struct Supervisor {
 }
 
 impl Default for Supervisor {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Supervisor {
     pub fn new() -> Self {
-        Self { cancelled: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)) }
+        Self {
+            cancelled: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
+        }
     }
 
     pub fn token(&self) -> std::sync::Arc<std::sync::atomic::AtomicBool> {
@@ -129,7 +159,8 @@ impl Supervisor {
     }
 
     pub fn cancel(&self) {
-        self.cancelled.store(true, std::sync::atomic::Ordering::SeqCst);
+        self.cancelled
+            .store(true, std::sync::atomic::Ordering::SeqCst);
     }
 
     /// Drive a worker through its stages, emitting normalised events. Failure,
@@ -164,7 +195,10 @@ impl Supervisor {
             });
 
             match worker.run_stage(stage) {
-                Ok(hash) => job.events.push(JobEvent::Checkpoint { id: stage.clone(), hash }),
+                Ok(hash) => job.events.push(JobEvent::Checkpoint {
+                    id: stage.clone(),
+                    hash,
+                }),
                 Err(provider_error) => {
                     job.state = JobState::Failed {
                         code: "WorkerStageFailed".to_string(),
@@ -178,7 +212,9 @@ impl Supervisor {
             }
 
             if started.elapsed().as_millis() as u64 > worker.descriptor().timeout_ms {
-                job.state = JobState::Failed { code: "TimedOut".to_string() };
+                job.state = JobState::Failed {
+                    code: "TimedOut".to_string(),
+                };
                 job.events.push(JobEvent::Error {
                     code: "TimedOut".to_string(),
                     provider_error: format!("exceeded {} ms", worker.descriptor().timeout_ms),
@@ -190,7 +226,9 @@ impl Supervisor {
         let manifest = format!("manifest:{}:{}", job.job_type, job.seed);
         job.output_manifest = Some(manifest.clone());
         job.state = JobState::Completed;
-        job.events.push(JobEvent::Done { output_manifest: manifest });
+        job.events.push(JobEvent::Done {
+            output_manifest: manifest,
+        });
         Ok(())
     }
 }

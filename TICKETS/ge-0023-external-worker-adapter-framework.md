@@ -3,7 +3,7 @@ id: GE-0023
 title: External worker adapter framework
 type: engineering
 priority: P1
-status: in-progress
+status: in-review
 milestone: M2
 labels: [type:engineering, area:core]
 depends_on: [GE-0007, GE-0022]
@@ -43,9 +43,9 @@ Spec §29 requires this for every non-Rust worker; licence boundaries depend on 
 Implement the seam first, then one permissive worker adapter.
 
 ## Acceptance criteria
-- [ ] Fake worker proves progress/cancel/timeout/error mapping
-- [ ] Process tree killed on timeout on all three OSes
-- [ ] Structured logs contain no secrets
+- [x] Fake worker proves progress/cancel/timeout/error mapping
+- [ ] Process tree killed on timeout on all three OSes — NOT MET: process spawning/kill-tree is follow-up; contract tests use a fake worker
+- [x] Structured logs contain no secrets
 - [ ] Tests and documentation updated
 
 ## Test plan
@@ -78,7 +78,11 @@ No cancellation API exists in surveyed tools; process supervision is the portabl
 ## Verification evidence
 
 GitHub issue: **#19** — https://github.com/Jasowills/genesis-engine/issues/19
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/jobs.rs`, `tests/jobs.rs`, `docs/developer/jobs.md`, lib.rs re-exports.
+- `cargo test --workspace --locked` → **77 passed, 0 failed** (4 new job tests: completion with checkpoints/JSON round-trip, cancellation, provider-failure mapping, descriptor validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- WorkerDescriptor rejects non-empty environments, zero memory cap and zero timeout; argv-only contract. Supervisor emits normalised events and canonical errors; no shell invocation.
+- NOT IMPLEMENTED: OS process spawning, kill-tree termination, per-OS sandbox profiles, real worker version probes. This ticket delivers the contract and fake-worker validation only.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

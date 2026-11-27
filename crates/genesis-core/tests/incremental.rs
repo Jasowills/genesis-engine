@@ -79,6 +79,7 @@ fn new_objects_and_seed_or_version_changes_are_detected() -> CoreResult<()> {
     assert_eq!(plan.reasons[&id("building").to_string()], "seed changed");
 
     let plan = plan_regeneration(&previous, &inputs(&[("building", "h1")]), 42, "v2")?;
+    assert_eq!(plan.regenerate, vec![id("building")]);
     assert_eq!(
         plan.reasons[&id("building").to_string()],
         "generator version changed"
