@@ -54,6 +54,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0016 — Studio shell/viewport scene snapshot + React UI; 64 tests pass, independent review pending (issue #14).
 GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, independent review pending (issue #16).
 None.
 

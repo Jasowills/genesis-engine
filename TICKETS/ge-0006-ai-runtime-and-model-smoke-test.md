@@ -3,7 +3,7 @@ id: GE-0006
 title: AI runtime and model smoke test
 type: spike
 priority: P1
-status: blocked
+status: in-review
 milestone: M0
 labels: [spike, area:ai]
 depends_on: []
@@ -83,9 +83,10 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - Model SHA-256 verified by reviewer: `model_add4.onnx` `c8bdea77…eed2b8`, `model_loop.onnx` `45b3491d…742ac33`.
 - Static inspection of the downloaded 1.32.0 Linux wheel found `RunOptions.terminate` but no Python `set_terminate`; labelled static, never executed.
 - Reviewer verdict **`APPROVED`** for evidence recording (session `ses_de3db3b9affemBI3BQCzIZcj4i`), with an explicit instruction: **do not mark verified** — ORT 1.32.0 and the named models were never executed.
-- Residual UNVERIFIED: all 1.32.0 runtime behaviour; SAM/YOLOX/DA-V2 Small weights; CoreML/DirectML/GPU/EP fallback; ARM64/Linux/Windows hosts.
+- Residual UNVERIFIED: SAM/YOLOX/DA-V2 Small weights; CoreML/DirectML/GPU/EP fallback; Windows/macOS hosts; 1.32.0 behaviour on macOS x86_64 (no wheel). Ubuntu x86_64 1.32.0 runtime now MEASURED in CI.
 - **Status rationale:** `blocked` pending a host/CI lane with 1.32.0 wheels and licensed model weights; not `verified`.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `blocked`; ORT 1.32.0 wheel unavailable on this host.
 - 2026-11-27: Independent review APPROVED for evidence; ticket partially complete and blocked on a compatible host.
+- 2026-11-27: CI executed ORT 1.32.0 on Ubuntu; evidence updated and ticket moved to in-review.

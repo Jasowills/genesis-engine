@@ -1,0 +1,20 @@
+[package]
+name = "genesis-studio"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "Apache-2.0"
+description = "Versioned Studio scene-snapshot seam for Genesis Engine (GE-0016)"
+
+[dependencies]
+genesis-core = { path = "../genesis-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Kept optional so the headless workspace builds on every CI OS without
+# webkit2gtk / WebView2 system dependencies. Enable `tauri-bindings` for the
+# command wrappers; the pure snapshot layer is always available.
+tauri = { version = "2", default-features = false, optional = true }
+
+[features]
+default = []
+tauri-bindings = ["dep:tauri"]
