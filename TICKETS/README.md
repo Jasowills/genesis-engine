@@ -75,4 +75,4 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0031 | [#32](https://github.com/Jasowills/genesis-engine/issues/32) | Target engine export fixtures | integration | P3 | M4 | proposed | [GE-0030] |
 | GE-0032 | [#21](https://github.com/Jasowills/genesis-engine/issues/21) | Signed release and auto-update pipeline | release | P3 | M5 | needs-owner-input | [GE-0008, GE-0009] |
 
-Statuses in this index are generated from each ticket's frontmatter.
+Statuses in this index are generated from each ticket's frontmatter. GitHub has no `status:verified` label; locally `verified` tickets carry `status:ready` (green) on GitHub, meaning accepted/done rather than awaiting work.
