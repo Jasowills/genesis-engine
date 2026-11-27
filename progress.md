@@ -48,6 +48,7 @@ GE-0019 — GLB export with 0-error glTF-Validator result (57 Core tests pass; i
 GE-0021 — contributor/governance documentation sweep (independent review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
 GE-0017 — select/inspect/provenance display (6 component tests; independent re-review `APPROVED`).
+GE-0020 — E2E vertical slice + frozen benchmark harness (65 tests; independent review `APPROVED`).
 GE-0016 — Studio Core-backed scene snapshot + React shell (64 Core+Studio tests; independent review pending).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
@@ -57,7 +58,6 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0020 — E2E vertical slice + frozen benchmark harness; 65 tests pass, independent review pending (issue #17).
 GE-0017 — select/inspect/provenance display; 4 React component tests pass, independent review pending (issue #15).
 GE-0006 — ORT 1.32.0 CI evidence recorded; named-model gap explicit (issue #9).
 GE-0016 — Studio shell/viewport scene snapshot + React UI; 64 tests pass, independent review pending (issue #14).
