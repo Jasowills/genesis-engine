@@ -2,7 +2,7 @@
 
 **Research / execution date:** 2026-11-27 (independent-review fixes applied).
 **Status:** prototype evidence only (not product code, not an implementation
-claim). No tickets, ADRs, research docs or GitHub items were modified.
+claim). The ticket, progress record and GitHub issue were updated after the typed WASI 0.2 closure.
 
 ## Environment
 
@@ -213,8 +213,8 @@ required.
   instantiation was built.
 - **Empty-write and invalid-import fixtures are out of scope and UNVERIFIED**
   (only normal, probe, infinite-loop, memory-grow and report-flood fixtures).
-- **Windows/Linux coverage pending**: macOS x86_64 only; the ticket's
-  all-three-OSes criterion is not met.
+- **OS coverage**: Windows, Ubuntu and macOS prototype jobs all succeeded
+  (runs `46064199831` and `46064116195`).
 - Component overhead percentage not measured; no manifest/signing/rollback;
   bulk-op (`memory.copy`) preemption not measured; CVE/advisory monitoring and
   multi-version compatibility not tested.

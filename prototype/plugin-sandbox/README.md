@@ -38,15 +38,18 @@ Host design points:
   guests blocked in hostcalls, which epochs do not cover.
 
 **Caveat:** on `wasm32-wasip1`, Rust std has no socket/DNS support at all, so
-the probe's TCP/DNS codes are **not** runtime proof of policy denial; see
-`RESULTS.md` (control experiment).
+the probe's TCP/DNS codes are **not** runtime proof of policy denial. The typed
+WASI 0.2 fixture (`network_probe_p2` + `tests/sandbox_p2.rs`) supplies that
+proof with a live listener and a permissive control; see `RESULTS.md`.
 
 ## Reproduce
 
 ```sh
 # from this directory
 cargo build --target wasm32-wasip1 --release --manifest-path guest/Cargo.toml
+cargo build --target wasm32-wasip2 --release --bin network_probe_p2 --manifest-path guest/Cargo.toml
 cargo test
+cargo test --test sandbox_p2 -- --nocapture
 cargo run
 ```
 
@@ -56,6 +59,7 @@ Measured commands, outputs, results and limitations are in `RESULTS.md`.
 
 This prototype uses **core Wasm + WASI Preview 1** (`wasm32-wasip1`), because
 the guest target is already installed and the fixtures are intentionally small.
-The typed WASI 0.2 component/WIT path, component overhead, non-macOS platforms,
-plugin manifests/signing/rollback are **not** validated here. No secrets are
+Typed WASI 0.2 is validated for network-policy denial only (three OSes in CI);
+component overhead, blocking-hostcall cancellation, empty-write/invalid-import
+fixtures, plugin manifests/signing/rollback are **not** validated here. No secrets are
 used or stored anywhere in this directory.
