@@ -48,6 +48,6 @@ fn pinned_blender_report_records_no_metadata_loss() -> CoreResult<()> {
     assert_eq!(report["custom_properties_preserved"], true);
     assert_eq!(report["metadata_identical"], true);
     assert_eq!(report["metadata_loss"].as_array().unwrap().len(), 0);
-    assert!(report["limitations"].as_array().unwrap().len() > 0);
+    assert!(!report["limitations"].as_array().unwrap().is_empty());
     Ok(())
 }
