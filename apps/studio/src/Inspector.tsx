@@ -80,7 +80,7 @@ export function Inspector({ node, translation, onTranslationChange }: InspectorP
         <dd>{node.provenance.licence_elected}</dd>
         <dt>Method</dt>
         <dd>{node.method}</dd>
-        <dt>Confidence</dt>
+        <dt>Evidence</dt>
         <dd>{node.evidence}</dd>
         <dt>Local-frame anchor (lon, lat)</dt>
         <dd>{node.origin_lon_lat.join(', ')}</dd>

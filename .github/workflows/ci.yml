@@ -104,6 +104,13 @@ jobs:
           npm ci --ignore-scripts
           node batched-pick.mjs
           npx tsc --version
+      - name: Studio frontend type-check and component tests
+        shell: bash
+        run: |
+          cd apps/studio
+          npm ci --ignore-scripts
+          npx tsc --noEmit
+          npm test
 
   # GPU lanes and signed release builds are intentionally absent: they require
   # paid larger runners/identities and explicit owner approval (D-022).

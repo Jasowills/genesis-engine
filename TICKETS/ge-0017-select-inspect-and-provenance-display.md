@@ -80,11 +80,11 @@ axe and keyboard tests planned.
 
 GitHub issue: **#15** — https://github.com/Jasowills/genesis-engine/issues/15
 - Files: `apps/studio/src/selection.test.tsx` (4 component tests), `apps/studio/vite.config.ts` (vitest/jsdom), `apps/studio/package.json` (`test` script + vitest/jsdom/testing-library dev deps), CI step for Studio frontend.
-- `cd apps/studio && npx vitest run` → **4 passed, 0 failed**: keyboard Enter selects stable node id; inspector renders source/attribution/licence/method; negative numeric input commits `-7.5`; selecting a node in the shell reveals attribution.
+- `cd apps/studio && npx vitest run` → **6 passed, 0 failed**: exact stable-ID selection with two distinct nodes (not always first), ArrowDown navigation, `selectable: false` respected, inspector shows source/attribution/licence/method/evidence/derivation chain, negative numeric input commits `-7.5`, shell selection reveals provenance.
 - `cd apps/studio && npx tsc --noEmit` clean; `cargo test --workspace --locked` still 64 passed (Core + Studio Rust).
 - No domain logic in React; selection/inspector present only presentation of Core snapshot fields. No network calls from UI.
 - Actual webview/visual verification remains UNVERIFIED (inherited from GE-0016).
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (missing CI step, stale bookkeeping, non-discriminating ID test, weak provenance assertions, selectable ignored); fixes applied, re-review pending.
 
 ## Changelog
-- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`. Pending owner approval of scope and independent review where required.

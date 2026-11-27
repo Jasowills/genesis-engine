@@ -14,9 +14,10 @@ export function Hierarchy({ nodes, selectedId, onSelect }: HierarchyProps) {
 
   const focusIndex = (index: number) => {
     const clamped = Math.max(0, Math.min(index, nodes.length - 1));
-    items.current[clamped]?.focus();
     const node = nodes[clamped];
-    if (node) onSelect(node.id);
+    if (!node) return;
+    items.current[clamped]?.focus();
+    if (node.selectable) onSelect(node.id);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, index: number) => {
@@ -40,7 +41,7 @@ export function Hierarchy({ nodes, selectedId, onSelect }: HierarchyProps) {
       case 'Enter':
       case ' ':
         event.preventDefault();
-        if (nodes[index]) onSelect(nodes[index].id);
+        if (nodes[index]?.selectable) onSelect(nodes[index].id);
         break;
       default:
         break;
@@ -61,9 +62,10 @@ export function Hierarchy({ nodes, selectedId, onSelect }: HierarchyProps) {
               role="treeitem"
               aria-level={1}
               aria-selected={selected}
-              tabIndex={selected || (selectedId === null && index === 0) ? 0 : -1}
+              aria-disabled={!node.selectable}
+              tabIndex={node.selectable && (selected || (selectedId === null && index === 0)) ? 0 : -1}
               className={selected ? 'treeitem selected' : 'treeitem'}
-              onClick={() => onSelect(node.id)}
+              onClick={() => { if (node.selectable) onSelect(node.id); }}
               onKeyDown={(event) => handleKeyDown(event, index)}
             >
               {node.label}
