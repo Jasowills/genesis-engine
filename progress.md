@@ -66,6 +66,10 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0033 — wire secondary layers into product generate (issue #33, ready).
+GE-0034 — per-kind viewport materials (issue #34, ready).
+GE-0035 — simple roof forms (issue #35, ready).
+GE-0036 — fit camera to scene bounds (issue #36, ready).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike independently `APPROVED`: p1 gap explained, typed WASI 0.2 denial proven with permissive control on three OSes (CI `46064199831`/`46064116195`); verified with retained limitations.
