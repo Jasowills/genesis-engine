@@ -37,3 +37,7 @@ panic = "abort"
 [[bin]]
 name = "socket_call"
 path = "src/bin/socket_call.rs"
+
+[[bin]]
+name = "network_probe_p2"
+path = "src/bin/network_probe_p2.rs"
