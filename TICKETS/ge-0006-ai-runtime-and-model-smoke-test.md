@@ -3,7 +3,7 @@ id: GE-0006
 title: AI runtime and model smoke test
 type: spike
 priority: P1
-status: in-review
+status: verified
 milestone: M0
 labels: [spike, area:ai]
 depends_on: []
@@ -95,3 +95,4 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - 2026-11-27: CI executed ORT 1.32.0 on Ubuntu; evidence updated and ticket moved to in-review.
 - 2026-11-27: CI run link and partial-status rationale recorded; ticket remains in-review pending named-model decision.
 - 2026-11-27: Owner approved named weights (D-033); weights downloaded, checksum-verified and executed; ticket moved from partial to full evidence.
+- 2026-11-27: Independent confirmation APPROVED; ticket marked verified with recorded limitations.
