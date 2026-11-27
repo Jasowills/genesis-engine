@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file. Format foll
 - `feat(studio)`: Core-backed scene snapshot and React shell (GE-0016).
 - `test(studio)`: keyboard selection and provenance component tests (GE-0017).
 - `feat(cli)`: headless Core command surface with versioned JSON output (GE-0022).
+- `feat(core)`: quality profiles and honest preflight estimates (GE-0024).
+- `feat(core)`: terrain and secondary environment layers (GE-0028).
+- `feat(core)`: external worker, plugin SDK and selective regeneration contracts (GE-0023, GE-0025, GE-0027).
 - `chore(ci)`: cross-platform test matrix, later fixed for workspace excludes.
 
 ### Added — 2026-11-27 (planning baseline, not product functionality)

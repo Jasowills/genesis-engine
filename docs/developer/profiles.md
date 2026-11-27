@@ -4,7 +4,7 @@ Four named profiles map to explicit gates (`ProfilePolicy::for_profile`): **Prev
 
 `preflight(profile, capabilities, object_count)` returns a `PreflightReport` where duration and peak memory are **bounded ranges** with `confidence: "low-uncalibrated"` and explicit limitations. No single guaranteed number is emitted. Capability suitability is computed from **caller-declared** `HostCapabilities` and labelled `caller-declared; no hardware probing performed`. This module performs no hardware detection, no timing run and no external call.
 
-`authorize_paid_operation` requires both `paid_operations_enabled` in host capabilities and an explicit `consent_granted` flag; it returns a consent token only, never executes or charges anything. `paid_operation` records estimated cost bounds and `consent: required-before-execution` for display before consent.
+`authorize_paid_operation` requires both `paid_operations_enabled` in host capabilities and an explicit `consent_granted` flag; it returns a consent token only, never executes or charges anything. `PreflightReport::add_paid_operation` attaches a named `EstimateRange` to the report for display before consent. The entry retains cost bounds, unit, confidence, method and limitations, plus `consent: required-before-execution`. `cuda_available` is informational: GPU suitability is vendor-neutral and does not depend on a specific backend.
 
 ## Scope limit
 
@@ -12,4 +12,4 @@ These are **policy and estimate contracts**, not calibrated benchmarks. Cost and
 
 ## Verification
 
-`cargo test --workspace --locked` includes five profile tests: explicit gate mapping across all four profiles (including evidence-tier rejection), range-only preflight output, declared-not-probed capability reporting, paid consent gating, and estimate bound validation.
+`cargo test --workspace --locked` includes six profile tests: explicit gate mapping across all four profiles (Unknown evidence rejected by every profile, observed accepted by every profile, deviation/resolution/checkpoint thresholds), range-only preflight output with survey warning, paid-cost metadata retention in the report, declared-not-probed capability reporting, paid consent gating (including empty name), and estimate bound validation.

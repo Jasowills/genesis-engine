@@ -26,6 +26,9 @@ pub struct ProfilePolicy {
     pub gates: Vec<String>,
 }
 
+/// Evidence strength. Derived `Ord` places the strongest tier at the lowest
+/// value: `Observed < Derived < Inferred < Unknown`. `permits` compares
+/// `tier <= min_evidence`, so callers must not read a larger value as stronger.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EvidenceTier {
@@ -151,6 +154,8 @@ pub struct HostCapabilities {
     pub logical_cpus: u32,
     pub memory_gb: f64,
     pub gpu_available: bool,
+    /// Reserved informational field. GPU suitability is vendor-neutral and
+    /// deliberately does not depend on a specific vendor backend.
     pub cuda_available: bool,
     /// True only when the operator has opted into paid operations.
     pub paid_operations_enabled: bool,
@@ -216,8 +221,22 @@ pub struct PreflightReport {
     pub duration: EstimateRange,
     pub peak_memory: EstimateRange,
     pub capability: CapabilityReport,
-    pub paid_operations: Vec<String>,
+    pub paid_operations: Vec<BTreeMap<String, String>>,
     pub warnings: Vec<String>,
+}
+
+impl PreflightReport {
+    /// Attach a cost estimate for display before consent. The estimate's
+    /// confidence, method and limitations are retained verbatim.
+    pub fn add_paid_operation(&mut self, name: &str, estimate: &EstimateRange) -> Result<()> {
+        if name.trim().is_empty() {
+            return Err(CoreError::InvalidManifest(
+                "paid operation needs a name".to_string(),
+            ));
+        }
+        self.paid_operations.push(paid_operation(name, estimate));
+        Ok(())
+    }
 }
 
 /// Build a preflight report. Every number is a range; no cost or timing is a
@@ -307,19 +326,22 @@ pub fn authorize_paid_operation(
 }
 
 /// Metadata for a named paid operation, carried in the preflight report so the
-/// operator can see it before consenting.
-pub fn paid_operation(
-    name: &str,
-    estimated_cost: EstimateRange,
-) -> Result<BTreeMap<String, String>> {
+/// operator can see it before consenting. All honesty metadata is retained.
+pub fn paid_operation(name: &str, estimated_cost: &EstimateRange) -> BTreeMap<String, String> {
     let mut entry = BTreeMap::new();
     entry.insert("name".to_string(), name.to_string());
     entry.insert("cost_low".to_string(), estimated_cost.low.to_string());
     entry.insert("cost_high".to_string(), estimated_cost.high.to_string());
-    entry.insert("unit".to_string(), estimated_cost.unit);
+    entry.insert("unit".to_string(), estimated_cost.unit.clone());
+    entry.insert("confidence".to_string(), estimated_cost.confidence.clone());
+    entry.insert("method".to_string(), estimated_cost.method.clone());
+    entry.insert(
+        "limitations".to_string(),
+        estimated_cost.limitations.join(" | "),
+    );
     entry.insert(
         "consent".to_string(),
         "required-before-execution".to_string(),
     );
-    Ok(entry)
+    entry
 }
