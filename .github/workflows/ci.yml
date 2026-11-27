@@ -77,6 +77,16 @@ jobs:
         run: cargo test --workspace --locked
       - name: Genesis Core lint
         run: cargo clippy --workspace --locked -- -D warnings
+      - name: Native GPU capability probe (informational)
+        shell: bash
+        run: cargo run --locked --quiet --manifest-path prototype/viewport-capability/Cargo.toml
+      - name: Three.js 100k picking and TypeScript 7 check
+        shell: bash
+        run: |
+          cd prototype/viewport-capability
+          npm ci --ignore-scripts
+          node batched-pick.mjs
+          npx tsc --version
 
   # GPU lanes and signed release builds are intentionally absent: they require
   # paid larger runners/identities and explicit owner approval (D-022).

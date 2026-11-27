@@ -3,7 +3,7 @@ id: GE-0004
 title: Desktop shell and viewport capability PoC
 type: spike
 priority: P0
-status: proposed
+status: in-progress
 milestone: M0
 labels: [spike, area:studio, area:viewport]
 depends_on: [GE-0003]

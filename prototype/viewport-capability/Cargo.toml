@@ -1,0 +1,15 @@
+[package]
+name = "viewport-capability-probe"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Throwaway evidence for GE-0004: native wgpu adapter/feature enumeration (NOT webview GPU evidence)"
+
+# Standalone throwaway crate. The repository root is a workspace whose members
+# do not include this prototype; declaring an empty [workspace] here keeps this
+# probe self-contained without modifying the root manifest.
+[workspace]
+
+[dependencies]
+wgpu = "=30.0.2"
+pollster = "=0.4.0"
