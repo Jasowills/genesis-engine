@@ -1,0 +1,78 @@
+# Rust / build artefacts
+/target/
+**/target/
+*.rlib
+*.rmeta
+*.dylib
+*.so
+*.dll
+*.pdb
+*.dSYM/
+
+# Node / desktop UI
+node_modules/
+dist/
+out/
+.vite/
+*.tsbuildinfo
+
+# Python workers / model caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.onnx
+*.safetensors
+*.pt
+*.pth
+*.gguf
+models/
+cache/
+
+# Project data / generated worlds (never commit city-scale output or imagery)
+/projects/
+/fixtures/large/
+*.laz
+*.las
+*.geotiff
+*.tif
+*.tiff
+*.jp2
+*.ply
+*.splat
+*.spz
+*.sog
+
+# Secrets and local configuration
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.provisionprofile
+*.keystore
+credentials*.json
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# Local scratch / issue tracker (if adopted)
+.scratch/
+
+# CI / release artefacts
+/artifacts/
+*.app
+*.dmg
+*.msi
+*.exe
+*.AppImage
+*.deb
+*.rpm
+
+# Log files
+*.log

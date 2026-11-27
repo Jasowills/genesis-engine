@@ -1,0 +1,11 @@
+Genesis Engine
+Copyright 2026 Genesis Engine contributors
+
+Licence scope (owner-approved 2026-11-27, D-026):
+
+- Core source code is licensed under the Apache License, Version 2.0 (see LICENSE).
+- The plugin SDK, documentation, test fixtures, sample generated assets and model weights are separate licence decisions. They are NOT covered by the core Apache-2.0 grant until explicitly recorded in DECISIONS.md and updated here.
+- Third-party dependencies, datasets and model weights retain their own licences; see research/LICENCE_AND_DATA_RIGHTS.md.
+- No OSM-derived database, restricted imagery, private data or large model weights are distributed with this repository.
+
+The standard Apache License 2.0 text in LICENSE is reproduced unmodified. The bracketed placeholders in its Appendix are intentionally left as published by the Apache Software Foundation; copyright and scope information for this project is provided in this NOTICE file.
