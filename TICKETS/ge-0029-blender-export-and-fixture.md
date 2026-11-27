@@ -3,7 +3,7 @@ id: GE-0029
 title: Blender export and round-trip fixture
 type: integration
 priority: P2
-status: proposed
+status: in-review
 milestone: M3
 labels: [type:integration, area:export]
 depends_on: [GE-0019]
@@ -42,10 +42,10 @@ Spec §27 forbids claiming integration without automated/documented compatibilit
 Invoke Blender as external process; never link GPL code into core.
 
 ## Acceptance criteria
-- [ ] Fixture round-trip passes with documented version
-- [ ] Metadata loss explicitly recorded
-- [ ] No GPL code in core
-- [ ] Tests and documentation updated
+- [x] Fixture round-trip passes with documented version
+- [x] Metadata loss explicitly recorded
+- [x] No GPL code in core
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: n/a
@@ -77,7 +77,12 @@ D-009 first integration decision still open.
 ## Verification evidence
 
 GitHub issue: **#25** — https://github.com/Jasowills/genesis-engine/issues/25
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `tools/blender_roundtrip.py` (external probe, not linked into Core), `fixtures/ikeja-blender-roundtrip.glb`, `fixtures/ikeja-blender-roundtrip-report.json`, `crates/genesis-core/tests/blender_roundtrip.rs`, `docs/developer/blender-roundtrip.md`.
+- Pinned Blender **4.5.17 LTS** (build `2f5ec98689b8`) installed locally via free Homebrew cask. Probe run on a Core-exported Ikeja GLB: 2 meshes before/after, object names preserved, `genesis` extras identical (`metadata_identical: true`, `metadata_loss: []`).
+- `cargo test --workspace --locked` → **114 passed, 0 failed** (2 new round-trip tests: Core re-import of the Blender GLB with provenance/attribution assertions; pinned report validation). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- Metadata loss recorded: none observed for extras; Blender may rename objects/merge materials across versions; material round-trip unverified (fixture has no materials); non-macOS platforms and component overhead unmeasured.
+- No GPL code in Core; Blender is an external process only.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

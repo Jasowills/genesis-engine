@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "blender_version": "4.5.17 LTS",
+  "input": "input.glb",
+  "output": "output.glb",
+  "objects_before": 2,
+  "objects_after": 2,
+  "object_names_preserved": true,
+  "missing_object_names": [],
+  "materials_before": 0,
+  "materials_after": 0,
+  "custom_property_keys_before": [
+    "genesis"
+  ],
+  "custom_property_keys_after": [
+    "genesis"
+  ],
+  "custom_properties_preserved": true,
+  "metadata_identical": true,
+  "metadata_loss": [],
+  "before": {
+    "objects": [
+      {
+        "name": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d",
+        "type": "MESH",
+        "parent": null,
+        "materials": [],
+        "custom_properties": {
+          "genesis": {
+            "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+            "evidence": "inferred_by_rule",
+            "generation_seed": 42,
+            "generator_version": "procedural-v0.1",
+            "origin_lon_lat": "<bpy id property array [2]>",
+            "provenance": {
+              "attribution": "\u00a9 OpenStreetMap contributors",
+              "checksum": null,
+              "derivation_chain": [
+                "procedural-v0.1:seed=42:road-surface"
+              ],
+              "derivative_database_status": null,
+              "display_obligations": "<bpy id property array [0]>",
+              "filters": "<bpy id property array [0]>",
+              "licence_elected": "ODbL-1.0",
+              "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+              "publisher": "user-provided",
+              "recorded_at_unix": null,
+              "source_feature_ids": [
+                "way/102"
+              ],
+              "source_id": "osm:fixture:ikeja",
+              "third_party_terms": "<bpy id property array [0]>",
+              "url": "local-file",
+              "version": "n/a",
+              "vintage": null
+            },
+            "source_object_ids": [
+              "id-2e9214a7a77144761300ef0f2eb44640a00e153fca62aeff2ff094f01de8f4f0"
+            ]
+          }
+        }
+      },
+      {
+        "name": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5",
+        "type": "MESH",
+        "parent": null,
+        "materials": [],
+        "custom_properties": {
+          "genesis": {
+            "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+            "evidence": "measured",
+            "generation_seed": 42,
+            "generator_version": "procedural-v0.1",
+            "origin_lon_lat": "<bpy id property array [2]>",
+            "provenance": {
+              "attribution": "\u00a9 OpenStreetMap contributors",
+              "checksum": null,
+              "derivation_chain": [
+                "procedural-v0.1:seed=42:chacha8"
+              ],
+              "derivative_database_status": null,
+              "display_obligations": "<bpy id property array [0]>",
+              "filters": "<bpy id property array [0]>",
+              "licence_elected": "ODbL-1.0",
+              "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+              "publisher": "user-provided",
+              "recorded_at_unix": null,
+              "source_feature_ids": [
+                "way/101"
+              ],
+              "source_id": "osm:fixture:ikeja",
+              "third_party_terms": "<bpy id property array [0]>",
+              "url": "local-file",
+              "version": "2",
+              "vintage": "2026-10-01T08:00:00Z"
+            },
+            "source_object_ids": [
+              "id-9f152ca5568190b8c15878758bd3ce603b2006fc14cdd5768adc1ffe0f04d90d"
+            ]
+          }
+        }
+      }
+    ],
+    "material_count": 0
+  },
+  "after": {
+    "objects": [
+      {
+        "name": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d",
+        "type": "MESH",
+        "parent": null,
+        "materials": [],
+        "custom_properties": {
+          "genesis": {
+            "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+            "evidence": "inferred_by_rule",
+            "generation_seed": 42,
+            "generator_version": "procedural-v0.1",
+            "origin_lon_lat": "<bpy id property array [2]>",
+            "provenance": {
+              "attribution": "\u00a9 OpenStreetMap contributors",
+              "checksum": null,
+              "derivation_chain": [
+                "procedural-v0.1:seed=42:road-surface"
+              ],
+              "derivative_database_status": null,
+              "display_obligations": "<bpy id property array [0]>",
+              "filters": "<bpy id property array [0]>",
+              "licence_elected": "ODbL-1.0",
+              "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+              "publisher": "user-provided",
+              "recorded_at_unix": null,
+              "source_feature_ids": [
+                "way/102"
+              ],
+              "source_id": "osm:fixture:ikeja",
+              "third_party_terms": "<bpy id property array [0]>",
+              "url": "local-file",
+              "version": "n/a",
+              "vintage": null
+            },
+            "source_object_ids": [
+              "id-2e9214a7a77144761300ef0f2eb44640a00e153fca62aeff2ff094f01de8f4f0"
+            ]
+          }
+        }
+      },
+      {
+        "name": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5",
+        "type": "MESH",
+        "parent": null,
+        "materials": [],
+        "custom_properties": {
+          "genesis": {
+            "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+            "evidence": "measured",
+            "generation_seed": 42,
+            "generator_version": "procedural-v0.1",
+            "origin_lon_lat": "<bpy id property array [2]>",
+            "provenance": {
+              "attribution": "\u00a9 OpenStreetMap contributors",
+              "checksum": null,
+              "derivation_chain": [
+                "procedural-v0.1:seed=42:chacha8"
+              ],
+              "derivative_database_status": null,
+              "display_obligations": "<bpy id property array [0]>",
+              "filters": "<bpy id property array [0]>",
+              "licence_elected": "ODbL-1.0",
+              "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+              "publisher": "user-provided",
+              "recorded_at_unix": null,
+              "source_feature_ids": [
+                "way/101"
+              ],
+              "source_id": "osm:fixture:ikeja",
+              "third_party_terms": "<bpy id property array [0]>",
+              "url": "local-file",
+              "version": "2",
+              "vintage": "2026-10-01T08:00:00Z"
+            },
+            "source_object_ids": [
+              "id-9f152ca5568190b8c15878758bd3ce603b2006fc14cdd5768adc1ffe0f04d90d"
+            ]
+          }
+        }
+      }
+    ],
+    "material_count": 0
+  },
+  "limitations": [
+    "Blender may rename objects or merge materials across versions",
+    "Custom property preservation depends on glTF extras support",
+    "This report describes one pinned Blender version only"
+  ]
+}

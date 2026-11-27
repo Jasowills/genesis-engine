@@ -103,6 +103,8 @@ def main():
         "custom_property_keys_before": sorted(props_before),
         "custom_property_keys_after": sorted(props_after),
         "custom_properties_preserved": props_before.issubset(props_after),
+        "metadata_identical": not metadata_loss,
+        "metadata_loss": metadata_loss,
         "before": before,
         "after": after,
         "limitations": [
