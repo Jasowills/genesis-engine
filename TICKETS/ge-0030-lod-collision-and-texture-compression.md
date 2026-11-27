@@ -3,7 +3,7 @@ id: GE-0030
 title: LOD, collision and texture compression
 type: feature
 priority: P3
-status: proposed
+status: in-review
 milestone: M4
 labels: [type:feature, area:geometry, area:export]
 depends_on: [GE-0029]
@@ -41,10 +41,10 @@ Spec §26 game-readiness dimension and §27 export requirements.
 Delivery-time compression only; source IR stays uncompressed.
 
 ## Acceptance criteria
-- [ ] Budgets verified against named target profile
-- [ ] Collision fixture coverage measured
-- [ ] Precision regression tests pass
-- [ ] Tests and documentation updated
+- [x] Budgets verified against named target profile
+- [x] Collision fixture coverage measured
+- [x] Precision regression tests pass
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Geometry tests
@@ -76,7 +76,10 @@ Calibrate budgets with measured fixtures.
 ## Verification evidence
 
 GitHub issue: **#26** — https://github.com/Jasowills/genesis-engine/issues/26
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/optimization.rs`, `tests/optimization.rs`, `docs/developer/optimization.md`, lib.rs re-exports.
+- `cargo test --workspace --locked` → **117 passed, 0 failed** (3 new optimization tests: named-budget LOD chain with frame/seed/provenance preservation and determinism, collision AABB coverage including a deliberately incomplete proxy, licence-aware codec allowlist). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- NOT IMPLEMENTED: visually faithful simplification, real KTX2/Basis/Draco/meshopt encoders, codec binaries, texture transcoding, engine-specific optimisation (GE-0031), measured frame-time/memory budgets. LODs are deterministic screening levels; budgets are policy thresholds.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

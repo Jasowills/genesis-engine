@@ -63,6 +63,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0030 — LOD/collision/compression allowlist (3 tests; independent review pending, issue #26).
 GE-0029 — Blender 4.5.17 LTS round-trip (2 tests; independent review pending, issue #25).
 
 ## Blocked tickets

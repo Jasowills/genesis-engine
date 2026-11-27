@@ -71,7 +71,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0027 | [#28](https://github.com/Jasowills/genesis-engine/issues/28) | Selective and incremental regeneration | feature | P2 | M3 | verified | [GE-0011, GE-0020] |
 | GE-0028 | [#24](https://github.com/Jasowills/genesis-engine/issues/24) | Terrain and secondary layers | feature | P2 | M3 | verified | [GE-0020] |
 | GE-0029 | [#25](https://github.com/Jasowills/genesis-engine/issues/25) | Blender export and round-trip fixture | integration | P2 | M3 | in-review | [GE-0019] |
-| GE-0030 | [#26](https://github.com/Jasowills/genesis-engine/issues/26) | LOD, collision and texture compression | feature | P3 | M4 | proposed | [GE-0029] |
+| GE-0030 | [#26](https://github.com/Jasowills/genesis-engine/issues/26) | LOD, collision and texture compression | feature | P3 | M4 | in-review | [GE-0029] |
 | GE-0031 | [#32](https://github.com/Jasowills/genesis-engine/issues/32) | Target engine export fixtures | integration | P3 | M4 | proposed | [GE-0030] |
 | GE-0032 | [#21](https://github.com/Jasowills/genesis-engine/issues/21) | Signed release and auto-update pipeline | release | P3 | M5 | needs-owner-input | [GE-0008, GE-0009] |
 

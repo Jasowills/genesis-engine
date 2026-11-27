@@ -10,6 +10,7 @@ pub mod incremental;
 pub mod jobs;
 pub mod lawful_source;
 pub mod layers;
+pub mod optimization;
 pub mod osm_ingest;
 pub mod plugins;
 pub mod procedural;
@@ -35,6 +36,10 @@ pub use lawful_source::{
 };
 pub use layers::{
     DemGrid, generate_markings, generate_sidewalks, generate_terrain, generate_vegetation,
+};
+pub use optimization::{
+    CollisionProxy, DeliveryCompression, LodLevel, TargetProfile, build_collision_proxy,
+    compression_allowlist, compression_is_allowed, generate_lod_chain,
 };
 pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_objects};
 pub use plugins::{
