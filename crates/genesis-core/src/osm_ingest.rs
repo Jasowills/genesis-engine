@@ -56,15 +56,26 @@ fn position(value: &Value) -> Result<[f64; 2]> {
     Ok([lon, lat])
 }
 
-fn feature_id(properties: &Value) -> Result<String> {
-    for key in ["id", "osm_id", "@id"] {
-        if let Some(value) = properties.get(key) {
-            let id = match value {
-                Value::String(s) => s.clone(),
-                Value::Number(n) => n.to_string(),
-                _ => continue,
-            };
-            if !id.trim().is_empty() {
+fn id_from(value: Option<&Value>) -> Option<String> {
+    let id = match value? {
+        Value::String(s) => s.clone(),
+        Value::Number(n) => n.to_string(),
+        _ => return None,
+    };
+    if id.trim().is_empty() { None } else { Some(id) }
+}
+
+/// Standard GeoJSON puts `id` / `@id` on the Feature; OSM extracts often put
+/// `osm_id` in properties. Both are accepted, feature level taking precedence.
+fn feature_id(feature: &Value) -> Result<String> {
+    for key in ["id", "@id"] {
+        if let Some(id) = id_from(feature.get(key)) {
+            return Ok(id);
+        }
+    }
+    if let Some(properties) = feature.get("properties").and_then(Value::as_object) {
+        for key in ["id", "osm_id", "@id"] {
+            if let Some(id) = id_from(properties.get(key)) {
                 return Ok(id);
             }
         }
@@ -75,13 +86,110 @@ fn feature_id(properties: &Value) -> Result<String> {
 }
 
 fn evidence_from_tags(tags: &BTreeMap<String, String>) -> EvidenceKind {
-    if tags.contains_key("height") || tags.contains_key("building:levels") {
+    // A numeric height is an explicit value; `building:levels` is a de facto
+    // tag with invalid values in the database and a 3 m/floor renderer guess,
+    // so it is derived-with-confidence, never measured.
+    if tags
+        .get("height")
+        .and_then(|s| s.parse::<f64>().ok())
+        .is_some_and(|h| h.is_finite())
+    {
         EvidenceKind::Measured
-    } else if tags.contains_key("confidence") {
+    } else if tags.contains_key("building:levels") || tags.contains_key("confidence") {
         EvidenceKind::DerivedWithConfidence
     } else {
         EvidenceKind::InferredByRule
     }
+}
+
+/// Shoelace centroid of a closed ring (duplicate closing vertex ignored).
+fn ring_centroid(ring: &[[f64; 2]]) -> Result<[f64; 3]> {
+    let points = if ring.first() == ring.last() {
+        &ring[..ring.len() - 1]
+    } else {
+        ring
+    };
+    if points.len() < 3 {
+        return Err(CoreError::InvalidManifest(
+            "ring has no area for a centroid".to_string(),
+        ));
+    }
+    let mut twice_area = 0.0;
+    let mut x = 0.0;
+    let mut y = 0.0;
+    for i in 0..points.len() {
+        let (x0, y0) = (points[i][0], points[i][1]);
+        let (x1, y1) = (
+            points[(i + 1) % points.len()][0],
+            points[(i + 1) % points.len()][1],
+        );
+        let cross = x0 * y1 - x1 * y0;
+        twice_area += cross;
+        x += (x0 + x1) * cross;
+        y += (y0 + y1) * cross;
+    }
+    if twice_area.abs() < f64::EPSILON {
+        return Err(CoreError::InvalidManifest(
+            "ring is degenerate (zero area)".to_string(),
+        ));
+    }
+    let centroid = [x / (3.0 * twice_area), y / (3.0 * twice_area), 0.0];
+    if centroid.iter().any(|v| !v.is_finite()) {
+        return Err(CoreError::InvalidManifest(
+            "centroid is not finite".to_string(),
+        ));
+    }
+    Ok(centroid)
+}
+
+/// Length-weighted midpoint along a centreline.
+fn line_midpoint(line: &[[f64; 2]]) -> Result<[f64; 3]> {
+    if line.len() < 2 {
+        return Err(CoreError::InvalidManifest(
+            "line needs two positions".to_string(),
+        ));
+    }
+    let mut segments = Vec::with_capacity(line.len() - 1);
+    let mut total = 0.0;
+    for pair in line.windows(2) {
+        let dx = pair[1][0] - pair[0][0];
+        let dy = pair[1][1] - pair[0][1];
+        let length = (dx * dx + dy * dy).sqrt();
+        if !length.is_finite() {
+            return Err(CoreError::InvalidManifest(
+                "line length is not finite".to_string(),
+            ));
+        }
+        total += length;
+        segments.push(length);
+    }
+    if total <= 0.0 || !total.is_finite() {
+        return Err(CoreError::InvalidManifest(
+            "line has zero length".to_string(),
+        ));
+    }
+    let mut remaining = total / 2.0;
+    for (i, length) in segments.iter().enumerate() {
+        if remaining <= *length {
+            let t = remaining / length;
+            let p = [
+                line[i][0] + (line[i + 1][0] - line[i][0]) * t,
+                line[i][1] + (line[i + 1][1] - line[i][1]) * t,
+                0.0,
+            ];
+            return if p.iter().all(|v| v.is_finite()) {
+                Ok(p)
+            } else {
+                Err(CoreError::InvalidManifest(
+                    "midpoint is not finite".to_string(),
+                ))
+            };
+        }
+        remaining -= length;
+    }
+    Err(CoreError::InvalidManifest(
+        "midpoint could not be computed".to_string(),
+    ))
 }
 
 /// Import a small OSM GeoJSON fixture after gating the source and CRS.
@@ -193,7 +301,7 @@ pub fn import_osm_geojson(
             .map(str::to_string);
 
         output.push(OsmFeature {
-            source_feature_id: feature_id(&Value::Object(properties.clone()))?,
+            source_feature_id: feature_id(feature)?,
             kind,
             coordinates,
             version,
@@ -210,6 +318,8 @@ pub fn to_world_objects(
     features: &[OsmFeature],
     source: &SourceDescriptor,
 ) -> Result<Vec<WorldObject>> {
+    // Never let a hand-built feature list bypass the lawful-source gate.
+    check_source(source)?;
     let base = Provenance::from(source);
     let mut objects = Vec::with_capacity(features.len());
     for feature in features {
@@ -234,10 +344,10 @@ pub fn to_world_objects(
                 .push(format!("tag:{key}={value}"));
         }
 
-        let lon = feature.coordinates.iter().map(|p| p[0]).sum::<f64>()
-            / feature.coordinates.len() as f64;
-        let lat = feature.coordinates.iter().map(|p| p[1]).sum::<f64>()
-            / feature.coordinates.len() as f64;
+        let geographic_position = match feature.kind {
+            OsmFeatureKind::Building => ring_centroid(&feature.coordinates)?,
+            OsmFeatureKind::Road => line_midpoint(&feature.coordinates)?,
+        };
 
         objects.push(WorldObject {
             id: derive_id(
@@ -248,7 +358,7 @@ pub fn to_world_objects(
                 OsmFeatureKind::Building => "building".to_string(),
                 OsmFeatureKind::Road => "road".to_string(),
             },
-            geographic_position: [lon, lat, 0.0],
+            geographic_position,
             local_position: [0.0, 0.0, 0.0],
             evidence: feature.evidence,
             provenance,

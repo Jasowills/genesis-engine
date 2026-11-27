@@ -48,7 +48,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0014 — OSM footprint and road feature ingestion; 34 Core tests pass, independent review assigned (issue #12).
+GE-0014 — OSM footprint and road feature ingestion; first review found a gate bypass and weak tests, fixes applied (39 tests pass), re-review assigned (issue #12).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
@@ -73,7 +73,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 34 passed, 0 failed (9 GeoJSON + 6 lawful-source + 3 OSM + 7 project + 9 World IR; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 39 passed, 0 failed (9 GeoJSON + 6 lawful-source + 8 OSM + 7 project + 9 World IR; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
