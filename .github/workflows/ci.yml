@@ -77,7 +77,10 @@ jobs:
         run: cargo test --locked --manifest-path prototype/plugin-sandbox/Cargo.toml
       - name: Genesis Core tests
         run: cargo test --workspace --locked
+      # Linux runners lack the GTK/WebKit system libraries required by Tauri;
+      # the feature is exercised on macOS and Windows instead.
       - name: Studio Tauri command wrappers
+        if: matrix.os != 'ubuntu-latest'
         run: cargo test --locked -p genesis-studio --features tauri-bindings
       - name: Genesis Core lint
         run: cargo clippy --workspace --locked --all-targets -- -D warnings
