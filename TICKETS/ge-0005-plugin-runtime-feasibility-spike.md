@@ -3,7 +3,7 @@ id: GE-0005
 title: Plugin runtime feasibility spike
 type: spike
 priority: P1
-status: ready
+status: in-progress
 milestone: M0
 labels: [spike, area:plugins, type:security]
 depends_on: []

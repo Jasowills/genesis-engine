@@ -64,7 +64,7 @@ Consolidation rule: contradictions between subagent reports must be resolved aga
 
 ## 3.1 GitHub issue capability (verified read-only)
 
-`gh issue create --help` (gh 2.97.0) supports `--parent`, `--blocked-by` and `--blocking` natively. Therefore, when the owner approves GitHub publication, the `to-tickets` blocking edges can be published as **native blocking links** rather than prose. This satisfies both the skill's Step 5 and spec §55's dependency requirement. No issues have been created.
+`gh issue create --help` (gh 2.97.0) supports `--parent`, `--blocked-by` and `--blocking` natively. The owner approved GitHub publication in D-027 (2026-11-27); the `to-tickets` blocking edges were published as **native blocking links** rather than prose, satisfying both the skill's Step 5 and spec §55's dependency requirement. **Supersession note:** the original observation read "No issues have been created" — that was true at the time of discovery and is now historical. The repository has 32 issues in dependency order with verified native blocking links (GE-0008 evidence).
 
 ## 4. Planned engineering gates (from the spec, not yet executed)
 
