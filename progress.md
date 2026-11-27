@@ -70,7 +70,7 @@ None.
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence `APPROVED`, cross-platform CI green (6/6 per OS), 7 prototype tests pass. Explicit WASI p1 `sock_connect` import is undefined in Wasmtime, confirming that network-policy denial is infeasible to verify on this target; remains UNVERIFIED, not `verified` (issue #22).
 GE-0006 — ORT 1.32.0 runtime green in CI; named weights checksum-verified and run deterministically on ORT 1.23.2 locally (D-033); independent confirmation `APPROVED` with limitations (SAM decoder/ORT 1.32.0 named weights untested).
-GE-0031 — target engine export fixtures: Unreal selected (D-034); blocked on manual engine install/Epic login; no support may be claimed without a fixture.
+GE-0031 — target engine export fixtures: **owner-deferred** (D-034); no engine install or support claim; no fixture.
 GE-0032 — signed release/auto-update: **owner declined** (D-022); closed as declined, no purchase or pipeline.
 
 ## Ready next tickets

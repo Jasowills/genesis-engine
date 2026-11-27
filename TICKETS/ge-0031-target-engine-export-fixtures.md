@@ -3,7 +3,7 @@ id: GE-0031
 title: Target engine export fixtures
 type: integration
 priority: P3
-status: blocked
+status: deferred
 milestone: M4
 labels: [type:integration, area:export]
 depends_on: [GE-0030]
@@ -79,7 +79,8 @@ GitHub issue: **#32** — https://github.com/Jasowills/genesis-engine/issues/32
 - Files (scaffold only): `tools/unreal_import_probe.py`, `docs/developer/unreal-fixture.md`. No fixture report exists.
 - D-034 owner selection: Unreal is the first target engine. `ls /Applications | grep -iE 'unreal|epic'` → no Unreal/Epic app; `which UnrealEditor` → not found; no Homebrew cask. Installation requires Epic account login (manual owner step).
 - NOT MET: all four acceptance criteria. No engine version pinned, no imported-asset report, no cross-OS evidence, no metadata-loss measurement. **No Unreal support is claimed.**
-- Status: `blocked` pending manual Unreal Editor installation/licensing; independent review has not run and must not be requested until a fixture exists.
+- Status: `deferred` by owner on 2026-11-27. Engine installation is postponed; no engine support is claimed. Independent review has not run and must not be requested until a fixture exists.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Owner deferred all engine installation; ticket left deferred with no support claim.
