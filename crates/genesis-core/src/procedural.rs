@@ -6,7 +6,7 @@
 use crate::{
     CoreError, Result, SourceDescriptor, check_source,
     osm_ingest::{OsmFeature, OsmFeatureKind},
-    world_ir::{EvidenceKind, Provenance, StableId},
+    world_ir::{EvidenceKind, Provenance, StableId, geodetic_to_enu},
 };
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
@@ -66,9 +66,10 @@ fn frame_origin(features: &[&OsmFeature]) -> [f64; 2] {
 }
 
 fn to_local(lon: f64, lat: f64, origin_lon: f64, origin_lat: f64) -> [f64; 2] {
-    let east = (lon - origin_lon) * 111_320.0 * origin_lat.to_radians().cos();
-    let north = (lat - origin_lat) * 110_540.0;
-    [east, north]
+    // True WGS84 ECEF -> ENU local metres (ADR-0008), not an equirectangular
+    // approximation. The frame origin is altitude zero for this slice.
+    let enu = geodetic_to_enu(lon, lat, 0.0, origin_lon, origin_lat, 0.0);
+    [enu[0], enu[1]]
 }
 
 /// Vertex accumulator with rounded-key deduplication. Within one way, adjacent

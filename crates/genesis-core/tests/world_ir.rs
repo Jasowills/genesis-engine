@@ -60,6 +60,8 @@ fn ir() -> WorldIr {
         local_frame: LocalFrame {
             frame_id: "ikeja-local".to_string(),
             origin_ecef: [6_325_680.944472361, 364_736.4683773493, 728_214.141724354],
+            origin_lon_lat: [3.35, 6.6],
+            origin_altitude_m: 0.0,
             epoch: Some(2024.5),
         },
         layers: vec![
@@ -298,4 +300,32 @@ fn validation_rejects_duplicates_empty_frame_and_escaping_payload() -> CoreResul
         );
     }
     Ok(())
+}
+
+#[test]
+fn wgs84_enu_conversion_is_precision_safe() {
+    use genesis_core::{geodetic_to_ecef, geodetic_to_enu};
+    let origin_lon = 3.35;
+    let origin_lat = 6.6;
+    let ecef = geodetic_to_ecef(origin_lon, origin_lat, 0.0);
+    assert!((ecef[0] - 6_325_320.576246685).abs() < 1e-6);
+    assert!((ecef[1] - 370_254.2048726019).abs() < 1e-6);
+    assert!((ecef[2] - 728_209.5442383343).abs() < 1e-6);
+
+    let at_origin = geodetic_to_enu(origin_lon, origin_lat, 0.0, origin_lon, origin_lat, 0.0);
+    assert!(at_origin.iter().all(|v| v.abs() < 1e-9));
+
+    // A one-centimetre-class offset survives in the local frame.
+    let offset = geodetic_to_enu(
+        origin_lon + 1e-7,
+        origin_lat,
+        0.0,
+        origin_lon,
+        origin_lat,
+        0.0,
+    );
+    assert!(offset[0] > 0.0 && offset[0] < 0.02);
+    let frame = LocalFrame::from_geodetic(origin_lon, origin_lat, 0.0, "test-frame");
+    assert_eq!(frame.origin_lon_lat, [origin_lon, origin_lat]);
+    assert_eq!(frame.origin_ecef, ecef);
 }

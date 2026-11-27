@@ -132,8 +132,76 @@ pub enum ValidationState {
 pub struct LocalFrame {
     pub frame_id: String,
     pub origin_ecef: [f64; 3],
+    /// Geodetic origin of the local metre frame, recorded for ENU conversion.
+    #[serde(default)]
+    pub origin_lon_lat: [f64; 2],
+    #[serde(default)]
+    pub origin_altitude_m: f64,
     #[serde(default)]
     pub epoch: Option<f64>,
+}
+
+/// WGS84 geodetic (degrees, metres) to ECEF in metres (ADR-0008).
+pub fn geodetic_to_ecef(lon: f64, lat: f64, altitude_m: f64) -> [f64; 3] {
+    const A: f64 = 6_378_137.0;
+    const F: f64 = 1.0 / 298.257_223_563;
+    let e2 = F * (2.0 - F);
+    let latitude = lat.to_radians();
+    let longitude = lon.to_radians();
+    let sin_lat = latitude.sin();
+    let cos_lat = latitude.cos();
+    let normal = A / (1.0 - e2 * sin_lat * sin_lat).sqrt();
+    [
+        (normal + altitude_m) * cos_lat * longitude.cos(),
+        (normal + altitude_m) * cos_lat * longitude.sin(),
+        (normal * (1.0 - e2) + altitude_m) * sin_lat,
+    ]
+}
+
+/// ECEF delta to local east/north/up given the frame's geodetic origin.
+pub fn ecef_to_enu(point: [f64; 3], origin_lon: f64, origin_lat: f64) -> [f64; 3] {
+    let latitude = origin_lat.to_radians();
+    let longitude = origin_lon.to_radians();
+    let (sin_lat, cos_lat) = (latitude.sin(), latitude.cos());
+    let (sin_lon, cos_lon) = (longitude.sin(), longitude.cos());
+    let east = -sin_lon * point[0] + cos_lon * point[1];
+    let north = -sin_lat * cos_lon * point[0] - sin_lat * sin_lon * point[1] + cos_lat * point[2];
+    let up = cos_lat * cos_lon * point[0] + cos_lat * sin_lon * point[1] + sin_lat * point[2];
+    [east, north, up]
+}
+
+/// Local ENU metres for a geodetic point relative to a geodetic origin.
+pub fn geodetic_to_enu(
+    lon: f64,
+    lat: f64,
+    altitude_m: f64,
+    origin_lon: f64,
+    origin_lat: f64,
+    origin_altitude_m: f64,
+) -> [f64; 3] {
+    let point = geodetic_to_ecef(lon, lat, altitude_m);
+    let origin = geodetic_to_ecef(origin_lon, origin_lat, origin_altitude_m);
+    ecef_to_enu(
+        [
+            point[0] - origin[0],
+            point[1] - origin[1],
+            point[2] - origin[2],
+        ],
+        origin_lon,
+        origin_lat,
+    )
+}
+
+impl LocalFrame {
+    pub fn from_geodetic(lon: f64, lat: f64, altitude_m: f64, frame_id: &str) -> Self {
+        Self {
+            frame_id: frame_id.to_string(),
+            origin_ecef: geodetic_to_ecef(lon, lat, altitude_m),
+            origin_lon_lat: [lon, lat],
+            origin_altitude_m: altitude_m,
+            epoch: None,
+        }
+    }
 }
 
 impl Default for LocalFrame {
@@ -141,6 +209,8 @@ impl Default for LocalFrame {
         Self {
             frame_id: "default".to_string(),
             origin_ecef: [0.0, 0.0, 0.0],
+            origin_lon_lat: [0.0, 0.0],
+            origin_altitude_m: 0.0,
             epoch: None,
         }
     }

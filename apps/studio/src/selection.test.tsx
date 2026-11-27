@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Hierarchy } from './Hierarchy';
 import { Inspector } from './Inspector';
 import { App } from './App';
+import { isSceneSnapshot } from './types';
 import type { SceneNode, SceneSnapshot } from './types';
 
 function makeNode(id: string, label: string, selectable = true, evidence: SceneNode['evidence'] = 'measured'): SceneNode {
@@ -105,5 +106,62 @@ describe('scene selection and provenance', () => {
     await user.keyboard('{Enter}');
     expect(screen.getByText('© OpenStreetMap contributors')).toBeTruthy();
     expect(screen.getByText('inferred_by_rule')).toBeTruthy();
+  });
+});
+
+
+describe('keyboard and boundary input', () => {
+  it('ArrowUp, Home and End move to clamped stable IDs', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(<Hierarchy nodes={[first, second]} selectedId={null} onSelect={onSelect} />);
+    screen.getByRole('treeitem', { name: 'Road 2' }).focus();
+    await user.keyboard('{ArrowUp}');
+    expect(onSelect).toHaveBeenLastCalledWith('id-building-1');
+    screen.getByRole('treeitem', { name: 'Road 2' }).focus();
+    await user.keyboard('{Home}');
+    expect(onSelect).toHaveBeenLastCalledWith('id-building-1');
+    screen.getByRole('treeitem', { name: 'Building 1' }).focus();
+    await user.keyboard('{End}');
+    expect(onSelect).toHaveBeenLastCalledWith('id-road-2');
+  });
+
+  it('Space selects and aria-selected reflects the selected node', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(<Hierarchy nodes={[first, second]} selectedId={first.id} onSelect={onSelect} />);
+    expect(screen.getByRole('treeitem', { name: 'Building 1' }).getAttribute('aria-selected')).toBe('true');
+    screen.getByRole('treeitem', { name: 'Road 2' }).focus();
+    await user.keyboard(' ');
+    expect(onSelect).toHaveBeenCalledWith('id-road-2');
+  });
+
+  it('clicking a selectable node selects it', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(<Hierarchy nodes={[disabled, first]} selectedId={null} onSelect={onSelect} />);
+    await user.click(screen.getByRole('treeitem', { name: 'Building 1' }));
+    expect(onSelect).toHaveBeenCalledWith('id-building-1');
+    await user.click(screen.getByRole('treeitem', { name: 'Unselectable 3' }));
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it('intermediate numeric input is not committed and blur restores the original', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Inspector node={first} translation={first.translation} onTranslationChange={onChange} />);
+    const north = screen.getByLabelText('North (m) for Building 1') as HTMLInputElement;
+    await user.clear(north);
+    await user.type(north, '-');
+    expect(onChange).not.toHaveBeenCalled();
+    await user.tab();
+    expect(north.value).toBe(String(first.translation[1]));
+  });
+
+  it('injected snapshots with a bad version or shape are rejected', () => {
+    expect(isSceneSnapshot(snapshot)).toBe(true);
+    expect(isSceneSnapshot({ ...snapshot, snapshot_version: 2 })).toBe(false);
+    expect(isSceneSnapshot({ ...snapshot, nodes: [{ ...first, translation: [1] }] })).toBe(false);
+    expect(isSceneSnapshot(null)).toBe(false);
   });
 });

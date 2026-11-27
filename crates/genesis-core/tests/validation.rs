@@ -245,5 +245,12 @@ fn unsupported_validation_report_schema_blocks_export() {
 fn referenced_sources_collects_distinct_source_ids() {
     let w = world();
     let sources = referenced_sources(&w);
+    assert_eq!(sources.len(), 1);
     assert!(sources.contains("osm:test"));
+    let mut multi = w.clone();
+    let mut second = multi.layers[0].objects[0].clone();
+    second.id = derive_id("object", "way/2");
+    second.provenance.source_id = "local:second".to_string();
+    multi.layers[0].objects.push(second);
+    assert_eq!(referenced_sources(&multi).len(), 2);
 }

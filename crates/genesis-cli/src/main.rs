@@ -200,6 +200,27 @@ fn load_ir(project: &Path) -> Result<WorldIr, String> {
     WorldIr::from_bytes(&bytes).map_err(|e| e.to_string())
 }
 
+/// Build the product local frame from the imported boundary bbox centre
+/// (ADR-0008). Falls back to the default frame when no boundary is present.
+fn load_frame(project: &Path) -> Result<LocalFrame, String> {
+    let path = project.join("worlds/boundary.json");
+    if !path.exists() {
+        return Ok(LocalFrame::default());
+    }
+    let raw: Value = read_json(&path)?;
+    let bbox = raw
+        .get("bbox")
+        .and_then(Value::as_array)
+        .ok_or("boundary manifest has no bbox")?;
+    let lon = (bbox.first().and_then(Value::as_f64).unwrap_or(0.0)
+        + bbox.get(2).and_then(Value::as_f64).unwrap_or(0.0))
+        / 2.0;
+    let lat = (bbox.get(1).and_then(Value::as_f64).unwrap_or(0.0)
+        + bbox.get(3).and_then(Value::as_f64).unwrap_or(0.0))
+        / 2.0;
+    Ok(LocalFrame::from_geodetic(lon, lat, 0.0, "ikeja-local"))
+}
+
 fn load_meshes(project: &Path) -> Result<Vec<GeneratedGeometry>, String> {
     read_json(&project.join("payloads/meshes.json"))
 }
@@ -265,7 +286,7 @@ fn run(cli: Cli) -> Result<Value, String> {
                 schema_version: CURRENT_SCHEMA_VERSION,
                 world_id: derive_id("world", "cli-project"),
                 crs,
-                local_frame: LocalFrame::default(),
+                local_frame: load_frame(&project)?,
                 layers: vec![WorldLayer {
                     id: derive_id("layer", "osm-features"),
                     objects,

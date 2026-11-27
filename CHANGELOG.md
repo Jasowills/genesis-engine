@@ -47,3 +47,4 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 - `test`: end-to-end vertical slice and frozen benchmark harness (GE-0020).
 - `docs`: contributor and governance documentation sweep (GE-0021).
 - `test`: ADR conformance review — CLI IR validation, lawful-source gate on inference/plugin paths, normalised progress checkpoints, Tauri/Studio render tests, sandbox flake fix, full-adapter descriptor fields.
+- `feat(core)`: WGS84 ECEF→ENU product precision path and local-frame origin from boundary bbox (ADR-0008).

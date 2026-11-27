@@ -320,3 +320,15 @@ fn progress_events_reach_one_and_carry_the_stage_checkpoint() -> CoreResult<()> 
     assert_eq!(progress[1].1.as_deref(), Some("checkpoint:build"));
     Ok(())
 }
+
+#[test]
+fn job_record_serialises_with_the_versioned_schema() -> CoreResult<()> {
+    let w = worker(&["fetch"]);
+    let job = record(&w);
+    let raw: serde_json::Value = serde_json::from_slice(&job.to_bytes()?)?;
+    assert_eq!(
+        raw["schema_version"],
+        genesis_core::JOB_RECORD_SCHEMA_VERSION
+    );
+    Ok(())
+}

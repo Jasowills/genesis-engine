@@ -61,7 +61,7 @@ pub use validation::{
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,
     Provenance, StableId, ValidationState, WorldIr, WorldLayer, WorldObject, derive_id,
-    migrate_backward, migrate_forward,
+    ecef_to_enu, geodetic_to_ecef, geodetic_to_enu, migrate_backward, migrate_forward,
 };
 
 use serde::{Deserialize, Serialize};
