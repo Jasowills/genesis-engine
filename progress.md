@@ -4,7 +4,7 @@
 Phase 8 owner checkpoint approved; M1–M4 dependency-ready work implemented and independently reviewed. M5 release work awaits owner decisions.
 
 ## Current milestone
-M4 — 29 verified, 1 in-review partial (GE-0005), 1 deferred (GE-0031), 1 declined (GE-0032). M1–M4 contracts, CI and the Blender round-trip are complete; only the Unreal fixture (manual engine install), M5 signing identities and the WASIp1 network-policy UNVERIFIED item remain.
+M4 — 29 verified, 1 in-review partial (GE-0005), 1 deferred (GE-0031), 1 declined (GE-0032). M1–M4 contracts, CI and the Blender round-trip are complete; GE-0031 is deferred, GE-0032 declined, and GE-0005 retains one infeasible-to-verify WASIp1 network-policy item. No spend or manual install is pending.
 
 ## Current objective
 No dependency-ready implementation work remains. Each code-changing ticket passed tests, lint, formatting and independent review before `verified`. No release, publication, purchase or deployment without owner approval.
@@ -13,7 +13,7 @@ No dependency-ready implementation work remains. Each code-changing ticket passe
 M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; a headless CLI, but no worker pipeline or game-engine integration yet.
 
 ## Last updated
-2026-11-27 (all dependency-ready tickets verified; adversarial audit remediated and independently confirmed; Blender round-trip measured; final cross-platform CI pending).
+2026-11-27 (all dependency-ready tickets verified; adversarial audit remediated and independently confirmed; Blender round-trip measured; final cross-platform CI green on the implementation commits).
 
 ## Approved product decisions
 D-001 engine + platform progressively; D-002 desktop-first Studio; D-003 local-first, cloud optional; D-004 bundled open models + optional external providers; D-005 game developers and technical artists equally; D-006 Windows/macOS/Linux (spec Part III). **Owner-approved 2026-11-27:** D-025 seven ADRs; D-026 Apache-2.0 **core only**; D-027 public `Jasowills/genesis-engine`; D-028 hard source deny. See `DECISIONS.md`.
