@@ -8,14 +8,15 @@ use crate::{CoreError, Result, WorldIr, world_ir::Provenance};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum LicenceElection {
+    #[default]
+    Mit,
     Odbl10,
     CcBy40,
     CdlaPermissive20,
     Apache20,
-    Mit,
     Other(String),
 }
 
@@ -55,7 +56,7 @@ pub enum SourcePurpose {
     ModelTraining,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct SourceDescriptor {
     pub id: String,
     pub publisher: String,

@@ -3,9 +3,11 @@
 //! This is the minimal headless foundation for the first vertical slice. The UI
 //! must never own this state; Studio, CLI and SDK all call these functions.
 
+pub mod geojson_boundary;
 pub mod lawful_source;
 pub mod world_ir;
 
+pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, validate_crs};
 pub use lawful_source::{
     LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
     enforce_sources, prepare_import,

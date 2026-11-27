@@ -3,7 +3,7 @@ id: GE-0013
 title: GeoJSON boundary import and CRS validation
 type: feature
 priority: P0
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:feature, area:geospatial]
 depends_on: [GE-0011, GE-0012]
@@ -43,10 +43,10 @@ Implements spec §50 steps 2-4 and the geographic-selection journey.
 Small fixture-driven importer behind a Core command.
 
 ## Acceptance criteria
-- [ ] Valid boundary imports; invalid produces structured error
-- [ ] CRS/epoch mismatch reported clearly
-- [ ] Provenance recorded
-- [ ] Tests and documentation updated
+- [x] Valid boundary imports; invalid produces structured error
+- [x] CRS/epoch mismatch reported clearly
+- [x] Provenance recorded
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Parser and CRS unit tests
@@ -78,7 +78,11 @@ Fixture must be small and redistributable.
 ## Verification evidence
 
 GitHub issue: **#11** — https://github.com/Jasowills/genesis-engine/issues/11
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/geojson_boundary.rs`, `tests/geojson_boundary.rs`, `docs/developer/boundary-import.md`, re-exports.
+- `cargo test --workspace --locked` → **26 passed, 0 failed** (7 project + 9 World IR + 6 lawful-source + 4 GeoJSON boundary), including deterministic re-import, bbox `[3.3480, 6.5985, 3.3552, 6.6051]` matching `research/BENCHMARK_AREA.md`, malformed geometry, CRS/datum validation, denied-source and antimeridian rejection.
+- `cargo clippy --workspace --locked -- -D warnings` → clean; `cargo fmt --all -- --check` → clean.
+- Import is gated by `check_source`; SHA-256 source checksum and derived stable boundary ID recorded. No global cache.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
