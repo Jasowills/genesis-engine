@@ -2,7 +2,7 @@
 
 An open-source, cross-platform platform for reconstructing real-world environments into editable, validated, game-ready 3D worlds.
 
-> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a small Rust Core crate implementing the project model, World IR, lawful-source gate and geospatial import primitives. There is no Studio, CLI, worker or export pipeline yet. Do not interpret planning documents as shipped features.
+> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a small Rust Core crate implementing the project model, World IR, lawful-source gate, geospatial import primitives and deterministic procedural geometry. There is no Studio, CLI, worker or export pipeline yet. Do not interpret planning documents as shipped features.
 
 ## What Genesis is
 

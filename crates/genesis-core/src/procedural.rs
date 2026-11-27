@@ -34,6 +34,10 @@ pub struct GeneratedGeometry {
     pub evidence: EvidenceKind,
     pub generation_seed: u64,
     pub generator_version: String,
+    /// Geodetic origin of the local metre frame (longitude, latitude).
+    pub origin_lon_lat: [f64; 2],
+    /// World IR object IDs this geometry was generated from (GE-0014).
+    pub source_object_ids: Vec<StableId>,
     pub provenance: Provenance,
     pub parameters: BTreeMap<String, String>,
 }
@@ -48,14 +52,26 @@ fn object_rng(seed: u64, key: &str) -> ChaCha8Rng {
     ChaCha8Rng::seed_from_u64(u64::from_le_bytes(bytes))
 }
 
+/// Deterministic frame origin: lexicographically smallest coordinate across
+/// all features, independent of input ordering or ring winding.
+fn frame_origin(features: &[&OsmFeature]) -> [f64; 2] {
+    features
+        .iter()
+        .flat_map(|f| f.coordinates.iter())
+        .min_by(|a, b| a[0].total_cmp(&b[0]).then_with(|| a[1].total_cmp(&b[1])))
+        .copied()
+        .unwrap_or([0.0, 0.0])
+}
+
 fn to_local(lon: f64, lat: f64, origin_lon: f64, origin_lat: f64) -> [f64; 2] {
     let east = (lon - origin_lon) * 111_320.0 * origin_lat.to_radians().cos();
     let north = (lat - origin_lat) * 110_540.0;
     [east, north]
 }
 
-/// Vertex accumulator with rounded-key deduplication: shared endpoints of
-/// separate road segments become one vertex (simple junction handling).
+/// Vertex accumulator with rounded-key deduplication. Within one way, adjacent
+/// segments share mitered left/right vertices; joins between separate ways are
+/// intentionally deferred (documented limitation).
 #[derive(Default)]
 struct MeshBuilder {
     keys: BTreeMap<String, u32>,
@@ -79,6 +95,14 @@ impl MeshBuilder {
         self.vertices.push(point);
         Ok(index)
     }
+}
+
+/// Stable World IR object ID from GE-0014 for the source feature.
+fn source_object_id(source: &SourceDescriptor, feature: &OsmFeature) -> StableId {
+    crate::derive_id(
+        "object",
+        &format!("{}:{}", source.id, feature.source_feature_id),
+    )
 }
 
 fn provenance_for(source: &SourceDescriptor, feature: &OsmFeature, seed: u64) -> Provenance {
@@ -145,7 +169,13 @@ pub fn verify_mesh(mesh: &GeneratedGeometry) -> Result<()> {
         ));
     }
     for i in (0..mesh.indices.len()).step_by(3) {
-        if mesh.indices[i..i + 3]
+        let triangle = &mesh.indices[i..i + 3];
+        if triangle[0] == triangle[1] || triangle[1] == triangle[2] || triangle[0] == triangle[2] {
+            return Err(CoreError::InvalidManifest(
+                "mesh contains a degenerate triangle".to_string(),
+            ));
+        }
+        if triangle
             .iter()
             .any(|index| *index as usize >= mesh.vertices.len())
         {
@@ -164,15 +194,16 @@ pub fn generate_building_volumes(
     seed: u64,
 ) -> Result<Vec<GeneratedGeometry>> {
     check_source(source)?;
-    let buildings: Vec<&OsmFeature> = features
+    let mut buildings: Vec<&OsmFeature> = features
         .iter()
         .filter(|f| f.kind == OsmFeatureKind::Building)
         .collect();
+    // Stable frame origin regardless of input ordering.
+    buildings.sort_by(|a, b| a.source_feature_id.cmp(&b.source_feature_id));
     if buildings.is_empty() {
         return Ok(Vec::new());
     }
-    let origin_lon = buildings[0].coordinates[0][0];
-    let origin_lat = buildings[0].coordinates[0][1];
+    let [origin_lon, origin_lat] = frame_origin(&buildings);
     let mut output = Vec::with_capacity(buildings.len());
     for feature in buildings {
         let (height, evidence, height_source) = height_for(feature, seed);
@@ -181,11 +212,32 @@ pub fn generate_building_volumes(
             .iter()
             .map(|p| to_local(p[0], p[1], origin_lon, origin_lat))
             .collect();
-        let ring = if local.first() == local.last() {
+        let unwrapped = if local.first() == local.last() {
             &local[..local.len() - 1]
         } else {
             &local[..]
         };
+        // Normalise orientation: OSM ways have no winding guarantee, and a
+        // clockwise ring would produce inward walls and a downward roof cap.
+        let mut area2 = 0.0;
+        for i in 0..unwrapped.len() {
+            let a = unwrapped[i];
+            let b = unwrapped[(i + 1) % unwrapped.len()];
+            area2 += a[0] * b[1] - b[0] * a[1];
+        }
+        let mut ring = unwrapped.to_vec();
+        if area2 < 0.0 {
+            ring.reverse();
+        }
+        // Canonical start vertex makes winding-normalised output byte-identical
+        // regardless of the input ring's starting point or direction.
+        if let Some(min_index) = (0..ring.len()).min_by(|&i, &j| {
+            ring[i][0]
+                .total_cmp(&ring[j][0])
+                .then_with(|| ring[i][1].total_cmp(&ring[j][1]))
+        }) {
+            ring.rotate_left(min_index);
+        }
         if ring.len() < 3 {
             return Err(CoreError::InvalidManifest(
                 "building ring has fewer than three vertices".to_string(),
@@ -194,7 +246,7 @@ pub fn generate_building_volumes(
         let mut mesh = MeshBuilder::default();
         let mut bottom = Vec::with_capacity(ring.len());
         let mut top = Vec::with_capacity(ring.len());
-        for point in ring {
+        for point in &ring {
             bottom.push(mesh.vertex([point[0], point[1], 0.0])?);
             top.push(mesh.vertex([point[0], point[1], height])?);
         }
@@ -211,13 +263,21 @@ pub fn generate_building_volumes(
         parameters.insert("height_m".to_string(), format!("{height:.3}"));
         parameters.insert("height_source".to_string(), height_source);
         output.push(GeneratedGeometry {
-            asset_id: crate::derive_id("mesh", &format!("building:{}", feature.source_feature_id)),
+            asset_id: crate::derive_id(
+                "mesh",
+                &format!(
+                    "building:{}:{seed}:{GENERATOR_VERSION}",
+                    feature.source_feature_id
+                ),
+            ),
             kind: GeneratedKind::BuildingVolume,
             vertices: mesh.vertices,
             indices,
             evidence,
             generation_seed: seed,
             generator_version: GENERATOR_VERSION.to_string(),
+            origin_lon_lat: [origin_lon, origin_lat],
+            source_object_ids: vec![source_object_id(source, feature)],
             provenance: provenance_for(source, feature, seed),
             parameters,
         });
@@ -239,15 +299,15 @@ pub fn generate_road_surfaces(
         ));
     }
     let width = width_m;
-    let roads: Vec<&OsmFeature> = features
+    let mut roads: Vec<&OsmFeature> = features
         .iter()
         .filter(|f| f.kind == OsmFeatureKind::Road)
         .collect();
+    roads.sort_by(|a, b| a.source_feature_id.cmp(&b.source_feature_id));
     if roads.is_empty() {
         return Ok(Vec::new());
     }
-    let origin_lon = roads[0].coordinates[0][0];
-    let origin_lat = roads[0].coordinates[0][1];
+    let [origin_lon, origin_lat] = frame_origin(&roads);
     let mut mesh = MeshBuilder::default();
     let mut indices = Vec::new();
     for feature in &roads {
@@ -317,12 +377,12 @@ pub fn generate_road_surfaces(
     parameters.insert("width_m".to_string(), format!("{width:.3}"));
     parameters.insert(
         "junction".to_string(),
-        "rounded-vertex-dedup-1mm".to_string(),
+        "per-feature-miter;cross-feature-junction-deferred".to_string(),
     );
     let mut provenance = Provenance::from(source);
     provenance
         .derivation_chain
-        .push(format!("{GENERATOR_VERSION}:seed={seed}:chacha8"));
+        .push(format!("{GENERATOR_VERSION}:seed={seed}:road-surface"));
     provenance.source_feature_ids = roads
         .iter()
         .map(|f| f.source_feature_id.clone())
@@ -330,13 +390,18 @@ pub fn generate_road_surfaces(
         .into_iter()
         .collect();
     Ok(vec![GeneratedGeometry {
-        asset_id: crate::derive_id("mesh", &format!("road:{seed}:{width:.3}")),
+        asset_id: crate::derive_id(
+            "mesh",
+            &format!("road:{seed}:{width:.3}:{GENERATOR_VERSION}"),
+        ),
         kind: GeneratedKind::RoadSurface,
         vertices: mesh.vertices,
         indices,
         evidence: EvidenceKind::InferredByRule,
         generation_seed: seed,
         generator_version: GENERATOR_VERSION.to_string(),
+        origin_lon_lat: [origin_lon, origin_lat],
+        source_object_ids: roads.iter().map(|f| source_object_id(source, f)).collect(),
         provenance,
         parameters,
     }])

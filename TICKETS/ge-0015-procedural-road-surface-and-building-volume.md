@@ -79,10 +79,10 @@ Selective regeneration design belongs to GE-0027.
 
 GitHub issue: **#13** — https://github.com/Jasowills/genesis-engine/issues/13
 - Files: `crates/genesis-core/src/procedural.rs`, `crates/genesis-core/tests/procedural.rs`, `docs/developer/procedural.md`, `Cargo.toml` (rand 0.9, rand_chacha 0.9), re-exports.
-- `cargo test --workspace --locked` → **43 passed, 0 failed** (9 GeoJSON + 6 lawful-source + 8 OSM + 4 procedural + 7 project + 9 World IR). Four procedural tests cover determinism, evidence tiers/named ChaCha8 seed, provenance + `verify_mesh` + golden vertex counts, and gate/invalid requests.
+- `cargo test --workspace --locked` → **48 passed, 0 failed** (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 7 project + 9 World IR). Nine procedural tests cover determinism, winding normalisation, deterministic origin/identity and World IR object links, evidence tiers, `verify_mesh` negative cases, levels/unit handling, cross-feature junction limitation, provenance and gate/invalid requests.
 - `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
-- Both generators call the lawful-source gate. No LOD/collision/facade/bridge/sidewalk code.
-- Reviewer result: pending independent review.
+- Both generators call the lawful-source gate. Winding is normalised; cross-feature way junctions are explicitly deferred. No LOD/collision/facade/bridge/sidewalk code.
+- Reviewer result: first pass `CHANGES_REQUESTED` (clockwise winding produced inside-out meshes, junction overclaim, implicit origin/identity, shallow mesh check, evidence-path gaps, bookkeeping); fixes applied, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

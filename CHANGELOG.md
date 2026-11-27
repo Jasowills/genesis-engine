@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file. Format foll
 - `feat(core)`: versioned World IR v2 with v1 migrations (GE-0011).
 - `feat(core)`: lawful-source gate and provenance export sidecar (GE-0012).
 - `feat(geodata)`: GeoJSON boundary import with CRS/epoch validation (GE-0013).
+- `feat(geodata)`: OSM footprint and road centreline ingestion (GE-0014).
+- `feat(geometry)`: deterministic procedural road/building meshes (GE-0015).
 - `chore(ci)`: cross-platform test matrix, later fixed for workspace excludes.
 
 ### Added — 2026-11-27 (planning baseline, not product functionality)
