@@ -3,6 +3,7 @@
 //! This is the minimal headless foundation for the first vertical slice. The UI
 //! must never own this state; Studio, CLI and SDK all call these functions.
 
+pub mod ai;
 pub mod export_glb;
 pub mod geojson_boundary;
 pub mod incremental;
@@ -16,6 +17,11 @@ pub mod profiles;
 pub mod validation;
 pub mod world_ir;
 
+pub use ai::{
+    CancelToken, DepthOutput, DepthRequest, DepthResult, ExternalProviderStub, FakeAdapter,
+    InferenceAdapter, InferenceEvidence, ModelDescriptor, ModelLicence, SegmentationOutput,
+    SegmentationRequest, SegmentationResult,
+};
 pub use export_glb::{GlbExport, ImportedGlb, export_glb, format_gate_metric, import_glb};
 pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, validate_crs};
 pub use incremental::{GenerationRecord, RegenerationPlan, missing_objects, plan_regeneration};

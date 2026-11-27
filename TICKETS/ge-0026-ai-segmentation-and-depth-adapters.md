@@ -3,7 +3,7 @@ id: GE-0026
 title: AI segmentation and depth adapters
 type: integration
 priority: P2
-status: proposed
+status: in-review
 milestone: M3
 labels: [type:integration, area:ai]
 depends_on: [GE-0006, GE-0023]
@@ -42,10 +42,10 @@ Delivers optional AI capability without making Python or a runtime mandatory.
 Adapter only; no capability code imports runtime types.
 
 ## Acceptance criteria
-- [ ] Outputs typed and provenance-recorded
-- [ ] Cancellation demonstrated
-- [ ] No non-commercial weight used
-- [ ] Tests and documentation updated
+- [x] Outputs typed and provenance-recorded
+- [x] Cancellation demonstrated
+- [x] No non-commercial weight used
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Schema tests
@@ -77,7 +77,10 @@ External providers are adapters, never hard dependencies.
 ## Verification evidence
 
 GitHub issue: **#20** — https://github.com/Jasowills/genesis-engine/issues/20
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/ai.rs`, `tests/ai.rs`, `docs/developer/ai-adapters.md`, lib.rs re-exports.
+- `cargo test --workspace --locked` → **102 passed, 0 failed** (5 new AI adapter tests: typed outputs with per-run evidence, cancellation on both ports, non-commercial weight rejection, external provider disabled by default, invalid request/descriptor rejection). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- NOT IMPLEMENTED: named model weights (SAM ViT-B, YOLOX, Depth Anything V2 Small), real ONNX inference, weight checksum verification against a loaded artefact, GPU execution providers, external provider transport. This ticket delivers the swappable typed adapter contract and deterministic fake only.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

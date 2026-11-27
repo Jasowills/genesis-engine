@@ -62,11 +62,11 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0026 — AI adapter contract (5 adapter tests; independent review pending, issue #20).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).
 GE-0006 — ORT 1.32.0 smoke test passes in CI; named model weights (SAM/YOLOX/Depth Anything) not loaded — requires owner cost/licence decision (issue #9).
-GE-0026 — AI segmentation/depth adapters: blocked on named model weights (GE-0006) and worker execution (GE-0023 contract only).
 GE-0029 — Blender round-trip: Blender not installed locally; no CI provisioning decision (issue #25).
 GE-0030 / GE-0031 — LOD/collision/texture compression and engine export fixtures: blocked on GE-0029.
 GE-0032 — signed release/auto-update: signing identities and budget require owner approval (D-022, issue #21).
