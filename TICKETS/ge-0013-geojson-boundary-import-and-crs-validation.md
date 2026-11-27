@@ -3,7 +3,7 @@ id: GE-0013
 title: GeoJSON boundary import and CRS validation
 type: feature
 priority: P0
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:geospatial]
 depends_on: [GE-0011, GE-0012]
@@ -82,7 +82,8 @@ GitHub issue: **#11** — https://github.com/Jasowills/genesis-engine/issues/11
 - `cargo test --workspace --locked` → **31 passed, 0 failed** (7 project + 9 World IR + 6 lawful-source + 9 GeoJSON boundary), including known-answer SHA-256/ID, bbox `[3.3480, 6.5985, 3.3552, 6.6051]` matching `research/BENCHMARK_AREA.md`, CRS mismatch/epoch rejection, malformed/empty/multiple-feature/hole/degenerate geometry, gate-before-parse and antimeridian heuristic.
 - `cargo clippy --workspace --locked -- -D warnings` → clean; `cargo fmt --all -- --check` → clean.
 - Import is gated by `check_source`; SHA-256 source checksum and derived stable boundary ID recorded. No global cache.
-- Reviewer result: first pass `CHANGES_REQUESTED` (unimplemented CRS mismatch, test gaps, stale bookkeeping); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; CRS mismatch/epoch handling, nine boundary tests and bookkeeping corrected; independent re-review **`APPROVED`** (session `ses_de37b8e63ffesSg2D45qrUP5uI`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.
