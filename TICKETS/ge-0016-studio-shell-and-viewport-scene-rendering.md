@@ -3,7 +3,7 @@ id: GE-0016
 title: Studio shell and viewport scene rendering
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:studio, area:viewport]
 depends_on: [GE-0004, GE-0011]
@@ -83,7 +83,7 @@ GitHub issue: **#14** — https://github.com/Jasowills/genesis-engine/issues/14
 - `cd apps/studio && npx tsc --noEmit` clean; `npm run build` succeeded (only a chunk-size advisory).
 - Snapshot derives from Core IR + generated meshes; hierarchy is ARIA tree with roving tabindex, inspector has keyboard-numeric inputs; React contains presentation only (no CRS/provenance rules).
 - UNVERIFIED: real Tauri window/webview, WebGL2/WebGPU in WebView2/WKWebView/WebKitGTK, visual rendering, GPU leaks, 100k-object picking, auto-update/signing.
-- Reviewer result: first pass `CHANGES_REQUESTED` (negative numeric input impossible, stale bookkeeping, fixture licence not recorded, duplicated capability report/bridge claim, no CSS, weak boundary guard); fixes applied for the first three and App claim, residual capability duplication/no-CSS/guard items recorded as debt, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; all findings fixed, narrow re-review and final confirmation **`APPROVED`** (session `ses_de2e4fab3ffeSbJYDjN41iTwxi`). Residual debt recorded: capability_report not bridged, no visual/webview verification, status text instead of toasts.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
@@ -93,3 +93,4 @@ GitHub issue: **#14** — https://github.com/Jasowills/genesis-engine/issues/14
 - `capability_report()` remains a Rust-side reference not invoked by the frontend; the frontend environment probe is presentation-level. Wiring them is a follow-up (not claimed as bridged).
 - `styles.css` now provides minimal layout; no visual/webview verification has been performed.
 - Toast notifications are not implemented; status text is used instead (service boundary deferred).
+- 2026-11-27: Independent review APPROVED; ticket marked verified.
