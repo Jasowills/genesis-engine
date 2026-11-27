@@ -1,0 +1,11 @@
+{
+  "type": "FeatureCollection",
+  "name": "ikeja-road-markings",
+  "attribution": "Synthetic demonstration markings; inferred from OSM centreline, not observed.",
+  "features": [{
+    "type": "Feature",
+    "id": "marking/1",
+    "properties": {"osm_id": "way/102", "marking": "centre_line", "lane_markings": "yes"},
+    "geometry": {"type": "LineString", "coordinates": [[3.3485, 6.5990], [3.3545, 6.6040]]}
+  }]
+}

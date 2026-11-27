@@ -3,7 +3,7 @@ id: GE-0028
 title: Terrain and secondary layers
 type: feature
 priority: P2
-status: proposed
+status: in-progress
 milestone: M3
 labels: [type:feature, area:geometry]
 depends_on: [GE-0020]

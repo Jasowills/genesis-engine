@@ -1,0 +1,15 @@
+{
+  "name": "ikeja-demo-dem",
+  "crs": "CRS84",
+  "origin_lon_lat": [3.3480, 6.5985],
+  "cell_size_degrees": 0.0035,
+  "source_resolution_m": 30.0,
+  "vertical_accuracy_m": 12.0,
+  "vertical_datum": "EGM2008",
+  "attribution": "Synthetic demonstration grid; not a surveyed DEM. No high-resolution claim.",
+  "elevations_m": [
+    [40.0, 41.5, 39.0],
+    [42.0, 43.5, 40.5],
+    [41.0, 42.0, 38.5]
+  ]
+}

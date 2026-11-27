@@ -68,7 +68,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0024 | [#30](https://github.com/Jasowills/genesis-engine/issues/30) | Quality profiles and preflight estimates | feature | P1 | M2 | proposed | [GE-0018, GE-0006] |
 | GE-0025 | [#23](https://github.com/Jasowills/genesis-engine/issues/23) | WIT/WASI plugin SDK and sandbox PoC | security | P2 | M2 | proposed | [GE-0005, GE-0011] |
 | GE-0026 | [#20](https://github.com/Jasowills/genesis-engine/issues/20) | AI segmentation and depth adapters | integration | P2 | M3 | proposed | [GE-0006, GE-0023] |
-| GE-0027 | [#28](https://github.com/Jasowills/genesis-engine/issues/28) | Selective and incremental regeneration | feature | P2 | M3 | in-review | [GE-0011, GE-0020] |
+| GE-0027 | [#28](https://github.com/Jasowills/genesis-engine/issues/28) | Selective and incremental regeneration | feature | P2 | M3 | verified | [GE-0011, GE-0020] |
 | GE-0028 | [#24](https://github.com/Jasowills/genesis-engine/issues/24) | Terrain and secondary layers | feature | P2 | M3 | proposed | [GE-0020] |
 | GE-0029 | [#25](https://github.com/Jasowills/genesis-engine/issues/25) | Blender export and round-trip fixture | integration | P2 | M3 | proposed | [GE-0019] |
 | GE-0030 | [#26](https://github.com/Jasowills/genesis-engine/issues/26) | LOD, collision and texture compression | feature | P3 | M4 | proposed | [GE-0029] |

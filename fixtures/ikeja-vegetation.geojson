@@ -1,0 +1,11 @@
+{
+  "type": "FeatureCollection",
+  "name": "ikeja-vegetation",
+  "attribution": "Synthetic demonstration trees; procedural proxy geometry, not surveyed.",
+  "features": [{
+    "type": "Feature",
+    "id": "tree/1",
+    "properties": {"osm_id": "node/201", "natural": "tree"},
+    "geometry": {"type": "Point", "coordinates": [3.3490, 6.6000]}
+  }]
+}

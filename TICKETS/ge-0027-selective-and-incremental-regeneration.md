@@ -3,7 +3,7 @@ id: GE-0027
 title: Selective and incremental regeneration
 type: feature
 priority: P2
-status: in-review
+status: verified
 milestone: M3
 labels: [type:feature, area:core]
 depends_on: [GE-0011, GE-0020]
@@ -80,7 +80,8 @@ GitHub issue: **#28** — https://github.com/Jasowills/genesis-engine/issues/28
 - Files: `crates/genesis-core/src/incremental.rs`, `tests/incremental.rs`, lib.rs re-exports, `docs/developer/incremental.md`.
 - `cargo test --workspace --locked` → **73 passed, 0 failed** (6 new incremental tests: no-op, one-child subgraph with transitive dependents, new/seed/version changes, removed objects, duplicate records, removed dependents not scheduled). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - `plan_regeneration` returns dependency-order IDs (blockers first), reasons per object, unchanged IDs, and `missing_objects` separately. It is a planning seam; applying regeneration to live geometry is a follow-up integration.
-- Reviewer result: first pass `CHANGES_REQUESTED` (removed dependents scheduled as fake work, stale index/issue number, weak duplicate error assertion); bug fixed with regression test and bookkeeping synced, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; deleted-dependent bug fixed with regression test, bookkeeping synced; final confirmation **`APPROVED`** (session `ses_de21b39e7ffeuqzYIbJTYxudkn`). Limitation recorded: planning seam only, no live geometry/payload rebuild.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent confirmation APPROVED; ticket marked verified.
