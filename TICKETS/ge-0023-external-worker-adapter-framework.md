@@ -3,7 +3,7 @@ id: GE-0023
 title: External worker adapter framework
 type: engineering
 priority: P1
-status: proposed
+status: in-progress
 milestone: M2
 labels: [type:engineering, area:core]
 depends_on: [GE-0007, GE-0022]
