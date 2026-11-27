@@ -44,6 +44,7 @@ GE-0014 — OSM footprint and road feature ingestion (39 Core tests pass; indepe
 GE-0004 — desktop/viewport capability PoC (three-OS CI green; independent review `APPROVED`).
 GE-0015 — deterministic procedural road/building meshes (48 Core tests pass; independent re-review `APPROVED`).
 GE-0018 — structural validation gates (53 Core tests pass; independent review `APPROVED`).
+GE-0019 — GLB export with 0-error glTF-Validator result (57 Core tests pass; independent review `APPROVED`).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -61,7 +62,7 @@ GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` 
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0016 (Studio shell and viewport scene rendering) — now ready (GE-0004 PoC complete). GE-0005/GE-0006 remain blocked on platform-specific gaps.
+GE-0016 (Studio shell and viewport scene rendering) — ready (GE-0004 PoC complete). GE-0020 (E2E slice) still waits on GE-0016/GE-0017. GE-0005/GE-0006 remain blocked on platform-specific gaps.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: Studio/CLI, worker/AI adapters, plugin runtime and game-engine integrations. GLB export, structural validation and procedural geometry are implemented.

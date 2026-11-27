@@ -3,7 +3,7 @@ id: GE-0019
 title: GLB export and re-import fixture
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:export]
 depends_on: [GE-0011, GE-0018]
@@ -83,7 +83,8 @@ GitHub issue: **#16** — https://github.com/Jasowills/genesis-engine/issues/16
 - Official Khronos `gltf-validator` 2.0.0-dev.3.10 on generated `fixture.glb`: **0 errors, 0 warnings, 0 infos**, exit 0. Two earlier validator errors (`EMPTY_ENTITY`, `BUFFER_VIEW_TARGET_MISSING`) were fixed and are recorded in `prototype/gltf-fixture/RESULTS.md`.
 - Source/validation gates run before export; unsupported fields are emitted as warnings, not silently dropped.
 - CI format-gate step added for Ubuntu; validation report now carries `subject_hash` and the export gate rejects report/world/mesh mismatch, unregistered mesh sources and incomplete provenance.
-- Reviewer result: first pass `CHANGES_REQUESTED` (clippy unused_mut, unbound validation gate, stale bookkeeping, validator command precision); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; clippy, gate binding and bookkeeping fixed; re-review and final confirmation **`APPROVED`** (session `ses_de3027183ffeNm5c59cEpWHK0y`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent review APPROVED; ticket marked verified.
