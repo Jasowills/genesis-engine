@@ -59,11 +59,7 @@ pub fn generate_lod_chain(
     ];
     let mut chain = Vec::new();
     for (name, cap) in levels {
-        let stride = if cap >= total {
-            1
-        } else {
-            (total + cap - 1) / cap
-        };
+        let stride = if cap >= total { 1 } else { total.div_ceil(cap) };
         let mut kept = Vec::new();
         let mut triangle = 0;
         while triangle < total && kept.len() < cap {
