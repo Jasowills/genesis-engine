@@ -3,7 +3,7 @@ id: GE-0011
 title: World IR schema v0 with migrations
 type: feature
 priority: P0
-status: ready
+status: in-review
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0003, GE-0007]
@@ -44,10 +44,10 @@ Every other component depends on this seam; changing it after projects exist is 
 Small schema core with adapters; no inline giant geometry JSON.
 
 ## Acceptance criteria
-- [ ] Schema round-trips losslessly
-- [ ] Migration fixtures pass forward and backward
-- [ ] Golden vector tests from GE-0003 pass
-- [ ] Tests and documentation updated
+- [x] Schema round-trips losslessly
+- [x] Migration fixtures pass forward and backward
+- [x] Golden vector tests from GE-0003 pass
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Serialization, ID stability, hash behaviour
@@ -79,7 +79,12 @@ Independent review mandatory; schema is foundational.
 ## Verification evidence
 
 GitHub issue: **#5** — https://github.com/Jasowills/genesis-engine/issues/5
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/world_ir.rs`, new tests `crates/genesis-core/tests/world_ir.rs`, `docs/developer/world-ir.md`, `Cargo.toml` (sha2 dependency), `Cargo.lock`.
+- `cargo test --workspace --locked` → **12 passed, 0 failed** (7 project tests + 5 World IR tests), including f64 golden-vector preservation at ~1e7 m, deterministic IDs, idempotent forward/backward migration and structured errors.
+- `cargo clippy --workspace --locked -- -D warnings` → clean (derived Default and collapsed conditionals fixed).
+- `cargo fmt --all -- --check` → clean.
+- Schema v2 current / v1 legacy; migration fixtures verified both directions. No inline geometry; payloads by relative path; ODbL/provenance fields are data.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

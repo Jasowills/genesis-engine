@@ -52,7 +52,7 @@ GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` 
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0011 (World IR schema v0) — now unblocked by GE-0010. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
+GE-0012 (lawful-source gate + provenance) — unblocked by GE-0002 and GE-0011. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Thin versioned World IR with binary payload references; authoritative geodetic coordinates + local ENU frames; lawful-source gate on every import/inference/export; external-process workers with normalised progress; swappable AI adapter; Wasmtime/WASI plugin sandbox.

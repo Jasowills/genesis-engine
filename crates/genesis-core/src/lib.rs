@@ -3,6 +3,14 @@
 //! This is the minimal headless foundation for the first vertical slice. The UI
 //! must never own this state; Studio, CLI and SDK all call these functions.
 
+pub mod world_ir;
+
+pub use world_ir::{
+    AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,
+    Provenance, StableId, ValidationState, WorldIr, WorldLayer, WorldObject, derive_id,
+    migrate_backward, migrate_forward,
+};
+
 use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeSet,
