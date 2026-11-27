@@ -25,8 +25,8 @@ pub struct DemGrid {
 }
 
 impl DemGrid {
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        let grid: Self = serde_json::from_slice(bytes)?;
+    pub fn validate(&self) -> Result<()> {
+        let grid = self;
         if grid.origin_lon_lat[0] < -180.0
             || grid.origin_lon_lat[0] > 180.0
             || grid.origin_lon_lat[1] < -90.0
@@ -50,6 +50,12 @@ impl DemGrid {
         {
             return Err(CoreError::InvalidManifest("invalid DEM grid".to_string()));
         }
+        Ok(())
+    }
+
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        let grid: Self = serde_json::from_slice(bytes)?;
+        grid.validate()?;
         Ok(grid)
     }
 }
@@ -105,8 +111,11 @@ fn evidence_for_source(source: &SourceDescriptor, note: &str) -> EvidenceKind {
     .to_lowercase();
     if [
         "synthetic",
+        "not measured",
+        "unmeasured",
         "not a surveyed",
         "not surveyed",
+        "no survey",
         "demo",
         "fake",
         "proxy",
@@ -129,6 +138,7 @@ fn evidence_for_source(source: &SourceDescriptor, note: &str) -> EvidenceKind {
 /// vertical accuracy are recorded as parameters; no upsampling claim is made.
 pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<GeneratedGeometry> {
     check_source(source)?;
+    grid.validate()?;
     let rows = grid.elevations_m.len();
     let cols = grid.elevations_m[0].len();
     let east_scale = 111_320.0 * grid.origin_lon_lat[1].to_radians().cos();
@@ -398,6 +408,7 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
         })?;
     let mut vertices = Vec::new();
     let mut indices = Vec::new();
+    let mut feature_ids = Vec::new();
     let first = features
         .first()
         .and_then(|f| f.get("geometry"))
@@ -420,6 +431,13 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
     let east_scale = 111_320.0 * origin[1].to_radians().cos();
     let north_scale = 110_540.0;
     for feature in features {
+        feature_ids.push(
+            feature
+                .get("id")
+                .and_then(Value::as_str)
+                .unwrap_or("unknown")
+                .to_string(),
+        );
         let geometry = feature
             .get("geometry")
             .ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
@@ -456,7 +474,7 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
         MeshMeta {
             evidence: EvidenceKind::InferredByRule,
             origin_lon_lat: origin,
-            source_feature_ids: Vec::new(),
+            source_feature_ids: feature_ids,
             parameters,
         },
     )

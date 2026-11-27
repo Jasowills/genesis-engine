@@ -84,3 +84,4 @@ GitHub issue: **#26** — https://github.com/Jasowills/genesis-engine/issues/26
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Independent review APPROVED with explicit contract-only limitations; ticket marked verified.
+- 2026-11-27: Second adversarial audit — validate mesh indices before dereferencing in LOD/coverage paths. Regression test added; ticket remains verified.

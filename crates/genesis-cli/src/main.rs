@@ -125,12 +125,17 @@ fn load_source(project: &Path) -> Result<SourceDescriptor, String> {
 }
 
 fn save_source(project: &Path, source: &SourceDescriptor) -> Result<(), String> {
-    std::fs::create_dir_all(project.join("metadata")).map_err(|e| e.to_string())?;
+    let dir = project.join("metadata");
+    std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let target = dir.join("source.json");
+    assert_no_symlink(project, &target)?;
+    let temporary = dir.join("source.json.tmp");
     std::fs::write(
-        project.join("metadata/source.json"),
+        &temporary,
         serde_json::to_vec_pretty(source).map_err(|e| e.to_string())?,
     )
-    .map_err(|e| e.to_string())
+    .map_err(|e| e.to_string())?;
+    std::fs::rename(&temporary, &target).map_err(|e| e.to_string())
 }
 
 fn profile(name: &str) -> Result<QualityProfile, String> {
@@ -151,9 +156,34 @@ fn fail(command: &str, message: String) -> Value {
     json!({"schema_version": OUTPUT_SCHEMA_VERSION, "command": command, "status": "error", "error": {"kind": "cli_error", "message": message}})
 }
 
+/// Refuse to write through symlinks: an untrusted project bundle must not be
+/// able to redirect source copies outside the project root (SECURITY_MODEL.md).
+fn assert_no_symlink(root: &Path, target: &Path) -> Result<(), String> {
+    let mut current = root.to_path_buf();
+    for component in target
+        .strip_prefix(root)
+        .map_err(|e| e.to_string())?
+        .components()
+    {
+        current.push(component);
+        let is_symlink = std::fs::symlink_metadata(&current)
+            .map(|metadata| metadata.file_type().is_symlink())
+            .unwrap_or(false);
+        if is_symlink {
+            return Err(format!(
+                "refusing to write through symlink: {}",
+                current.display()
+            ));
+        }
+    }
+    Ok(())
+}
+
 fn copy_source(project: &Path, file: &Path, name: &str) -> Result<PathBuf, String> {
-    std::fs::create_dir_all(project.join("sources")).map_err(|e| e.to_string())?;
     let dest = project.join("sources").join(name);
+    assert_no_symlink(project, &dest)?;
+    std::fs::create_dir_all(project.join("sources")).map_err(|e| e.to_string())?;
+    assert_no_symlink(project, &dest)?;
     std::fs::copy(file, &dest).map_err(|e| e.to_string())?;
     Ok(dest)
 }
@@ -201,12 +231,12 @@ fn run(cli: Cli) -> Result<Value, String> {
             attribution,
         } => {
             let source = source_from_args(source_id, licence, attribution);
-            save_source(&project, &source)?;
             let crs = load_crs(&project)?;
-            let dest = copy_source(&project, &file, "boundary.geojson")?;
-            let bytes = std::fs::read(&dest).map_err(|e| e.to_string())?;
+            let bytes = std::fs::read(&file).map_err(|e| e.to_string())?;
             let boundary =
                 import_geojson(&bytes, &name, &source, &crs).map_err(|e| e.to_string())?;
+            copy_source(&project, &file, "boundary.geojson")?;
+            save_source(&project, &source)?;
             let manifest = json!({"schema_version": CURRENT_SCHEMA_VERSION, "name": boundary.name, "bbox": boundary.bbox, "id": boundary.id.to_string(), "checksum": boundary.source_checksum});
             std::fs::create_dir_all(project.join("worlds")).map_err(|e| e.to_string())?;
             std::fs::write(
@@ -224,10 +254,8 @@ fn run(cli: Cli) -> Result<Value, String> {
             attribution,
         } => {
             let source = source_from_args(source_id, licence, attribution);
-            save_source(&project, &source)?;
             let crs = load_crs(&project)?;
-            let dest = copy_source(&project, &file, "features.geojson")?;
-            let bytes = std::fs::read(&dest).map_err(|e| e.to_string())?;
+            let bytes = std::fs::read(&file).map_err(|e| e.to_string())?;
             let features = import_osm_geojson(&bytes, &source, &crs).map_err(|e| e.to_string())?;
             let objects = to_world_objects(&features, &source).map_err(|e| e.to_string())?;
             let world = WorldIr {
@@ -240,6 +268,8 @@ fn run(cli: Cli) -> Result<Value, String> {
                     objects,
                 }],
             };
+            copy_source(&project, &file, "features.geojson")?;
+            save_source(&project, &source)?;
             std::fs::create_dir_all(project.join("worlds")).map_err(|e| e.to_string())?;
             std::fs::write(
                 project.join("worlds/world.json"),
@@ -352,8 +382,12 @@ fn run(cli: Cli) -> Result<Value, String> {
 }
 
 fn main() {
-    let command_name = std::env::args().nth(1).unwrap_or_default();
-    match run(Cli::parse()) {
+    let arguments: Vec<_> = std::env::args_os().collect();
+    let command_name = arguments
+        .get(1)
+        .map(|value| value.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    match run(Cli::parse_from(arguments)) {
         Ok(value) => println!("{}", serde_json::to_string_pretty(&value).unwrap()),
         Err(message) => {
             eprintln!(

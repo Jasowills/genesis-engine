@@ -125,3 +125,87 @@ fn invalid_profile_is_a_structured_error() {
     );
     let _ = std::fs::remove_dir_all(&root);
 }
+
+#[test]
+fn failed_import_does_not_mutate_persisted_source() {
+    let root = std::env::temp_dir().join(format!(
+        "genesis-cli-source-{}-{}",
+        std::process::id(),
+        FAILED_IMPORT_COUNTER.fetch_add(1, std::sync::atomic::Ordering::SeqCst)
+    ));
+    let _ = std::fs::remove_dir_all(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "Atomic source"]);
+    run(&[
+        "features",
+        project_s,
+        OSM,
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--attribution",
+        "ORIGINAL",
+    ]);
+    let failed = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .args([
+            "features",
+            project_s,
+            "/definitely/missing.geojson",
+            "--source-id",
+            "osm:fixture:ikeja",
+            "--attribution",
+            "CHANGED",
+        ])
+        .output()
+        .unwrap();
+    assert!(!failed.status.success());
+    let stored: Value =
+        serde_json::from_slice(&std::fs::read(project.join("metadata/source.json")).unwrap())
+            .unwrap();
+    assert_eq!(stored["attribution"], "ORIGINAL");
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+static FAILED_IMPORT_COUNTER: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+
+#[cfg(unix)]
+#[test]
+fn symlinked_source_destination_is_rejected() {
+    use std::os::unix::fs::symlink;
+    let root = std::env::temp_dir().join(format!("genesis-cli-symlink-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&root).unwrap();
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    let outside = root.join("outside.geojson");
+    std::fs::write(&outside, "original").unwrap();
+    run(&["project", project_s, "Symlink test"]);
+    std::fs::create_dir_all(project.join("sources")).unwrap();
+    symlink(&outside, project.join("sources/boundary.geojson")).unwrap();
+
+    let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .args(["boundary", project_s, BOUNDARY, "Ikeja"])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("symlink"));
+    assert_eq!(std::fs::read_to_string(&outside).unwrap(), "original");
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[cfg(unix)]
+#[test]
+fn non_utf8_argument_does_not_panic() {
+    use std::os::unix::ffi::OsStringExt;
+    let arg = std::ffi::OsString::from_vec(vec![0xff, b'i', b'n', b'v', b'a', b'l', b'i', b'd']);
+    let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .arg(arg)
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        !stderr.contains("panicked"),
+        "non-UTF8 argv panicked: {stderr}"
+    );
+}

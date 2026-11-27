@@ -86,3 +86,4 @@ GitHub issue: **#24** — https://github.com/Jasowills/genesis-engine/issues/24
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Independent re-review APPROVED; ticket marked verified.
+- 2026-11-27: Second adversarial audit — direct DemGrid validation, negation-aware evidence tiers, vegetation feature IDs. Regression tests added; ticket remains verified.

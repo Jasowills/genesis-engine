@@ -88,3 +88,4 @@ GitHub issue: **#18** — https://github.com/Jasowills/genesis-engine/issues/18
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Independent review APPROVED; ticket marked verified.
+- 2026-11-27: Second adversarial audit — reject symlink destinations, atomic source writes, validate imports before persisting provenance, and non-UTF-8 argv without panic. Regression tests added; ticket remains verified.

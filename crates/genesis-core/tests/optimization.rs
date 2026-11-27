@@ -82,7 +82,7 @@ fn collision_proxy_encloses_source_and_measures_coverage() -> CoreResult<()> {
     let mut smaller = proxy.clone();
     smaller.max = [0.0, 0.0, 0.0];
     assert!(
-        smaller.coverage_of(&source) < 1.0,
+        smaller.coverage_of(&source).unwrap() < 1.0,
         "shrunk proxy must report incomplete coverage"
     );
     assert!(build_collision_proxy(&source, -0.1).is_err());
@@ -101,4 +101,14 @@ fn compression_allowlist_is_licence_aware() {
     assert!(compression_is_allowed(DeliveryCompression::Meshopt, true));
     assert!(!compression_is_allowed(DeliveryCompression::Meshopt, false));
     assert!(!compression_is_allowed(DeliveryCompression::None, false));
+}
+
+#[test]
+fn invalid_mesh_indices_are_errors_not_panics() -> CoreResult<()> {
+    let mut bad = mesh();
+    bad.indices[0] = 999;
+    assert!(generate_lod_chain(&bad, TargetProfile::DesktopPreview).is_err());
+    let proxy = build_collision_proxy(&mesh(), 0.01)?;
+    assert!(proxy.coverage_of(&bad).is_err());
+    Ok(())
 }

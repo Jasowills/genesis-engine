@@ -4,7 +4,7 @@
 Phase 8 owner checkpoint approved; M1–M4 dependency-ready work implemented and independently reviewed. M5 release work awaits owner decisions.
 
 ## Current milestone
-M4 — 31 of 32 tickets verified. M1–M4 contracts, CI and the Blender round-trip are complete; only the Unreal fixture (manual engine install), M5 signing identities and the WASIp1 network-policy UNVERIFIED item remain.
+M4 — 31 verified, 1 deferred, 1 declined; 1 partial (GE-0005). M1–M4 contracts, CI and the Blender round-trip are complete; only the Unreal fixture (manual engine install), M5 signing identities and the WASIp1 network-policy UNVERIFIED item remain.
 
 ## Current objective
 No dependency-ready implementation work remains. Each code-changing ticket passed tests, lint, formatting and independent review before `verified`. No release, publication, purchase or deployment without owner approval.
@@ -92,7 +92,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 117 passed, 0 failed (Core incl. 6 incremental + 11 job + 6 layer + 6 profile + 5 plugin + 5 AI + 2 Blender + 3 optimization tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 124 passed, 0 failed (Core incl. 6 incremental + 11 job + 6 layer + 6 profile + 5 plugin + 5 AI + 2 Blender + 3 optimization tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: historical CI runs `45979438978`/`45979776607` failed on prototype workspace formatting (fixed by `4a78f0e`, re-run `45980065945` green). CI run `46046257230` (intermediate GE-0030 commit `cf874c5`) failed the lint gate on two one-line Clippy findings; both fixed in `e0abbe6` and `66f44da`, with `46046601712`/`46046663754` green. Latest commit `d29a07a` CI run `46047346586` pending. No product-code test failures.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.

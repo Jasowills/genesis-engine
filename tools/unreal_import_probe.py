@@ -41,15 +41,18 @@ def main():
     task.save = True
     tools.import_asset_tasks([task])
 
+    imported_paths = optional(
+        lambda: [str(path) for path in task.imported_object_paths], default=[]
+    )
     assets = []
-    for path in task.imported_object_paths:
+    for path in imported_paths:
         asset = unreal.EditorAssetLibrary.load_asset(str(path))
         if asset is None:
             continue
         assets.append(
             {
                 "path": str(path),
-                "class": asset.get_class().get_name(),
+                "class": optional(lambda: asset.get_class().get_name()),
                 "vertices": optional(
                     lambda: unreal.EditorStaticMeshLibrary.get_number_verts(asset, 0)
                 ),

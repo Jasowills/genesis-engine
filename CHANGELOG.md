@@ -43,3 +43,4 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 - `feat(integration)`: pinned Blender 4.5.17 LTS GLB round-trip fixture (GE-0029).
 - `feat(core)`: LOD/collision/compression and adversarial-hardening fixes (GE-0030, audits).
 - `test(ai)`: owner-approved named ONNX models (SAM ViT-B quantised encoder, YOLOX-S, Depth Anything V2 Small) executed with checksum and licence records (GE-0006).
+- `fix`: second adversarial audit — index/panic guards, DEM validation, evidence negation, CLI symlink/atomic writes, script defensiveness.

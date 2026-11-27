@@ -163,3 +163,41 @@ fn declared_survey_sources_may_produce_measured_evidence() -> CoreResult<()> {
     assert_eq!(marks[0].evidence, EvidenceKind::Measured);
     Ok(())
 }
+
+#[test]
+fn direct_dem_construction_is_validated() -> CoreResult<()> {
+    let mut grid = DemGrid::from_bytes(&std::fs::read(DEM)?)?;
+    grid.elevations_m.clear();
+    let result = generate_terrain(&grid, &source());
+    assert!(matches!(
+        result,
+        Err(genesis_core::CoreError::InvalidManifest(_))
+    ));
+    Ok(())
+}
+
+#[test]
+fn explicitly_unmeasured_sources_never_produce_measured_evidence() -> CoreResult<()> {
+    let mut src = source();
+    src.attribution = "DEM not measured by any survey".to_string();
+    let mut grid = DemGrid::from_bytes(&std::fs::read(DEM)?)?;
+    grid.attribution = "not measured".to_string();
+    let terrain = generate_terrain(&grid, &src)?;
+    assert_ne!(terrain.evidence, EvidenceKind::Measured);
+    let observed = br#"{"type":"FeatureCollection","features":[{"type":"Feature","id":"m/2","properties":{"observed":true},"geometry":{"type":"LineString","coordinates":[[3.0,6.0],[3.01,6.0]]}}]}"#;
+    let marks = generate_markings(observed, &src)?;
+    assert_ne!(marks[0].evidence, EvidenceKind::Measured);
+    Ok(())
+}
+
+#[test]
+fn vegetation_keeps_fixture_feature_ids() -> CoreResult<()> {
+    let vegetation = generate_vegetation(&std::fs::read(VEGETATION)?, &source())?;
+    assert!(
+        vegetation
+            .provenance
+            .source_feature_ids
+            .contains(&"tree/1".to_string())
+    );
+    Ok(())
+}

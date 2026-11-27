@@ -40,6 +40,8 @@ pub fn generate_lod_chain(
     source: &GeneratedGeometry,
     target: TargetProfile,
 ) -> Result<Vec<LodLevel>> {
+    // Validate the source before dereferencing caller-supplied indices.
+    verify_mesh(source)?;
     let budget = target.max_triangles_per_asset();
     if budget == 0 {
         return Err(CoreError::InvalidManifest(
@@ -125,10 +127,10 @@ pub struct CollisionProxy {
 impl CollisionProxy {
     /// Fraction of surface samples contained in the proxy. A value below 1.0
     /// means the proxy does not enclose the source geometry.
-    pub fn coverage_of(&self, mesh: &GeneratedGeometry) -> f64 {
-        let samples = surface_samples(mesh);
+    pub fn coverage_of(&self, mesh: &GeneratedGeometry) -> Result<f64> {
+        let samples = surface_samples(mesh)?;
         if samples.is_empty() {
-            return 0.0;
+            return Ok(0.0);
         }
         let inside = samples
             .iter()
@@ -139,23 +141,30 @@ impl CollisionProxy {
                 })
             })
             .count();
-        inside as f64 / samples.len() as f64
+        Ok(inside as f64 / samples.len() as f64)
     }
 }
 
-fn surface_samples(mesh: &GeneratedGeometry) -> Vec<[f64; 3]> {
+fn surface_samples(mesh: &GeneratedGeometry) -> Result<Vec<[f64; 3]>> {
+    verify_mesh(mesh)?;
     let mut samples = mesh.vertices.clone();
     for triangle in mesh.indices.as_chunks::<3>().0 {
-        let a = mesh.vertices[triangle[0] as usize];
-        let b = mesh.vertices[triangle[1] as usize];
-        let c = mesh.vertices[triangle[2] as usize];
+        let vertex = |index: u32| -> Result<[f64; 3]> {
+            mesh.vertices
+                .get(index as usize)
+                .copied()
+                .ok_or_else(|| CoreError::InvalidManifest("mesh index out of range".to_string()))
+        };
+        let a = vertex(triangle[0])?;
+        let b = vertex(triangle[1])?;
+        let c = vertex(triangle[2])?;
         samples.push([
             (a[0] + b[0] + c[0]) / 3.0,
             (a[1] + b[1] + c[1]) / 3.0,
             (a[2] + b[2] + c[2]) / 3.0,
         ]);
     }
-    samples
+    Ok(samples)
 }
 
 /// Build a padded AABB collision proxy and measure coverage against the
@@ -173,7 +182,7 @@ pub fn build_collision_proxy(mesh: &GeneratedGeometry, tolerance_m: f64) -> Resu
             "collision tolerance must be non-negative".to_string(),
         ));
     }
-    let samples = surface_samples(mesh);
+    let samples = surface_samples(mesh)?;
     if samples.is_empty() {
         return Err(CoreError::InvalidManifest(
             "collision proxy needs geometry".to_string(),
@@ -199,7 +208,7 @@ pub fn build_collision_proxy(mesh: &GeneratedGeometry, tolerance_m: f64) -> Resu
         sample_count: samples.len(),
         coverage: 1.0,
     };
-    let coverage = proxy.coverage_of(mesh);
+    let coverage = proxy.coverage_of(mesh)?;
     if coverage < 1.0 {
         return Err(CoreError::InvalidManifest(format!(
             "collision proxy covers only {coverage} of surface samples"

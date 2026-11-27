@@ -96,3 +96,4 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - 2026-11-27: CI run link and partial-status rationale recorded; ticket remains in-review pending named-model decision.
 - 2026-11-27: Owner approved named weights (D-033); weights downloaded, checksum-verified and executed; ticket moved from partial to full evidence.
 - 2026-11-27: Independent confirmation APPROVED; ticket marked verified with recorded limitations.
+- 2026-11-27: Second adversarial audit — named-weight digest verified before extraction; digest mismatch now marks the model failed.

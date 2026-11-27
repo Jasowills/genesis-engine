@@ -95,6 +95,9 @@ def run_model(spec: dict) -> dict:
     result["sha256"] = digest
     if spec["expected_sha256"]:
         result["digest_matches_published"] = digest == spec["expected_sha256"]
+        if not result["digest_matches_published"]:
+            result["status"] = "checksum_mismatch"
+            return result
     try:
         onnx.checker.check_model(str(path))
         result["onnx_checker"] = "pass"
@@ -120,15 +123,20 @@ def run_model(spec: dict) -> dict:
 
 
 def main() -> None:
-    unpack_sam()
     archive = WEIGHTS / "sam_vit_b_01ec64_quant.zip"
     published_archive_digest = "9d59db12affc009f71c9ddeab8fc833507510883e7f6bc4c0cc6c45e0d4f5862"
+    archive_present = archive.is_file()
+    archive_digest = sha256(archive) if archive_present else None
+    archive_matches = archive_present and archive_digest == published_archive_digest
+    # Verify before extraction: tampered bytes must never be unpacked.
+    if archive_matches:
+        unpack_sam()
     report = {
         "archive_checksums": {
             "sam_vit_b_01ec64_quant.zip": {
-                "sha256": sha256(archive) if archive.is_file() else None,
+                "sha256": archive_digest,
                 "published_sha256": published_archive_digest,
-                "matches": archive.is_file() and sha256(archive) == published_archive_digest,
+                "matches": archive_matches,
                 "source": "https://huggingface.co/vietanhdev/segment-anything-onnx-models",
             },
         },
@@ -139,7 +147,14 @@ def main() -> None:
         "platform": platform.platform(),
         "machine": platform.machine(),
         "execution_provider": "CPUExecutionProvider",
-        "models": [run_model(spec) for spec in MODELS],
+        "models": [
+            (
+                {"name": spec["name"], "status": "checksum_mismatch"}
+                if spec["name"].startswith("sam_vit_b") and not archive_matches
+                else run_model(spec)
+            )
+            for spec in MODELS
+        ],
         "limitations": [
             "Synthetic small-valued inputs, not real imagery; this is an inference smoke test, not an accuracy benchmark",
             "SAM ViT-B is the quantised ONNX export (encoder only); decoder/prompt path is not exercised here",
