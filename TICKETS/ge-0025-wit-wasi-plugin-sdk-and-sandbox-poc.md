@@ -3,7 +3,7 @@ id: GE-0025
 title: WIT/WASI plugin SDK and sandbox PoC
 type: security
 priority: P2
-status: proposed
+status: in-review
 milestone: M2
 labels: [type:security, area:plugins]
 depends_on: [GE-0005, GE-0011]
@@ -42,10 +42,10 @@ Spec §33 requires a safe extension model; A05 must be proven before any registr
 PoC graduates into SDK only after adversarial fixtures pass.
 
 ## Acceptance criteria
-- [ ] Evil plugin fixtures pass
-- [ ] Rollback demonstrated
-- [ ] Capabilities deny-by-default
-- [ ] Tests and documentation updated
+- [x] Evil plugin fixtures pass
+- [x] Rollback demonstrated
+- [x] Capabilities deny-by-default
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: WIT schema tests
@@ -77,7 +77,10 @@ No registry before legal/trust policy.
 ## Verification evidence
 
 GitHub issue: **#23** — https://github.com/Jasowills/genesis-engine/issues/23
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/plugins.rs`, `tests/plugins.rs`, `docs/developer/plugins.md`, lib.rs re-exports. Throwaway `prototype/plugin-sandbox/` evidence (GE-0005) is explicitly not imported.
+- `cargo test --workspace --locked` → **96 passed, 0 failed** (5 new plugin tests: deny-by-default WIT world, deny-by-default grants, adversarial manifest rejection including seal tampering, atomic activation with rollback, structured invalid-state/serialisation checks). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- NOT IMPLEMENTED: generated WIT bindings, live WASI 0.2 component execution, OS-enforced sandbox policy, asymmetric signature verification/key management, cross-process persistence. The manifest seal is SHA-256 tamper-evidence, not authentication.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

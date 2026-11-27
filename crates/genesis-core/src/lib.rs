@@ -10,6 +10,7 @@ pub mod jobs;
 pub mod lawful_source;
 pub mod layers;
 pub mod osm_ingest;
+pub mod plugins;
 pub mod procedural;
 pub mod profiles;
 pub mod validation;
@@ -30,6 +31,10 @@ pub use layers::{
     DemGrid, generate_markings, generate_sidewalks, generate_terrain, generate_vegetation,
 };
 pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_objects};
+pub use plugins::{
+    ActivationStore, Capability, CapabilityGrants, IntegritySeal, MANIFEST_SCHEMA_VERSION,
+    PluginManifest, WIT_WORLD_SOURCE, WIT_WORLD_VERSION, wit_world_is_deny_by_default,
+};
 pub use procedural::{
     GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, generate_building_volumes,
     generate_road_surfaces, verify_mesh,
