@@ -44,10 +44,10 @@ ADRs A01/A05/A06 cannot be approved on unresolved evidence; ODbL and Wasmtime de
 Primary-source verification per conflict; mark anything still unresolved as UNVERIFIED and gate the dependent ADR.
 
 ## Acceptance criteria
-- [ ] Every conflict has a resolution or explicit UNVERIFIED status
-- [ ] Each resolution cites a primary source and access date
+- [x] Every conflict has a resolution or explicit UNVERIFIED status
+- [x] Each resolution cites a primary source and access date
 - [x] RESEARCH_REGISTER.md updated
-- [ ] Tests and documentation updated
+- [x] Documentation updated (RESEARCH_REGISTER.md resolution block); tests n/a per test plan (integration = re-fetch primary sources, already performed)
 
 ## Test plan
 - Unit: n/a
@@ -83,8 +83,8 @@ GitHub issue: **#3** — https://github.com/Jasowills/genesis-engine/issues/3
 - `research/RESEARCH_REGISTER.md` §4 now contains a dated "Resolution block — 2026-11-27 (GE-0002 research subagent)" with per-conflict VERDICT, primary-source URLs, residual UNVERIFIED caveats and affected ticket/ADR. The original eight-entry list is retained as history.
 - Outcome: 7 resolved, 1 partially resolved (3D Tiles royalty-free to implement from OGC spec, but repo-derived code / quantized-mesh terms unverified).
 - No architecture or licence decision was made; resolutions are evidence only.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` on stale local ticket state (read before sync); local sync corrected, fresh review requested.
 
 ## Changelog
-- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review`; owner approval of scope recorded at Phase 8. Independent review requested.
 - 2026-11-27: Eight conflicts resolved against primary sources; status moved to in-review.

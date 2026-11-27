@@ -43,7 +43,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | ID | GitHub | Title | Type | Priority | Milestone | Status | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | GE-0001 | [#31](https://github.com/Jasowills/genesis-engine/issues/31) | Record environment and workflow capabilities | documentation | P0 | M0 | ready | [] |
-| GE-0002 | [#3](https://github.com/Jasowills/genesis-engine/issues/3) | Resolve licence and source-rights conflicts | research | P0 | M0 | in-progress | [] |
+| GE-0002 | [#3](https://github.com/Jasowills/genesis-engine/issues/3) | Resolve licence and source-rights conflicts | research | P0 | M0 | in-review | [] |
 | GE-0003 | [#1](https://github.com/Jasowills/genesis-engine/issues/1) | Precision and CRS golden-vector spike | spike | P0 | M0 | verified | [] |
 | GE-0004 | [#2](https://github.com/Jasowills/genesis-engine/issues/2) | Desktop shell and viewport capability PoC | spike | P0 | M0 | proposed | [GE-0003] |
 | GE-0005 | [#22](https://github.com/Jasowills/genesis-engine/issues/22) | Plugin runtime feasibility spike | spike | P1 | M0 | ready | [] |
