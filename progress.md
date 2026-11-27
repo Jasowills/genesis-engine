@@ -4,10 +4,10 @@
 Phase 7 — GitHub project setup. Phase 8 owner checkpoint completed 2026-11-27; foundational plan approved.
 
 ## Current milestone
-M0 — Research, architecture and approval. Research and planning complete; repository setup is the remaining action.
+M1 — Foundation and first vertical slice. Research, architecture, repository setup and GitHub issues are complete; Core primitives are implemented and independently verified.
 
 ## Current objective
-Create the approved public GitHub repository with a small verified documentation-only commit, labels, milestones and issues from the 32 approved tickets with native blocking links; report exact URL/branch/hash/issue count. Then run the unblocked M0 spikes with independent review. No product implementation.
+Advance M1 tickets in dependency order: Studio shell/viewport, E2E vertical slice, and remaining foundation tickets. Each code-changing ticket must pass tests, lint, formatting and independent review before `verified`. No release or deployment without owner approval.
 
 ## Overall status
 M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. No Studio UI, CLI, worker pipeline or game-engine integration yet.
@@ -28,7 +28,7 @@ D-007 platform boundaries; D-015 cloud; D-016 collaboration; D-017 skill identit
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
 - Latest commit: **read live with `git rev-parse HEAD`** (this file is itself committed after each update, so a hard-coded hash would always lag by one commit). Reconciliation baseline: `15e5b4548c180cc4cf4160cf81a837c50efa04ef`; earlier commits `5fb68abba2f1ec801d2c887f63b4c30f4360f545` (issue links) and `aa728fd9a9aa5e0bf2ca05b94006434816be973d` (initial 81-file documentation-only commit).
-- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. No product code.
+- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export); no Studio UI or CLI yet.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
 
