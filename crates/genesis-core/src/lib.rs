@@ -3,8 +3,12 @@
 //! This is the minimal headless foundation for the first vertical slice. The UI
 //! must never own this state; Studio, CLI and SDK all call these functions.
 
+pub mod lawful_source;
 pub mod world_ir;
 
+pub use lawful_source::{
+    LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
+};
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,
     Provenance, StableId, ValidationState, WorldIr, WorldLayer, WorldObject, derive_id,
@@ -85,6 +89,7 @@ pub enum CoreError {
     UnsupportedSchemaVersion { found: u32, supported: u32 },
     InvalidManifest(String),
     PathEscapesProject(String),
+    SourceDenied(String),
     AlreadyExists(PathBuf),
 }
 
@@ -99,6 +104,9 @@ impl fmt::Display for CoreError {
             ),
             Self::InvalidManifest(msg) => write!(f, "invalid project manifest: {msg}"),
             Self::PathEscapesProject(path) => write!(f, "path escapes project root: {path}"),
+            Self::SourceDenied(reason) => {
+                write!(f, "source denied by lawful-source policy: {reason}")
+            }
             Self::AlreadyExists(path) => write!(f, "project already exists at {}", path.display()),
         }
     }

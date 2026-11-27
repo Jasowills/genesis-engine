@@ -42,10 +42,10 @@ Makes the provenance differentiator real and prevents rights violations in code 
 Cross-cutting service consulted by all import and export paths.
 
 ## Acceptance criteria
-- [ ] Denied sources are rejected in tests
-- [ ] Attribution and licence election survive IR to export
-- [ ] Provenance record covers all fields from research synthesis
-- [ ] Tests and documentation updated
+- [x] Denied sources are rejected in tests
+- [x] Attribution and licence election survive IR to export
+- [x] Provenance record covers all fields from research synthesis
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Gate decision logic
@@ -77,7 +77,12 @@ Do not defer: hard blocker for any data import.
 ## Verification evidence
 
 GitHub issue: **#10** — https://github.com/Jasowills/genesis-engine/issues/10
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/lawful_source.rs`, `crates/genesis-core/tests/lawful_source.rs`, `docs/developer/lawful-sources.md`, `CoreError::SourceDenied` variant.
+- `cargo test --workspace --locked` → **20 passed, 0 failed** (7 project + 9 World IR + 4 lawful-source), including all deny-list patterns and the CesiumJS-allowed carve-out.
+- `cargo clippy --workspace --locked -- -D warnings` → clean; `cargo fmt --all -- --check` → clean.
+- Deny-list covers Google Maps/Street View/Photorealistic 3D Tiles and Cesium ion content, plus non-commercial licences; open standards software remains permitted.
+- Attribution + licence election verified through IR round-trip and machine-readable export sidecar.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
