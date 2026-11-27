@@ -1,0 +1,8 @@
+[package]
+name = "precision-crs-prototype"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Throwaway evidence prototype for GE-0003: glTF f32 precision and local ENU frames"
+
+[dependencies]

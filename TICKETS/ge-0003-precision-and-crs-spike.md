@@ -3,7 +3,7 @@ id: GE-0003
 title: Precision and CRS golden-vector spike
 type: spike
 priority: P0
-status: ready
+status: in-review
 milestone: M0
 labels: [spike, area:geometry]
 depends_on: []
@@ -44,10 +44,10 @@ Directly answers spec questions on internal CRS and precision loss far from orig
 Throwaway prototype producing decision-rich snippets (state/transform shape), kept as primary source; fold findings into A07 and IR requirements.
 
 ## Acceptance criteria
-- [ ] Prototype measures and records coordinate error in local frames
-- [ ] Golden vectors reproducible and committed
-- [ ] ADR A07 evidence updated with measured result
-- [ ] Tests and documentation updated
+- [x] Prototype measures and records coordinate error in local frames
+- [x] Golden vectors reproducible and committed
+- [x] ADR A07 evidence updated with measured result
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Coordinate transform unit checks
@@ -79,7 +79,12 @@ Prototype is evidence, not product code; do not mark verified without independen
 ## Verification evidence
 
 GitHub issue: **#1** — https://github.com/Jasowills/genesis-engine/issues/1
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- `cd prototype/precision-crs && cargo test` → **5 passed, 0 failed** (rustc 1.98.1).
+- `cargo run --quiet` → f32 ULP 0.5 m @ 6.37e6 m, 1.0 m @ 1e7 m; naive 1 cm offset at 1e7 m lost (stored delta 0.0 m); f64 origin + f32 local ENU error 1.92e-6 m; ECEF↔ENU round trip 0.0 m; antimeridian cuts at ±180°.
+- Evidence files: `prototype/precision-crs/src/main.rs`, `prototype/precision-crs/RESULTS.md`, `prototype/precision-crs/README.md`.
+- `adr/0008-floating-origin-local-frame-precision-strategy.md` Verification plan updated with measured results.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Prototype implemented and tested; status moved to in-review pending independent review.

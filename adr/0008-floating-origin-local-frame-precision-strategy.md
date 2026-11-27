@@ -44,7 +44,7 @@ Full citations and licence texts are in the referenced research files and `resea
 
 ## Verification plan
 
-GE-0003 golden vectors at ~1e7 m and ±180°. No implementation claim is made here.
+GE-0003 golden vectors at ~1e7 m and ±180°. **Measured 2026-11-27 in the throwaway prototype `prototype/precision-crs/`:** f32 ULP 0.5 m at 6.37e6 m and 1.0 m at 1e7 m; a 1 cm offset at 1e7 m is lost entirely; the f64-origin + f32-local-ENU strategy had 1.92e-6 m error for a ~130 m offset; f64 ECEF↔ENU round-trip exact to 12 decimals; antimeridian cut vectors pass. Five unit tests pass (`cargo test`, rustc 1.98.1). Full evidence: `prototype/precision-crs/RESULTS.md`. No product implementation claim is made here.
 
 ## Notes
 
