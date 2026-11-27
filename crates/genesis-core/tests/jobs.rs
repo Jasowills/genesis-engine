@@ -1,8 +1,6 @@
 use genesis_core::{
     CoreResult, JobEvent, JobRecord, JobState, Supervisor, Worker, WorkerDescriptor,
 };
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
 
 struct FakeWorker {
     descriptor: WorkerDescriptor,
