@@ -162,6 +162,12 @@ fn surface_samples(mesh: &GeneratedGeometry) -> Vec<[f64; 3]> {
 /// source surface. Non-finite vertices are rejected rather than silently
 /// producing an enclosing box.
 pub fn build_collision_proxy(mesh: &GeneratedGeometry, tolerance_m: f64) -> Result<CollisionProxy> {
+    verify_mesh(mesh)?;
+    if !mesh.indices.len().is_multiple_of(3) {
+        return Err(CoreError::InvalidManifest(
+            "collision mesh index count is not a multiple of three".to_string(),
+        ));
+    }
     if !tolerance_m.is_finite() || tolerance_m < 0.0 {
         return Err(CoreError::InvalidManifest(
             "collision tolerance must be non-negative".to_string(),
@@ -218,7 +224,10 @@ pub fn compression_allowlist() -> Vec<(DeliveryCompression, &'static str)> {
         (DeliveryCompression::None, "no codec"),
         (DeliveryCompression::Draco, "Apache-2.0 encoder/decoder"),
         (DeliveryCompression::Meshopt, "MIT encoder/decoder"),
-        (DeliveryCompression::Ktx2Basis, "Apache-2.0 / BSD-3 sources"),
+        (
+            DeliveryCompression::Ktx2Basis,
+            "Basis Apache-2.0 / Khronos KTX2 spec",
+        ),
     ]
 }
 

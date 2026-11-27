@@ -3,7 +3,7 @@ id: GE-0030
 title: LOD, collision and texture compression
 type: feature
 priority: P3
-status: in-review
+status: verified
 milestone: M4
 labels: [type:feature, area:geometry, area:export]
 depends_on: [GE-0029]
@@ -79,7 +79,8 @@ GitHub issue: **#26** — https://github.com/Jasowills/genesis-engine/issues/26
 - Files: `crates/genesis-core/src/optimization.rs`, `tests/optimization.rs`, `docs/developer/optimization.md`, lib.rs re-exports.
 - `cargo test --workspace --locked` → **117 passed, 0 failed** (3 new optimization tests: named-budget LOD chain with frame/seed/provenance preservation and determinism, collision AABB coverage including a deliberately incomplete proxy, licence-aware codec allowlist). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - NOT IMPLEMENTED: visually faithful simplification, real KTX2/Basis/Draco/meshopt encoders, codec binaries, texture transcoding, engine-specific optimisation (GE-0031), measured frame-time/memory budgets. LODs are deterministic screening levels; budgets are policy thresholds.
-- Reviewer result: pending independent review.
+- Reviewer result: independent review **`APPROVED`** (session `ses_de1d11bd7ffecN3f7DBGNqsUUf`); low findings (collision mesh validation, KTX licence note, provenance assertions, stale count) applied.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent review APPROVED with explicit contract-only limitations; ticket marked verified.

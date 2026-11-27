@@ -53,6 +53,8 @@ fn lod_chain_respects_named_budget_and_preserves_source_frame() -> CoreResult<()
         assert!(level.triangle_count > 0);
         assert_eq!(level.mesh.origin_lon_lat, source.origin_lon_lat);
         assert_eq!(level.mesh.generation_seed, source.generation_seed);
+        assert_eq!(level.mesh.provenance, source.provenance);
+        assert_eq!(level.mesh.source_object_ids, source.source_object_ids);
         assert_eq!(level.mesh.parameters["lod_level"], level.name);
         verify_mesh(&level.mesh)?;
     }

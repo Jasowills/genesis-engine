@@ -52,6 +52,7 @@ GE-0023 — external worker supervision contract (contract only; independent re-
 GE-0026 — AI adapter contract (adapter only; independent review `APPROVED`).
 GE-0024 — quality profiles and preflight estimates (6 tests; independent re-review `APPROVED`, estimate-only limitation).
 GE-0029 — Blender 4.5.17 LTS round-trip (2 tests; review findings remediated, `verified` with recorded limitations).
+GE-0030 — LOD/collision/compression contracts (3 tests; independent review `APPROVED`, contract-only limitation).
 GE-0028 — terrain/secondary layer generators (5 layer tests; independent re-review `APPROVED`).
 GE-0025 — plugin SDK contract (contract only; independent review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
@@ -65,7 +66,6 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0030 — LOD/collision/compression allowlist (3 tests; independent review pending, issue #26).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).
@@ -92,7 +92,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 91 passed, 0 failed (Core incl. 6 incremental + 8 job + 5 layer + 5 profile tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 117 passed, 0 failed (Core incl. 6 incremental + 11 job + 6 layer + 6 profile + 5 plugin + 5 AI + 2 Blender + 3 optimization tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
