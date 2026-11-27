@@ -1,6 +1,6 @@
 # Genesis Engine — Release Process (PROPOSED)
 
-**Date:** 2026-11-27. No release has occurred. No signing identity, repository, domain or paid account has been acquired. All purchases require explicit owner approval.
+**Date:** 2026-11-27. No release has occurred. No signing identity, repository, domain or paid account has been acquired. All purchases require explicit owner approval. **Owner decision (2026-11-27):** signed/notarised releases and auto-update are declined (D-022, GE-0032); distribution is source/OS-appropriate builds. The signing requirements below remain documented research only, not an active plan.
 
 ## 1. Release stages (spec §52)
 

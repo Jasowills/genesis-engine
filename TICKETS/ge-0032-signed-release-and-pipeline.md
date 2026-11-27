@@ -3,7 +3,7 @@ id: GE-0032
 title: Signed release and auto-update pipeline
 type: release
 priority: P3
-status: needs-owner-input
+status: declined
 milestone: M5
 labels: [type:release, area:infra]
 depends_on: [GE-0008, GE-0009]
@@ -16,7 +16,7 @@ owner_approval_required: true
 # GE-0032 — Signed release and auto-update pipeline
 
 ## Problem
-Public releases need signing, notarisation and safe update key custody.
+Public releases need signing, notarisation and safe update key custody. **Owner declined this scope on 2026-11-27**: Genesis Engine is open source and users may obtain OS-appropriate source/builds; no paid signing identity or auto-update pipeline will be acquired. This ticket is closed as declined, not verified.
 
 ## User / engineering value
 Spec §52 and research on Apple/Windows signing costs and Tauri updater.
@@ -76,7 +76,10 @@ Do not announce stable support for untested features.
 ## Verification evidence
 
 GitHub issue: **#21** — https://github.com/Jasowills/genesis-engine/issues/21
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Owner decision 2026-11-27: decline Apple Developer Program ($99/yr) and Windows signing certificates. No purchase, credential, updater key or notarisation setup has been made. D-022 records the decision.
+- Outcome: GE-0032 is closed as `declined`; no release pipeline, signed installer, notarisation or auto-update feature is claimed. Users can build/download OS-appropriate versions from source. No independent review requested because no implementation exists.
+- Acceptance criteria: not applicable (scope declined).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `needs-owner-input`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Owner declined signing spend; ticket closed as declined.
