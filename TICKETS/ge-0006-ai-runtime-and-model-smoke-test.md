@@ -3,7 +3,7 @@ id: GE-0006
 title: AI runtime and model smoke test
 type: spike
 priority: P1
-status: ready
+status: in-progress
 milestone: M0
 labels: [spike, area:ai]
 depends_on: []

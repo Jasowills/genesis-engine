@@ -1,0 +1,35 @@
+[package]
+name = "ge-plugin-sandbox-guest-fixtures"
+version = "0.1.0"
+edition = "2021"
+publish = false
+autobins = false
+
+[[bin]]
+name = "normal"
+path = "src/bin/normal.rs"
+
+[[bin]]
+name = "infinite_loop"
+path = "src/bin/infinite_loop.rs"
+
+[[bin]]
+name = "memory_grow"
+path = "src/bin/memory_grow.rs"
+
+[[bin]]
+name = "probe"
+path = "src/bin/probe.rs"
+
+[[bin]]
+name = "report_flood"
+path = "src/bin/report_flood.rs"
+
+[profile.release]
+opt-level = "s"
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[workspace]

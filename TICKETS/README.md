@@ -46,8 +46,8 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0002 | [#3](https://github.com/Jasowills/genesis-engine/issues/3) | Resolve licence and source-rights conflicts | research | P0 | M0 | verified | [] |
 | GE-0003 | [#1](https://github.com/Jasowills/genesis-engine/issues/1) | Precision and CRS golden-vector spike | spike | P0 | M0 | verified | [] |
 | GE-0004 | [#2](https://github.com/Jasowills/genesis-engine/issues/2) | Desktop shell and viewport capability PoC | spike | P0 | M0 | proposed | [GE-0003] |
-| GE-0005 | [#22](https://github.com/Jasowills/genesis-engine/issues/22) | Plugin runtime feasibility spike | spike | P1 | M0 | in-progress | [] |
-| GE-0006 | [#9](https://github.com/Jasowills/genesis-engine/issues/9) | AI runtime and model smoke test | spike | P1 | M0 | ready | [] |
+| GE-0005 | [#22](https://github.com/Jasowills/genesis-engine/issues/22) | Plugin runtime feasibility spike | spike | P1 | M0 | blocked | [] |
+| GE-0006 | [#9](https://github.com/Jasowills/genesis-engine/issues/9) | AI runtime and model smoke test | spike | P1 | M0 | in-progress | [] |
 | GE-0007 | [#4](https://github.com/Jasowills/genesis-engine/issues/4) | Approve ADR set and decision register | documentation | P0 | M0 | blocked | [GE-0002, GE-0003, GE-0004] |
 | GE-0008 | [#6](https://github.com/Jasowills/genesis-engine/issues/6) | GitHub repository and issue setup | engineering | P0 | M0 | verified | [GE-0007] |
 | GE-0009 | [#7](https://github.com/Jasowills/genesis-engine/issues/7) | Cross-platform CI skeleton | engineering | P0 | M0 | proposed | [GE-0008] |

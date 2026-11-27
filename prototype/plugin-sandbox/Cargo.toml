@@ -1,0 +1,14 @@
+[package]
+name = "ge-plugin-sandbox-spike"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+wasmtime = "51.0.0"
+wasmtime-wasi = "51.0.0"
+tokio = { version = "1", features = ["time", "rt", "rt-multi-thread", "macros"] }
+anyhow = "1"
+
+[workspace]
+exclude = ["guest"]

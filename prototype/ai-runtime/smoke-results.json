@@ -1,0 +1,61 @@
+{
+  "ticket": "GE-0006",
+  "purpose": "throwaway local evidence only",
+  "host": {
+    "platform": "macOS-26.5.2-x86_64-i386-64bit-Mach-O",
+    "machine": "x86_64",
+    "python": "3.13.15"
+  },
+  "versions": {
+    "onnxruntime_actual": "1.23.2",
+    "onnx": "1.23.2"
+  },
+  "is_1_32_0": false,
+  "model_add4_sha256": "c8bdea77412146e0e66f9ef3666440375c2ff9a6b25cb2dc173af57067eed2b8",
+  "model_loop_sha256": "45b3491d115ee03df2a7791df47f110bf88889825b4321b0e5826f6b5742ac33",
+  "add_inference": {
+    "input": [
+      1.0,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "expected": [
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "output_run_1": [
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "output_run_2": [
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "exact_match": true,
+    "deterministic": true,
+    "elapsed_seconds_run_1": 0.000438,
+    "elapsed_seconds_run_2": 7.8e-05,
+    "note": "Measured on this host; not a performance budget or benchmark."
+  },
+  "cancellation": {
+    "terminate_set_after_sleep_seconds": 0.002,
+    "completed": false,
+    "error_type": "Fail",
+    "error_message": "[ONNXRuntimeError] : 1 : FAIL : Exiting due to terminate flag being set to true.",
+    "elapsed_seconds": 0.003317,
+    "verdict": "CANCELLED (cooperative terminate via RunOptions.terminate)"
+  },
+  "limitations": [
+    "Runtime version printed above is the version actually imported.",
+    "No model weights, external AI providers or paid API calls were used.",
+    "No EP/CoreML/DirectML/GPU/ARM64 tests; CPUExecutionProvider only.",
+    "No SAM/YOLO/Depth Anything weights were tested."
+  ]
+}
