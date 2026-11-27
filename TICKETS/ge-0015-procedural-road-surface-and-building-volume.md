@@ -3,7 +3,7 @@ id: GE-0015
 title: Procedural road surface and building volume
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:geometry]
 depends_on: [GE-0014]
@@ -82,7 +82,8 @@ GitHub issue: **#13** — https://github.com/Jasowills/genesis-engine/issues/13
 - `cargo test --workspace --locked` → **48 passed, 0 failed** (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 7 project + 9 World IR). Nine procedural tests cover determinism, winding normalisation, deterministic origin/identity and World IR object links, evidence tiers, `verify_mesh` negative cases, levels/unit handling, cross-feature junction limitation, provenance and gate/invalid requests.
 - `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - Both generators call the lawful-source gate. Winding is normalised; cross-feature way junctions are explicitly deferred. No LOD/collision/facade/bridge/sidewalk code.
-- Reviewer result: first pass `CHANGES_REQUESTED` (clockwise winding produced inside-out meshes, junction overclaim, implicit origin/identity, shallow mesh check, evidence-path gaps, bookkeeping); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED` (clockwise winding produced inside-out meshes, junction overclaim, implicit origin/identity, shallow mesh check, evidence-path gaps, bookkeeping); all findings fixed; narrow re-review and final doc confirmation **`APPROVED`** (session `ses_de337b768ffeq6pA5O8BskNmmk`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.

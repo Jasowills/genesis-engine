@@ -56,7 +56,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0012 | [#10](https://github.com/Jasowills/genesis-engine/issues/10) | Lawful-source gate and provenance record | feature | P0 | M1 | verified | [GE-0002, GE-0011] |
 | GE-0013 | [#11](https://github.com/Jasowills/genesis-engine/issues/11) | GeoJSON boundary import and CRS validation | feature | P0 | M1 | verified | [GE-0011, GE-0012] |
 | GE-0014 | [#12](https://github.com/Jasowills/genesis-engine/issues/12) | OSM footprint and road feature ingestion | feature | P1 | M1 | verified | [GE-0013] |
-| GE-0015 | [#13](https://github.com/Jasowills/genesis-engine/issues/13) | Procedural road surface and building volume | feature | P1 | M1 | in-review | [GE-0014] |
+| GE-0015 | [#13](https://github.com/Jasowills/genesis-engine/issues/13) | Procedural road surface and building volume | feature | P1 | M1 | verified | [GE-0014] |
 | GE-0016 | [#14](https://github.com/Jasowills/genesis-engine/issues/14) | Studio shell and viewport scene rendering | feature | P1 | M1 | proposed | [GE-0004, GE-0011] |
 | GE-0017 | [#15](https://github.com/Jasowills/genesis-engine/issues/15) | Select, inspect and provenance display | feature | P1 | M1 | proposed | [GE-0016] |
 | GE-0018 | [#8](https://github.com/Jasowills/genesis-engine/issues/8) | Geometry and structural validation gates | feature | P1 | M1 | proposed | [GE-0011, GE-0009] |

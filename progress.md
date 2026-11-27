@@ -41,6 +41,7 @@ GE-0011 — World IR v2 with v1 migrations (16 Core tests pass; independent re-r
 GE-0012 — lawful-source gate and provenance sidecar (22 Core tests pass; independent re-review `APPROVED`).
 GE-0013 — GeoJSON boundary import and CRS validation (31 Core tests pass; independent re-review `APPROVED`).
 GE-0014 — OSM footprint and road feature ingestion (39 Core tests pass; independent re-review `APPROVED`).
+GE-0015 — deterministic procedural road/building meshes (48 Core tests pass; independent re-review `APPROVED`).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -49,14 +50,14 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0015 — procedural road/building meshes; first review found winding/origin/identity defects, fixes applied (48 tests pass), re-review assigned (issue #13).
+None.
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
 GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
 
 ## Ready next tickets
-GE-0016 (Studio shell and viewport scene rendering) after GE-0015 is verified. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
+GE-0016 (Studio shell and viewport scene rendering) — now ready. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: geospatial/worker/AI adapters, Studio/CLI, validation gates, 3D exports, plugin runtime.
