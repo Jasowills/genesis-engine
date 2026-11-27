@@ -26,7 +26,11 @@ fn run(args: &[&str]) -> Value {
     );
     let value: Value = serde_json::from_str(&stdout).expect("machine-readable JSON output");
     assert_eq!(value["schema_version"], 1);
-    assert_eq!(value["status"], "ok");
+    assert!(
+        value["status"] == "ok" || value["status"] == "unsupported",
+        "unexpected status: {}",
+        value["status"]
+    );
     value
 }
 
@@ -39,11 +43,21 @@ fn cli_drives_the_full_slice_headlessly() {
     let glb = root.join("world.glb");
     let glb_s = glb.to_str().unwrap();
 
-    let created = run(&["project", project_s, "Ikeja CLI", "--datum", "EGM2008"]);
+    let created = run(&["project", project_s, "Ikeja CLI", "--datum", "EGM96"]);
     assert_eq!(created["data"]["schema_version"], 1);
     let boundary = run(&["boundary", project_s, BOUNDARY, "Ikeja study area"]);
     assert_eq!(boundary["data"]["bbox"][0], 3.348);
-    let features = run(&["features", project_s, OSM]);
+    let features = run(&[
+        "features",
+        project_s,
+        OSM,
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors",
+    ]);
     assert_eq!(features["data"]["feature_count"], 2);
     let generated = run(&["generate", project_s, "42", "--road-width", "8"]);
     assert_eq!(generated["data"]["mesh_count"], 2);
@@ -67,22 +81,42 @@ fn cli_drives_the_full_slice_headlessly() {
     );
 
     let job = run(&["job", project_s, "job-1"]);
-    assert_eq!(job["data"]["status"], "unsupported");
+    assert_eq!(job["status"], "unsupported");
 
     assert!(Path::new(&glb).exists());
     assert!(project.join("validation/report.json").exists());
-    assert!(project.join("exports").is_dir());
+    // CRS and provenance supplied at create/import time are persisted and reused.
+    let manifest: Value =
+        serde_json::from_slice(&std::fs::read(project.join("metadata/project.json")).unwrap())
+            .unwrap();
+    assert_eq!(manifest["crs"]["vertical_datum"], "EGM96");
+    let stored_source: Value =
+        serde_json::from_slice(&std::fs::read(project.join("metadata/source.json")).unwrap())
+            .unwrap();
+    assert_eq!(stored_source["attribution"], "© OpenStreetMap contributors");
     let _ = std::fs::remove_dir_all(&root);
 }
 
 #[test]
 fn invalid_profile_is_a_structured_error() {
+    let root = std::env::temp_dir().join(format!("genesis-cli-profile-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "Profile test"]);
     let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
-        .args(["validate", "/nonexistent", "--profile", "bogus"])
+        .args(["validate", project_s, "--profile", "bogus"])
         .output()
         .unwrap();
     assert!(!output.status.success());
     let value: Value = serde_json::from_slice(&output.stderr).unwrap();
     assert_eq!(value["status"], "error");
     assert_eq!(value["schema_version"], 1);
+    assert!(
+        value["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("unknown profile 'bogus'")
+    );
+    let _ = std::fs::remove_dir_all(&root);
 }

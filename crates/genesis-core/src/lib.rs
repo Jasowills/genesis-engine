@@ -5,6 +5,7 @@
 
 pub mod export_glb;
 pub mod geojson_boundary;
+pub mod incremental;
 pub mod lawful_source;
 pub mod osm_ingest;
 pub mod procedural;
@@ -13,6 +14,7 @@ pub mod world_ir;
 
 pub use export_glb::{GlbExport, ImportedGlb, export_glb, format_gate_metric, import_glb};
 pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, validate_crs};
+pub use incremental::{GenerationRecord, RegenerationPlan, missing_objects, plan_regeneration};
 pub use lawful_source::{
     LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
     enforce_sources, prepare_import,

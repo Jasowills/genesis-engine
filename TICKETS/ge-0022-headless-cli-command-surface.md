@@ -79,11 +79,11 @@ Do not fork Core logic into the CLI.
 
 GitHub issue: **#18** — https://github.com/Jasowills/genesis-engine/issues/18
 - Files: `crates/genesis-cli/` (Cargo.toml, src/main.rs, tests/cli.rs), workspace member, `docs/developer/cli.md`.
-- `cargo test --workspace --locked` → **67 passed, 0 failed** (65 previous + 2 CLI integration tests). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- `cargo test --workspace --locked` → **72 passed, 0 failed** (Core + Studio + CLI + incremental tests). CLI integration tests drive the full E2E workflow and a structured invalid-profile error on a valid project. `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - CLI integration test drives project create → boundary → features → generate → validate → export → scene → job status through the binary, asserts versioned JSON `status: ok`, and verifies the exported GLB with Core `import_glb` (2 meshes, 14 triangles, attribution preserved).
 - Structured error test asserts `status: error` with `schema_version: 1` on an invalid profile.
-- Job status/cancel return structured `unsupported` (no fake success); worker orchestration is GE-0023.
-- Reviewer result: pending independent review.
+- Job status/cancel return top-level `status: "unsupported"` (no fake success); worker orchestration is GE-0023. CRS is loaded from the project manifest and provenance from `metadata/source.json`; arbitrary input is never implicitly attributed to OSM. `--help`/clap parse errors remain plain text (documented exception); orchestration job records and a dedicated reproducibility subcommand are deferred.
+- Reviewer result: first pass `CHANGES_REQUESTED` (CRS/provenance defaults, misleading error test, stale bookkeeping, JSON help claim); fixes applied, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

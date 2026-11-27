@@ -2,7 +2,7 @@
 
 An open-source, cross-platform platform for reconstructing real-world environments into editable, validated, game-ready 3D worlds.
 
-> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a Rust Core crate implementing the portable project model, versioned World IR, lawful-source gate, geospatial import, deterministic procedural geometry, structural validation gates and a validated GLB export. A Core-backed Studio foundation (Rust scene snapshot + React/TypeScript shell) exists; no Tauri window has been visually verified. No CLI, worker pipeline or game-engine integration yet. Do not interpret planning documents as shipped features.
+> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a Rust Core crate implementing the portable project model, versioned World IR, lawful-source gate, geospatial import, deterministic procedural geometry, structural validation gates and a validated GLB export. A Core-backed Studio foundation (Rust scene snapshot + React/TypeScript shell) and a headless Rust CLI exist; no Tauri window has been visually verified. No worker pipeline or game-engine integration yet. Do not interpret planning documents as shipped features.
 
 ## What Genesis is
 

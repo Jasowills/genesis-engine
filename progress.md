@@ -28,7 +28,7 @@ D-007 platform boundaries; D-015 cloud; D-016 collaboration; D-017 skill identit
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
 - Latest commit: **read live with `git rev-parse HEAD`** (this file is itself committed after each update, so a hard-coded hash would always lag by one commit). Reconciliation baseline: `15e5b4548c180cc4cf4160cf81a837c50efa04ef`; earlier commits `5fb68abba2f1ec801d2c887f63b4c30f4360f545` (issue links) and `aa728fd9a9aa5e0bf2ca05b94006434816be973d` (initial 81-file documentation-only commit).
-- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified and no CLI exists.
+- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export, headless CLI commands) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified and no CLI exists.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
 
@@ -72,7 +72,7 @@ GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), inde
 GE-0020 (E2E vertical slice + benchmark harness) — now ready. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with two crates — `crates/genesis-core` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; no CLI, worker/AI adapters, plugin runtime or game-engine integration yet.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), no worker/AI adapters, plugin runtime or game-engine integration yet.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
@@ -87,7 +87,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 67 passed, 0 failed (Core + Studio + 2 CLI integration tests; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 72 passed, 0 failed (Core incl. 5 incremental + Studio + CLI integration; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.

@@ -3,7 +3,7 @@ id: GE-0027
 title: Selective and incremental regeneration
 type: feature
 priority: P2
-status: proposed
+status: in-progress
 milestone: M3
 labels: [type:feature, area:core]
 depends_on: [GE-0011, GE-0020]

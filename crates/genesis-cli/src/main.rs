@@ -39,9 +39,24 @@ enum Command {
         project: PathBuf,
         file: PathBuf,
         name: String,
+        #[arg(long)]
+        source_id: Option<String>,
+        #[arg(long)]
+        licence: Option<String>,
+        #[arg(long)]
+        attribution: Option<String>,
     },
     #[command(name = "features")]
-    FeaturesImport { project: PathBuf, file: PathBuf },
+    FeaturesImport {
+        project: PathBuf,
+        file: PathBuf,
+        #[arg(long)]
+        source_id: Option<String>,
+        #[arg(long)]
+        licence: Option<String>,
+        #[arg(long)]
+        attribution: Option<String>,
+    },
     #[command(name = "generate")]
     Generate {
         project: PathBuf,
@@ -65,25 +80,56 @@ enum Command {
     JobCancel { project: PathBuf, id: String },
 }
 
-fn source() -> SourceDescriptor {
+/// Source descriptor supplied by the caller. Defaults are deliberately
+/// neutral: never attribute arbitrary user data to OpenStreetMap implicitly.
+fn source_from_args(
+    source_id: Option<String>,
+    licence: Option<String>,
+    attribution: Option<String>,
+) -> SourceDescriptor {
     SourceDescriptor {
-        id: "osm:fixture:ikeja".to_string(),
-        publisher: "OpenStreetMap contributors".to_string(),
-        url: "https://www.openstreetmap.org/copyright".to_string(),
-        version: "2026-11-27".to_string(),
-        licence: LicenceElection::Odbl10,
-        attribution: "© OpenStreetMap contributors".to_string(),
+        id: source_id.unwrap_or_else(|| "local:user-provided".to_string()),
+        publisher: "user-provided".to_string(),
+        url: "local-file".to_string(),
+        version: "n/a".to_string(),
+        licence: match licence.unwrap_or_default().as_str() {
+            "odbl" | "ODbL-1.0" => LicenceElection::Odbl10,
+            "cc-by-4.0" | "CC-BY-4.0" => LicenceElection::CcBy40,
+            "apache-2.0" => LicenceElection::Apache20,
+            other if !other.is_empty() => LicenceElection::Other(other.to_string()),
+            _ => LicenceElection::Other("UNSPECIFIED".to_string()),
+        },
+        attribution: attribution
+            .unwrap_or_else(|| "User-provided data; no licence elected".to_string()),
         ..Default::default()
     }
 }
 
-fn crs() -> CrsMetadata {
-    CrsMetadata {
-        wkt2: Some("GEOGCRS[\"WGS 84\"]".to_string()),
-        epoch: Some(2024.5),
-        vertical_datum: Some("EGM2008".to_string()),
-        ..CrsMetadata::default()
-    }
+fn metadata_path(project: &Path) -> PathBuf {
+    project.join("metadata/project.json")
+}
+
+fn load_crs(project: &Path) -> Result<CrsMetadata, String> {
+    let raw: Value = read_json(&metadata_path(project))?;
+    serde_json::from_value(
+        raw.get("crs")
+            .cloned()
+            .ok_or("project manifest has no CRS")?,
+    )
+    .map_err(|e| e.to_string())
+}
+
+fn load_source(project: &Path) -> Result<SourceDescriptor, String> {
+    read_json(&project.join("metadata/source.json"))
+}
+
+fn save_source(project: &Path, source: &SourceDescriptor) -> Result<(), String> {
+    std::fs::create_dir_all(project.join("metadata")).map_err(|e| e.to_string())?;
+    std::fs::write(
+        project.join("metadata/source.json"),
+        serde_json::to_vec_pretty(source).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())
 }
 
 fn profile(name: &str) -> Result<QualityProfile, String> {
@@ -101,7 +147,7 @@ fn ok(command: &str, data: Value) -> Value {
 }
 
 fn fail(command: &str, message: String) -> Value {
-    json!({"schema_version": OUTPUT_SCHEMA_VERSION, "command": command, "status": "error", "error": {"kind": "core_error", "message": message}})
+    json!({"schema_version": OUTPUT_SCHEMA_VERSION, "command": command, "status": "error", "error": {"kind": "cli_error", "message": message}})
 }
 
 fn copy_source(project: &Path, file: &Path, name: &str) -> Result<PathBuf, String> {
@@ -133,10 +179,12 @@ fn run(cli: Cli) -> Result<Value, String> {
             datum,
             epoch,
         } => {
-            let mut c = crs();
-            c.wkt2 = Some(wkt2);
-            c.vertical_datum = Some(datum);
-            c.epoch = Some(epoch);
+            let c = CrsMetadata {
+                wkt2: Some(wkt2),
+                vertical_datum: Some(datum),
+                epoch: Some(epoch),
+                ..CrsMetadata::default()
+            };
             let project = create_project(&path, &name, c).map_err(|e| e.to_string())?;
             Ok(ok(
                 "project_create",
@@ -147,12 +195,18 @@ fn run(cli: Cli) -> Result<Value, String> {
             project,
             file,
             name,
+            source_id,
+            licence,
+            attribution,
         } => {
+            let source = source_from_args(source_id, licence, attribution);
+            save_source(&project, &source)?;
+            let crs = load_crs(&project)?;
             let dest = copy_source(&project, &file, "boundary.geojson")?;
             let bytes = std::fs::read(&dest).map_err(|e| e.to_string())?;
             let boundary =
-                import_geojson(&bytes, &name, &source(), &crs()).map_err(|e| e.to_string())?;
-            let manifest = json!({"schema_version": 1, "name": boundary.name, "bbox": boundary.bbox, "id": boundary.id.to_string(), "checksum": boundary.source_checksum});
+                import_geojson(&bytes, &name, &source, &crs).map_err(|e| e.to_string())?;
+            let manifest = json!({"schema_version": CURRENT_SCHEMA_VERSION, "name": boundary.name, "bbox": boundary.bbox, "id": boundary.id.to_string(), "checksum": boundary.source_checksum});
             std::fs::create_dir_all(project.join("worlds")).map_err(|e| e.to_string())?;
             std::fs::write(
                 project.join("worlds/boundary.json"),
@@ -161,16 +215,24 @@ fn run(cli: Cli) -> Result<Value, String> {
             .map_err(|e| e.to_string())?;
             Ok(ok("boundary_import", manifest))
         }
-        Command::FeaturesImport { project, file } => {
+        Command::FeaturesImport {
+            project,
+            file,
+            source_id,
+            licence,
+            attribution,
+        } => {
+            let source = source_from_args(source_id, licence, attribution);
+            save_source(&project, &source)?;
+            let crs = load_crs(&project)?;
             let dest = copy_source(&project, &file, "features.geojson")?;
             let bytes = std::fs::read(&dest).map_err(|e| e.to_string())?;
-            let features =
-                import_osm_geojson(&bytes, &source(), &crs()).map_err(|e| e.to_string())?;
-            let objects = to_world_objects(&features, &source()).map_err(|e| e.to_string())?;
+            let features = import_osm_geojson(&bytes, &source, &crs).map_err(|e| e.to_string())?;
+            let objects = to_world_objects(&features, &source).map_err(|e| e.to_string())?;
             let world = WorldIr {
                 schema_version: CURRENT_SCHEMA_VERSION,
                 world_id: derive_id("world", "cli-project"),
-                crs: crs(),
+                crs,
                 local_frame: LocalFrame::default(),
                 layers: vec![WorldLayer {
                     id: derive_id("layer", "osm-features"),
@@ -193,14 +255,15 @@ fn run(cli: Cli) -> Result<Value, String> {
             seed,
             road_width,
         } => {
+            let source = load_source(&project)?;
+            let crs = load_crs(&project)?;
             let path = project.join("sources/features.geojson");
             let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
-            let features =
-                import_osm_geojson(&bytes, &source(), &crs()).map_err(|e| e.to_string())?;
+            let features = import_osm_geojson(&bytes, &source, &crs).map_err(|e| e.to_string())?;
             let mut meshes =
-                generate_building_volumes(&features, &source(), seed).map_err(|e| e.to_string())?;
+                generate_building_volumes(&features, &source, seed).map_err(|e| e.to_string())?;
             meshes.extend(
-                generate_road_surfaces(&features, &source(), seed, road_width)
+                generate_road_surfaces(&features, &source, seed, road_width)
                     .map_err(|e| e.to_string())?,
             );
             std::fs::create_dir_all(project.join("payloads")).map_err(|e| e.to_string())?;
@@ -218,9 +281,10 @@ fn run(cli: Cli) -> Result<Value, String> {
             project,
             profile: profile_name,
         } => {
+            let selected_profile = profile(&profile_name)?;
             let world = load_ir(&project)?;
             let meshes = load_meshes(&project)?;
-            let report = validate_world(&world, profile(&profile_name)?, &meshes, false, "cli-1.0");
+            let report = validate_world(&world, selected_profile, &meshes, false, "cli-1.0");
             std::fs::create_dir_all(project.join("validation")).map_err(|e| e.to_string())?;
             std::fs::write(
                 project.join("validation/report.json"),
@@ -238,8 +302,8 @@ fn run(cli: Cli) -> Result<Value, String> {
             let report: genesis_core::ValidationReport =
                 read_json(&project.join("validation/report.json"))?;
             check_export_ready(&report).map_err(|e| e.to_string())?;
-            let exported =
-                export_glb(&meshes, &world, &[source()], &report).map_err(|e| e.to_string())?;
+            let exported = export_glb(&meshes, &world, &[load_source(&project)?], &report)
+                .map_err(|e| e.to_string())?;
             std::fs::write(&output, &exported.bytes).map_err(|e| e.to_string())?;
             std::fs::write(
                 output.with_extension("attribution.json"),
@@ -260,14 +324,18 @@ fn run(cli: Cli) -> Result<Value, String> {
                 json!({"schema_version": 1, "world_id": world.world_id.to_string(), "mesh_count": meshes.len(), "ids": meshes.iter().map(|m| m.asset_id.to_string()).collect::<Vec<_>>()}),
             ))
         }
-        Command::JobStatus { project: _, id } => Ok(ok(
-            "job_status",
-            json!({"id": id, "status": "unsupported", "note": "job orchestration is not implemented in Core yet (GE-0023 follow-up)"}),
-        )),
-        Command::JobCancel { project: _, id } => Ok(ok(
-            "job_cancel",
-            json!({"id": id, "status": "unsupported", "note": "job orchestration is not implemented in Core yet (GE-0023 follow-up)"}),
-        )),
+        Command::JobStatus { project: _, id } => Ok(json!({
+            "schema_version": OUTPUT_SCHEMA_VERSION,
+            "command": "job_status",
+            "status": "unsupported",
+            "data": {"id": id, "note": "job orchestration is not implemented in Core yet (GE-0023 follow-up)"}
+        })),
+        Command::JobCancel { project: _, id } => Ok(json!({
+            "schema_version": OUTPUT_SCHEMA_VERSION,
+            "command": "job_cancel",
+            "status": "unsupported",
+            "data": {"id": id, "note": "job orchestration is not implemented in Core yet (GE-0023 follow-up)"}
+        })),
     }
 }
 

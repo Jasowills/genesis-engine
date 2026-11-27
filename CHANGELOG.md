@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file. Format foll
 - `feat(export)`: validated GLB interchange with provenance sidecar (GE-0019).
 - `feat(studio)`: Core-backed scene snapshot and React shell (GE-0016).
 - `test(studio)`: keyboard selection and provenance component tests (GE-0017).
+- `feat(cli)`: headless Core command surface with versioned JSON output (GE-0022).
 - `chore(ci)`: cross-platform test matrix, later fixed for workspace excludes.
 
 ### Added — 2026-11-27 (planning baseline, not product functionality)

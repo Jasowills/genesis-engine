@@ -14,7 +14,7 @@ pub const CURRENT_SCHEMA_VERSION: u32 = 2;
 pub const LEGACY_SCHEMA_VERSION: u32 = 1;
 
 /// Stable, content-derived identity. Names alone are not stable across edits.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 #[serde(transparent)]
 pub struct StableId(String);
 
