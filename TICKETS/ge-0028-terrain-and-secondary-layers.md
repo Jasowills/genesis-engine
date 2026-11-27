@@ -3,7 +3,7 @@ id: GE-0028
 title: Terrain and secondary layers
 type: feature
 priority: P2
-status: in-progress
+status: in-review
 milestone: M3
 labels: [type:feature, area:geometry]
 depends_on: [GE-0020]
@@ -42,10 +42,10 @@ Extends generation coverage while preserving provenance and quality policy.
 Vertical slices per layer; do not create one giant layer ticket.
 
 ## Acceptance criteria
-- [ ] Each new layer has its own fixture and validation
-- [ ] No high-resolution claim from low-resolution DEM
-- [ ] Attribution preserved
-- [ ] Tests and documentation updated
+- [x] Each new layer has its own fixture and validation
+- [x] No high-resolution claim from low-resolution DEM
+- [x] Attribution preserved
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Per-layer unit tests
@@ -77,7 +77,11 @@ Split by layer if review diff is too large.
 ## Verification evidence
 
 GitHub issue: **#24** — https://github.com/Jasowills/genesis-engine/issues/24
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/layers.rs`, `tests/layers.rs`, `docs/developer/layers.md`, `fixtures/ikeja-dem.json`, `fixtures/ikeja-markings.geojson`, `fixtures/ikeja-vegetation.geojson`, semantic `GeneratedKind` variants propagated to Studio.
+- `cargo test --workspace --locked` → **85 passed, 0 failed** (4 new layer tests: 3×3 DEM → 9 vertices/24 indices with recorded 30 m resolution and 12 m accuracy, invalid DEM rejection, markings/sidewalks/vegetation with separate fixtures and evidence, source-gate enforcement).
+- `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- No high-resolution or survey claim; resolution/claim recorded as parameters; all layer evidence is observed/derived/inferred explicitly.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
