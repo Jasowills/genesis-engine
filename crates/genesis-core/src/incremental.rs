@@ -89,11 +89,14 @@ pub fn plan_regeneration(
     let mut queue: VecDeque<StableId> = dirty.iter().cloned().collect();
     while let Some(changed) = queue.pop_front() {
         for record in previous {
+            // Never schedule an object that is no longer part of the world.
+            if !current_inputs.contains_key(&record.object_id) {
+                continue;
+            }
             if record.dependencies.contains(&changed) && dirty.insert(record.object_id.clone()) {
-                reasons.insert(
-                    record.object_id.to_string(),
-                    format!("dependency {changed} changed"),
-                );
+                reasons
+                    .entry(record.object_id.to_string())
+                    .or_insert_with(|| format!("dependency {changed} changed"));
                 queue.push_back(record.object_id.clone());
             }
         }

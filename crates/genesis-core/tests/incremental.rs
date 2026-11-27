@@ -105,5 +105,23 @@ fn duplicate_generation_records_are_structured_errors() {
         record("building", "h1", &[], 42, "v1"),
         record("building", "h2", &[], 42, "v1"),
     ];
-    assert!(plan_regeneration(&previous, &inputs(&[]), 42, "v1").is_err());
+    match plan_regeneration(&previous, &inputs(&[]), 42, "v1") {
+        Err(genesis_core::CoreError::InvalidManifest(message)) => {
+            assert!(message.contains("duplicate generation record"));
+        }
+        other => panic!("expected structured duplicate-record error, got {other:?}"),
+    }
+}
+
+#[test]
+fn removed_dependents_are_not_scheduled_for_regeneration() -> CoreResult<()> {
+    let previous = vec![
+        record("building", "h1", &[], 42, "v1"),
+        record("old_sign", "h2", &["building"], 42, "v1"),
+    ];
+    let current = inputs(&[("building", "h1-changed")]);
+    let plan = plan_regeneration(&previous, &current, 42, "v1")?;
+    assert_eq!(plan.regenerate, vec![id("building")]);
+    assert_eq!(missing_objects(&previous, &current), vec![id("old_sign")]);
+    Ok(())
 }

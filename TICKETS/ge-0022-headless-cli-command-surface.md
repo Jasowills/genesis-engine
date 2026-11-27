@@ -3,7 +3,7 @@ id: GE-0022
 title: Headless CLI command surface
 type: feature
 priority: P1
-status: in-review
+status: verified
 milestone: M2
 labels: [type:feature, area:core]
 depends_on: [GE-0020]
@@ -83,7 +83,8 @@ GitHub issue: **#18** — https://github.com/Jasowills/genesis-engine/issues/18
 - CLI integration test drives project create → boundary → features → generate → validate → export → scene → job status through the binary, asserts versioned JSON `status: ok`, and verifies the exported GLB with Core `import_glb` (2 meshes, 14 triangles, attribution preserved).
 - Structured error test asserts `status: error` with `schema_version: 1` on an invalid profile.
 - Job status/cancel return top-level `status: "unsupported"` (no fake success); worker orchestration is GE-0023. CRS is loaded from the project manifest and provenance from `metadata/source.json`; arbitrary input is never implicitly attributed to OSM. `--help`/clap parse errors remain plain text (documented exception); orchestration job records and a dedicated reproducibility subcommand are deferred.
-- Reviewer result: first pass `CHANGES_REQUESTED` (CRS/provenance defaults, misleading error test, stale bookkeeping, JSON help claim); fixes applied, re-review pending.
+- Reviewer result: two `CHANGES_REQUESTED` passes (CRS/provenance, misleading error test, stale bookkeeping, CRS/persistence, scene reproducibility); all findings fixed; final confirmation **`APPROVED`** (session `ses_de225eaa3ffeHEXKLzAh32Yh5k`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent review APPROVED; ticket marked verified.
