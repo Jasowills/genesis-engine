@@ -208,9 +208,10 @@ required.
   cancellation remains UNVERIFIED in practice.
 - The **static source guard is supplemental, not proof**: it checks text in
   `src/lib.rs`, not WASI runtime behaviour.
-- **WIT / typed WASI 0.2 component path is out of scope and UNVERIFIED** here
-  (core Wasm + WASI Preview 1 only); no WIT world, `bindgen!`, or component
-  instantiation was built.
+- **Typed WASI 0.2 is validated for network-policy denial only** (component
+  instantiation via `Command::instantiate_async` in `tests/sandbox_p2.rs`);
+  its wider surface, component overhead and WIT binding generation remain
+  UNVERIFIED.
 - **Empty-write and invalid-import fixtures are out of scope and UNVERIFIED**
   (only normal, probe, infinite-loop, memory-grow and report-flood fixtures).
 - **OS coverage**: Windows, Ubuntu and macOS prototype jobs all succeeded
