@@ -8,8 +8,8 @@ This review is about the **product journey**, not unit correctness. We drive the
 2. Import a lawful boundary and OSM features with real provenance (not defaults).
 3. Generate geometry, validate, inspect the report, export GLB.
 4. Re-import the GLB and check identity/provenance survive.
-5. Open the Studio shell, inspect hierarchy/inspector/viewport, select and transform a node.
-6. Exercise adverse journeys: missing files, denied sources, wrong profile, export before validation, corrupt IR, seed change, symlinked destinations.
+5. Open the built Studio shell, inspect hierarchy/inspector/viewport, select and transform a node, and use keyboard navigation.
+6. Exercise adverse journeys actually run: missing input file and unsupported profile. Other adverse cases (denied sources, corrupt IR, seed change, symlinked destinations, export before validation) are covered by product-code tests, not by this product journey; export after a valid report succeeds by design.
 
 ## Quality rubric (what "good" means here)
 

@@ -299,3 +299,33 @@ fn corrupt_world_ir_is_rejected_by_the_headless_path() {
     assert_eq!(value["status"], "error");
     let _ = std::fs::remove_dir_all(&root);
 }
+
+#[test]
+fn features_only_project_uses_a_feature_derived_frame() {
+    let root = std::env::temp_dir().join(format!("genesis-cli-no-boundary-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "No boundary"]);
+    run(&[
+        "features",
+        project_s,
+        OSM,
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors",
+    ]);
+    run(&["generate", project_s, "42"]);
+    let meshes: Value =
+        serde_json::from_slice(&std::fs::read(project.join("payloads/meshes.json")).unwrap())
+            .unwrap();
+    let origin = meshes[0]["origin_lon_lat"].as_array().unwrap();
+    assert_ne!(origin[0].as_f64(), Some(0.0));
+    assert_ne!(origin[1].as_f64(), Some(0.0));
+    let east = meshes[0]["vertices"][0][0].as_f64().unwrap();
+    assert!(east.abs() < 1_000.0, "local metres expected, got {east}");
+    let _ = std::fs::remove_dir_all(&root);
+}

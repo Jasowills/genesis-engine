@@ -56,6 +56,11 @@ fn object_rng(seed: u64, key: &str) -> ChaCha8Rng {
 
 /// Deterministic frame origin: lexicographically smallest coordinate across
 /// all features, independent of input ordering or ring winding.
+/// Feature-derived frame origin for callers without an imported boundary.
+pub fn frame_origin_for_features(features: &[OsmFeature]) -> [f64; 2] {
+    frame_origin(&references(features))
+}
+
 fn references(features: &[OsmFeature]) -> Vec<&OsmFeature> {
     features.iter().collect()
 }

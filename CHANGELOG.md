@@ -50,3 +50,4 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 - `feat(core)`: WGS84 ECEF→ENU product precision path and local-frame origin from boundary bbox (ADR-0008).
 - `feat(core)`: shared local-frame origin for CLI and procedural generators; ADR-0008 product precision path.
 - `docs(product)`: end-to-end product journey and asset-quality verdict with a repeatable harness and captured Studio evidence.
+- `fix(cli)`: derive local frame from imported features when no boundary exists; product review claims and QA hook corrected.

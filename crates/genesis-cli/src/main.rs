@@ -202,11 +202,16 @@ fn load_ir(project: &Path) -> Result<WorldIr, String> {
 }
 
 /// Build the product local frame from the imported boundary bbox centre
-/// (ADR-0008). Falls back to the default frame when no boundary is present.
-fn load_frame(project: &Path) -> Result<LocalFrame, String> {
+/// (ADR-0008). Without a boundary, derive the origin from the imported features.
+fn load_frame(project: &Path, features: &[genesis_core::OsmFeature]) -> Result<LocalFrame, String> {
     let path = project.join("worlds/boundary.json");
     if !path.exists() {
-        return Ok(LocalFrame::default());
+        let [lon, lat] = genesis_core::frame_origin_for_features(features);
+        return Ok(if lon == 0.0 && lat == 0.0 {
+            LocalFrame::default()
+        } else {
+            LocalFrame::from_geodetic(lon, lat, 0.0, "features-local")
+        });
     }
     let raw: Value = read_json(&path)?;
     let bbox = raw
@@ -287,7 +292,7 @@ fn run(cli: Cli) -> Result<Value, String> {
                 schema_version: CURRENT_SCHEMA_VERSION,
                 world_id: derive_id("world", "cli-project"),
                 crs,
-                local_frame: load_frame(&project)?,
+                local_frame: load_frame(&project, &features)?,
                 layers: vec![WorldLayer {
                     id: derive_id("layer", "osm-features"),
                     objects,
@@ -313,11 +318,11 @@ fn run(cli: Cli) -> Result<Value, String> {
         } => {
             let source = load_source(&project)?;
             let crs = load_crs(&project)?;
-            let frame = load_frame(&project)?;
-            let origin_lon_lat = frame.origin_lon_lat;
             let path = project.join("sources/features.geojson");
             let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
             let features = import_osm_geojson(&bytes, &source, &crs).map_err(|e| e.to_string())?;
+            let frame = load_frame(&project, &features)?;
+            let origin_lon_lat = frame.origin_lon_lat;
             let mut meshes =
                 generate_building_volumes_with_origin(&features, &source, seed, origin_lon_lat)
                     .map_err(|e| e.to_string())?;

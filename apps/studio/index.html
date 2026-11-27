@@ -8,9 +8,9 @@
   <body>
     <div id="root"></div>
     <script type="module">
-      // Dev-only QA hook: ?e2e=1 injects a persisted scene snapshot before the
+      // Development-only QA hook: ?e2e=1 injects a persisted scene snapshot before the
       // app boots, letting a human drive the real Studio shell end to end.
-      if (new URLSearchParams(location.search).has('e2e')) {
+      if (import.meta.env.DEV && new URLSearchParams(location.search).get('e2e') === '1') {
         const snapshot = await fetch('/e2e-snapshot.json').then((r) => r.json());
         window.__GENESIS_SNAPSHOT__ = snapshot;
       }

@@ -47,8 +47,8 @@ pub use plugins::{
     PluginManifest, WIT_WORLD_SOURCE, WIT_WORLD_VERSION, wit_world_is_deny_by_default,
 };
 pub use procedural::{
-    GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, generate_building_volumes,
-    generate_building_volumes_with_origin, generate_road_surfaces,
+    GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, frame_origin_for_features,
+    generate_building_volumes, generate_building_volumes_with_origin, generate_road_surfaces,
     generate_road_surfaces_with_origin, verify_mesh,
 };
 pub use profiles::{
