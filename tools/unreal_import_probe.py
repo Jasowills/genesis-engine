@@ -41,9 +41,15 @@ def main():
     task.save = True
     tools.import_asset_tasks([task])
 
-    imported_paths = optional(
-        lambda: [str(path) for path in task.imported_object_paths], default=[]
+    imported_observation = optional(
+        lambda: [str(path) for path in task.imported_object_paths]
     )
+    if isinstance(imported_observation, dict):
+        imported_paths = []
+        imported_paths_unavailable = imported_observation["unavailable"]
+    else:
+        imported_paths = imported_observation
+        imported_paths_unavailable = None
     assets = []
     for path in imported_paths:
         asset = unreal.EditorAssetLibrary.load_asset(str(path))
@@ -78,6 +84,7 @@ def main():
         "schema_version": 1,
         "unreal_version": unreal.SystemLibrary.get_engine_version(),
         "input": source,
+        "imported_paths_unavailable": imported_paths_unavailable,
         "imported_assets": assets,
         "axis_conversion": "glTF Y-up right-handed -> Unreal Z-up left-handed (importer default)",
         "unit_conversion": "glTF metres -> Unreal centimetres (1 m = 100 cm)",
