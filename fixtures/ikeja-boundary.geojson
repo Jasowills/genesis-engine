@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "name": "ikeja-benchmark-boundary",
+  "description": "Frozen benchmark boundary from research/BENCHMARK_AREA.md (D-031). WGS84/CRS84 lon/lat. Not a survey.",
+  "attribution": "© OpenStreetMap contributors — data available under the Open Database License (ODbL) 1.0; see https://www.openstreetmap.org/copyright.",
+  "licence": "ODbL-1.0",
+  "features": [{
+    "type": "Feature",
+    "id": "boundary/ikeja-study",
+    "properties": {"name": "Ikeja study area"},
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[
+        [3.3480, 6.5985], [3.3552, 6.5985],
+        [3.3552, 6.6051], [3.3480, 6.6051], [3.3480, 6.5985]
+      ]]
+    }
+  }]
+}
