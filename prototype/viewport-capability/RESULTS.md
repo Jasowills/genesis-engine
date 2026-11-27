@@ -252,15 +252,18 @@ they are recorded for transparency, not as measured capability results.
    stress loop, no `renderer.info`, no repeated create/dispose cycle and no
    long-run memory sampling was performed. The three.js disposal/leak concern
    in `research/notes/desktop-viewport-formats.md` remains open.
-5. **Cross-platform matrix.** No Ubuntu or Windows runner was used; only the
-   local Intel macOS host was measured. The wgpu probe is designed to run in
-   the existing CI matrix but those results are not present here.
+5. **Cross-platform matrix — measured.** CI runs `45996397293` and
+   `45996483515` executed both probes on ubuntu-latest, windows-latest and
+   macos-latest: all jobs success. macOS/aarch64 METAL 1 adapter, Windows/x86_64
+   1 adapter, Linux/x86_64 0 adapters (`no_adapter`); three.js 100k picking 0
+   mismatches and TypeScript 7.0.2 on all three OSes.
 6. **FPS, frame time, texture limits, shader compilation, GPU upload and
    rendering correctness.** No WebGL/WebGPU context exists in either probe;
    the 29.07 ms/pick figure is a CPU raycast measurement, not a frame time.
 7. **TS 7 ecosystem compatibility** beyond `tsc --version` (see above).
-8. **No-adapter / no-backend runtime paths.** Implemented and code-reviewed but
-   not executed: every recorded run had a Metal backend and two adapters.
+8. **No-adapter runtime path — exercised.** Linux CI reported
+   `"adapter_count": 0` and `"status": "no_adapter"` and the job succeeded;
+   the no-backend branch remains code-reviewed only.
 9. **1M-instance picking, gizmo/snap behaviour, keyboard-numeric transform
    path, LOD hysteresis, 3D Tiles/USD round-trips and streaming.** Not in this
    PoC's scope and not measured.

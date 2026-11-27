@@ -3,7 +3,7 @@ id: GE-0004
 title: Desktop shell and viewport capability PoC
 type: spike
 priority: P0
-status: in-review
+status: verified
 milestone: M0
 labels: [spike, area:studio, area:viewport]
 depends_on: [GE-0003]
@@ -83,7 +83,8 @@ GitHub issue: **#2** — https://github.com/Jasowills/genesis-engine/issues/2
 - CI run `45996397293` on commit `194d7a9` and run `45996483515` on `c375a68`: **all jobs success**. Probe output per OS: macOS/aarch64 wgpu 30.0.2 METAL, 1 adapter, status ok; Windows/x86_64 1 adapter, status ok; Linux/x86_64 0 adapters, status `no_adapter` (graceful empty path exercised). three.js probe: 100,000 instances, 0 mismatches, `pass: true`, TypeScript 7.0.2 on all three OSes.
 - Explicitly UNVERIFIED: WebView2/WKWebView/WebKitGTK WebGL2/WebGPU, Electron Chromium comparison, Tauri packaging/signing, long-session GPU leaks, FPS/texture limits, TS7 bundler compatibility, 1M-instance picking. Shell and viewport recommendations remain separate per ADR-0003.
 - Floating-origin vectors remain in GE-0003; not duplicated here.
-- Reviewer result: pending independent review.
+- Reviewer result: technical checks **`APPROVED`** (session `ses_de30cc751ffe9UAVf81NcjiXDL`); four stale bookkeeping lines corrected, ticket marked verified.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent review approved after documentation fixes; ticket marked verified.

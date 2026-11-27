@@ -65,9 +65,9 @@ The probe uses a fixed PRNG seed and a deterministic grid/permutation, so
 ## Running in the existing GitHub Actions matrix
 
 The `.github/workflows/ci.yml` matrix is `ubuntu-latest`, `windows-latest`,
-`macos-latest`. **This prototype does not modify CI.** To gather cross-OS
-evidence, add these steps to the existing `prototype-tests` job (or run them in
-a temporary branch/workflow); no GPU runner or secrets are required:
+`macos-latest`. The two probe steps below were added to the existing
+`prototype-tests` job in commit `194d7a9`; no GPU runner or secrets are required.
+Verified green runs: `45996397293` and `45996483515` on all three OSes.
 
 ```yaml
       - name: GE-0004 native GPU probe
