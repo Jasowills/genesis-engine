@@ -3,7 +3,7 @@ id: GE-0014
 title: OSM footprint and road feature ingestion
 type: feature
 priority: P1
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:feature, area:geospatial]
 depends_on: [GE-0013]
@@ -42,10 +42,10 @@ Provides the evidence layer for the first vertical slice.
 Pure-Rust PBF/GeoJSON path; no external GPL tool in this ticket.
 
 ## Acceptance criteria
-- [ ] Fixture features import with stable source IDs
-- [ ] Sourced vs inferred attributes distinguished
-- [ ] OSM attribution recorded
-- [ ] Tests and documentation updated
+- [x] Fixture features import with stable source IDs
+- [x] Sourced vs inferred attributes distinguished
+- [x] OSM attribution recorded
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Parser unit tests
@@ -77,7 +77,11 @@ Use a small, documented extract.
 ## Verification evidence
 
 GitHub issue: **#12** — https://github.com/Jasowills/genesis-engine/issues/12
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/osm_ingest.rs`, `crates/genesis-core/tests/osm_ingest.rs`, `docs/developer/osm-ingest.md`, re-exports.
+- `cargo test --workspace --locked` → **34 passed, 0 failed** (9 GeoJSON + 6 lawful-source + 3 OSM + 7 project + 9 World IR); 3 OSM tests cover stable source IDs/version/timestamp, observed-vs-inferred evidence, provenance/sidecar round-trip, denied source and malformed geometry.
+- `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- Source and CRS gates precede parsing; 10,000-feature cap; no external GPL tool or PBF dependency.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

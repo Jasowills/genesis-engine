@@ -5,6 +5,7 @@
 
 pub mod geojson_boundary;
 pub mod lawful_source;
+pub mod osm_ingest;
 pub mod world_ir;
 
 pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, validate_crs};
@@ -12,6 +13,7 @@ pub use lawful_source::{
     LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
     enforce_sources, prepare_import,
 };
+pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_objects};
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,
     Provenance, StableId, ValidationState, WorldIr, WorldLayer, WorldObject, derive_id,
