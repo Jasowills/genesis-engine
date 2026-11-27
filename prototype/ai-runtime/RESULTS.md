@@ -265,8 +265,9 @@ written.
   metadata and static wheel inspection are verified for 1.32.0.
 * `RunOptions::SetTerminate()` (C++/C ABI) was **not** exercised; Python 1.23.2
   uses the `terminate` attribute, not a `set_terminate()` method.
-* **No SAM ViT-B / YOLOX / Depth Anything V2 Small weights** were downloaded or
-  tested; no checksums or weight licences for those artefacts were gathered here.
+* The **original locally-generated-model lane** downloaded no named weights and
+  gathered no weight checksums. Named weights, their checksums and licences were
+  added separately under D-033 at the end of this document.
 * **No EP tests**: CPUExecutionProvider only. CoreML, DirectML, OpenVINO,
   CUDA/GPU, ARM64, Linux and Windows remain **UNVERIFIED** on this host.
 * **No external provider calls, no API keys/secrets, no paid costs, no GitHub

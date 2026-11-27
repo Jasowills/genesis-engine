@@ -34,9 +34,9 @@ Date of run: 2026-11-27. Host: macOS 26.5.2, x86_64, Python 3.13.15 venv.
 | `weights/` | Directory is tracked; `*.onnx`, `*.zip` and extracted binaries are git-ignored (only the text `config.yaml` is tracked). Never commit binaries; digests and source URLs are in the report. |
 | `model_add4.onnx` | Locally generated 4-element float32 `Add` graph (106 bytes). |
 | `model_loop.onnx` | Locally generated 20 000-node `Add` chain (used only to make cancellation observable). |
-| `smoke-output.log`, `smoke-results.json` | Smoke run transcript and machine-readable measured results. |
+| `smoke-results.json` | Machine-readable measured results; transcript embedded in `RESULTS.md` (`smoke-output.log` is an ignored local transcript). |
 | `RESULTS.md` | Verbatim commands/output, versions, checksums, licence source, verdicts, limits. |
-| `install-*.log`, `download-1.32.0-linux-wheel.log`, `inspect-1.32.0-wheel-api.log`, `api-surface-1.23.2.log`, `pypi-*.log` | Raw evidence logs. |
+| `install-*.log`, `download-1.32.0-linux-wheel.log`, `inspect-1.32.0-wheel-api.log`, `api-surface-1.23.2.log`, `pypi-*.log` | Ignored local raw transcripts; key excerpts are embedded in `RESULTS.md`. |
 | `wheels/` | Downloaded 1.32.0 wheel + extracted `.so` for static inspection only; ignored by `.gitignore`. Not runnable on macOS. |
 | `.venv/` | Local venv; ignored by `.gitignore`; never commit. |
 | `probe-cancel.py`, `probe-cancel.onnx`, `probe-cancel.log` | Earlier cancellation probe, superseded by `smoke.py`. |
@@ -64,4 +64,7 @@ the evidence. No secrets were created. No EP/CoreML/DirectML/
 GPU/ARM64 tests were run — CPU provider only. Timing values are local
 measurements, **not** performance budgets or benchmarks. The venv and wheel
 cache are ignored by the local `.gitignore`; the source and evidence files are
-committed in this repository (commit `b53d0c2`).
+committed in this repository (scripts in `b53d0c2`, named-model evidence in
+`f14ed73` and licence correction in `ff6b09a`); `*.log`, `*.onnx` and `*.zip`
+are local/ignored evidence artefacts, with their digests recorded in `RESULTS.md`
+and `named-models-results.json`.
