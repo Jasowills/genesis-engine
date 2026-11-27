@@ -21,4 +21,4 @@ Open standards software (CesiumJS, 3D Tiles) is **allowed** with Genesis-owned c
 
 ## Verification
 
-`cargo test --workspace --locked` runs six dedicated tests covering allowed OSM sources, all deny-list patterns with case/hyphen variants, licence spellings, purpose behaviour, malformed descriptors, full provenance preservation, and export gating with distinct-source sidecars. Twenty-two Core tests pass in total.
+`cargo test --workspace --locked` runs six dedicated tests covering allowed OSM sources, all deny-list patterns with case/hyphen variants, licence spellings, purpose behaviour, malformed descriptors, full provenance preservation, and export gating with distinct-source sidecars. Counts in these pages are point-in-time snapshots; see `progress.md` for the current workspace total.

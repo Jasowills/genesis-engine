@@ -20,4 +20,4 @@ Without independent checkpoints, `geographic_accuracy_claim` is exactly `"none"`
 
 ## Verification
 
-`cargo test --workspace --locked` includes five validation tests: defect detection, no-accuracy-claim, survey-profile rejection, JSON round-trip and missing-provenance flagging. Fifty-seven Core tests pass in total; these tests run in the cross-platform CI matrix.
+`cargo test --workspace --locked` includes five validation tests: defect detection, no-accuracy-claim, survey-profile rejection, JSON round-trip and missing-provenance flagging. Counts in this page are point-in-time verification snapshots; see `progress.md` for the current total.; these tests run in the cross-platform CI matrix.

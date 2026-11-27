@@ -13,6 +13,18 @@ const OSM: &str = concat!(
     "/../../fixtures/ikeja-small.geojson"
 );
 
+/// Subcommand aliases map to canonical command names in the JSON envelope.
+fn command_for<'a>(args: &[&'a str]) -> &'a str {
+    match args[0] {
+        "project" => "project_create",
+        "boundary" => "boundary_import",
+        "features" => "features_import",
+        "job" => "job_status",
+        "job-cancel" => "job_cancel",
+        other => other,
+    }
+}
+
 fn run(args: &[&str]) -> Value {
     let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
         .args(args)
@@ -26,6 +38,11 @@ fn run(args: &[&str]) -> Value {
     );
     let value: Value = serde_json::from_str(&stdout).expect("machine-readable JSON output");
     assert_eq!(value["schema_version"], 1);
+    assert_eq!(
+        value["command"],
+        command_for(args),
+        "command envelope must match invocation"
+    );
     assert!(
         value["status"] == "ok" || value["status"] == "unsupported",
         "unexpected status: {}",
@@ -87,6 +104,8 @@ fn cli_drives_the_full_slice_headlessly() {
 
     let job = run(&["job", project_s, "job-1"]);
     assert_eq!(job["status"], "unsupported");
+    let cancel = run(&["job-cancel", project_s, "job-1"]);
+    assert_eq!(cancel["status"], "unsupported");
 
     assert!(Path::new(&glb).exists());
     assert!(project.join("validation/report.json").exists());
@@ -117,6 +136,7 @@ fn invalid_profile_is_a_structured_error() {
     let value: Value = serde_json::from_slice(&output.stderr).unwrap();
     assert_eq!(value["status"], "error");
     assert_eq!(value["schema_version"], 1);
+    assert_eq!(value["error"]["kind"], "cli_error");
     assert!(
         value["error"]["message"]
             .as_str()
@@ -208,4 +228,74 @@ fn non_utf8_argument_does_not_panic() {
         !stderr.contains("panicked"),
         "non-UTF8 argv panicked: {stderr}"
     );
+}
+
+#[test]
+fn export_without_a_passing_validation_report_is_a_structured_error() {
+    let root = std::env::temp_dir().join(format!("genesis-cli-no-report-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "No report"]);
+    run(&[
+        "boundary",
+        project_s,
+        BOUNDARY,
+        "Ikeja",
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors",
+    ]);
+    run(&[
+        "features",
+        project_s,
+        OSM,
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors",
+    ]);
+    run(&["generate", project_s, "42"]);
+    let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .args([
+            "export",
+            project_s,
+            root.join("world.glb").to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let value: Value = serde_json::from_slice(&output.stderr).unwrap();
+    assert_eq!(value["status"], "error");
+    assert_eq!(value["command"], "export");
+    assert_eq!(value["error"]["kind"], "cli_error");
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn corrupt_world_ir_is_rejected_by_the_headless_path() {
+    let root = std::env::temp_dir().join(format!("genesis-cli-ir-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "Corrupt IR"]);
+    std::fs::create_dir_all(project.join("worlds")).unwrap();
+    std::fs::write(
+        project.join("worlds/world.json"),
+        r#"{"schema_version":999,"world_id":"x","crs":{},"local_frame":{},"layers":[]}"#,
+    )
+    .unwrap();
+    let output = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .args(["scene", project_s])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let value: Value = serde_json::from_slice(&output.stderr).unwrap();
+    assert_eq!(value["status"], "error");
+    let _ = std::fs::remove_dir_all(&root);
 }

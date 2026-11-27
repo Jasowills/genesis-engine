@@ -296,3 +296,27 @@ fn running_jobs_cannot_be_reexecuted_or_duplicate_history() -> CoreResult<()> {
     assert_eq!(job.events.len(), before, "no duplicate history appended");
     Ok(())
 }
+
+#[test]
+fn progress_events_reach_one_and_carry_the_stage_checkpoint() -> CoreResult<()> {
+    let w = worker(&["fetch", "build"]);
+    let mut job = record(&w);
+    Supervisor::new().execute(&mut job, &w)?;
+    let progress: Vec<_> = job
+        .events
+        .iter()
+        .filter_map(|event| match event {
+            JobEvent::Progress {
+                progress,
+                checkpoint,
+                ..
+            } => Some((*progress, checkpoint.clone())),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(progress.len(), 2);
+    assert!(progress[0].0 > 0.0 && progress[0].0 < 1.0);
+    assert_eq!(progress[1].0, 1.0);
+    assert_eq!(progress[1].1.as_deref(), Some("checkpoint:build"));
+    Ok(())
+}

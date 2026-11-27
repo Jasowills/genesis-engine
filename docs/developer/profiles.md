@@ -13,3 +13,5 @@ These are **policy and estimate contracts**, not calibrated benchmarks. Cost and
 ## Verification
 
 `cargo test --workspace --locked` includes six profile tests: explicit gate mapping across all four profiles (Unknown evidence rejected by every profile, observed accepted by every profile, deviation/resolution/checkpoint thresholds), range-only preflight output with survey warning, paid-cost metadata retention in the report, declared-not-probed capability reporting, paid consent gating (including empty name), and estimate bound validation.
+
+The Khronos glTF-Validator is a separate CI gate on the exported fixture; it is not executed by `check_export_ready`, so the profile gate name deliberately refers to the structural export gate actually enforced.

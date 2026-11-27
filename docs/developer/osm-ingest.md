@@ -15,4 +15,4 @@ Building features require a closed Polygon outer ring; road features require a L
 
 ## Verification
 
-`cargo test --workspace --locked` includes eight OSM ingestion tests: golden IDs and positions, top-level feature IDs, evidence tiers, discriminating geometry errors, 10k cap, gate ordering, denied conversion and sidecar attribution. Thirty-nine Core tests pass in total.
+`cargo test --workspace --locked` includes eight OSM ingestion tests: golden IDs and positions, top-level feature IDs, evidence tiers, discriminating geometry errors, 10k cap, gate ordering, denied conversion and sidecar attribution. Counts in this page are point-in-time verification snapshots; see `progress.md` for the current total..

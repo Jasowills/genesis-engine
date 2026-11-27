@@ -14,4 +14,4 @@
 
 ## Verification
 
-`cargo test --workspace --locked` includes nine boundary tests covering a valid Ikeja fixture with known-answer SHA-256 and deterministic ID, bbox, malformed/multiple/empty/degenerate geometry, bare Feature and holes, CRS mismatch/epoch validation, denied-source gate ordering and the antimeridian heuristic. Thirty-one Core tests pass in total.
+`cargo test --workspace --locked` includes nine boundary tests covering a valid Ikeja fixture with known-answer SHA-256 and deterministic ID, bbox, malformed/multiple/empty/degenerate geometry, bare Feature and holes, CRS mismatch/epoch validation, denied-source gate ordering and the antimeridian heuristic. Counts in this page are point-in-time verification snapshots; see `progress.md` for the current total..

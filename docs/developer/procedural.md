@@ -19,4 +19,4 @@ Every generated asset carries the source descriptor's licence election, attribut
 
 ## Verification
 
-`cargo test --workspace --locked` includes nine procedural tests: determinism, winding normalisation, stable origin/identity, evidence tiers, provenance and golden vertex counts, `verify_mesh` negative cases, levels/unit handling, cross-feature junction limitation, and gate/invalid requests. Forty-eight Core tests pass in total.
+`cargo test --workspace --locked` includes nine procedural tests: determinism, winding normalisation, stable origin/identity, evidence tiers, provenance and golden vertex counts, `verify_mesh` negative cases, levels/unit handling, cross-feature junction limitation, and gate/invalid requests. Counts in this page are point-in-time verification snapshots; see `progress.md` for the current total..

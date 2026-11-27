@@ -131,3 +131,33 @@ fn snapshot_survives_versioned_document_round_trip() {
     let restored: SceneSnapshot = serde_json::from_slice(&encoded).expect("snapshot deserialises");
     assert_eq!(restored, snapshot);
 }
+
+#[cfg(feature = "tauri-bindings")]
+#[test]
+fn tauri_commands_open_and_export_a_scene_snapshot() {
+    use genesis_studio::commands::{export_scene, open_scene};
+
+    let root = std::env::temp_dir().join(format!("genesis-tauri-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&root).unwrap();
+    let (world, meshes) = built();
+    let world_path = root.join("world.json");
+    let meshes_path = root.join("world.meshes.json");
+    std::fs::write(&world_path, world.to_bytes().unwrap()).unwrap();
+    std::fs::write(&meshes_path, serde_json::to_vec(&meshes).unwrap()).unwrap();
+
+    let snapshot = open_scene(world_path.to_str().unwrap().to_string()).unwrap();
+    assert_eq!(snapshot.nodes.len(), 2);
+
+    let missing = root.join("missing.json");
+    std::fs::write(&missing, world.to_bytes().unwrap()).unwrap();
+    let error = open_scene(missing.to_str().unwrap().to_string()).unwrap_err();
+    assert!(error.contains("cannot read"));
+
+    let exported = root.join("exported.json");
+    export_scene(exported.to_str().unwrap().to_string(), snapshot.clone()).unwrap();
+    let restored: SceneSnapshot =
+        serde_json::from_slice(&std::fs::read(&exported).unwrap()).unwrap();
+    assert_eq!(restored, snapshot);
+    let _ = std::fs::remove_dir_all(&root);
+}

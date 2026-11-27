@@ -194,7 +194,10 @@ fn read_json<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, String> {
 }
 
 fn load_ir(project: &Path) -> Result<WorldIr, String> {
-    read_json(&project.join("worlds/world.json"))
+    // Use Core's version-gated parser, never a raw deserialise: a hand-edited
+    // or legacy IR document must be rejected with a structured error.
+    let bytes = std::fs::read(project.join("worlds/world.json")).map_err(|e| e.to_string())?;
+    WorldIr::from_bytes(&bytes).map_err(|e| e.to_string())
 }
 
 fn load_meshes(project: &Path) -> Result<Vec<GeneratedGeometry>, String> {

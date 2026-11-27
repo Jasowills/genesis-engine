@@ -1,7 +1,18 @@
 use genesis_core::{
-    ActivationStore, Capability, CapabilityGrants, CoreError, PluginManifest, WIT_WORLD_SOURCE,
-    wit_world_is_deny_by_default,
+    ActivationStore, Capability, CapabilityGrants, CoreError, LicenceElection, PluginManifest,
+    SourceDescriptor, WIT_WORLD_SOURCE, wit_world_is_deny_by_default,
 };
+
+fn artifact_source() -> SourceDescriptor {
+    SourceDescriptor {
+        id: "local:plugin:fixture".to_string(),
+        publisher: "Genesis test".to_string(),
+        url: "local".to_string(),
+        licence: LicenceElection::Other("test".to_string()),
+        attribution: "test".to_string(),
+        ..Default::default()
+    }
+}
 
 fn manifest(name: &str, version: &str) -> PluginManifest {
     let mut m = PluginManifest {
@@ -10,6 +21,7 @@ fn manifest(name: &str, version: &str) -> PluginManifest {
         version: version.to_string(),
         wit_world_version: genesis_core::WIT_WORLD_VERSION.to_string(),
         artifact_digest: "a".repeat(64),
+        artifact_source: artifact_source(),
         grants: CapabilityGrants::default(),
         dependency_pins: vec!["core@1.0.0".to_string()],
         seal: genesis_core::IntegritySeal {
@@ -137,4 +149,22 @@ fn malformed_semver_suffixes_are_rejected() {
     }
     let good = manifest("good", "1.0.0-beta.1+build.5");
     assert!(good.verify().is_ok());
+}
+
+#[test]
+fn denied_artifact_source_blocks_plugin_activation() {
+    let mut denied = artifact_source();
+    denied.publisher = "Cesium ion".to_string();
+    let mut m = manifest("denied", "1.0.0");
+    m.artifact_source = denied;
+    m.seal();
+    assert!(matches!(
+        m.verify(),
+        Err(genesis_core::CoreError::SourceDenied(_))
+    ));
+    let mut store = ActivationStore::default();
+    assert!(matches!(
+        store.stage(m),
+        Err(genesis_core::CoreError::SourceDenied(_))
+    ));
 }

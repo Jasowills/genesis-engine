@@ -4,7 +4,7 @@ The World IR is the engine-agnostic, versioned description of a reconstructed wo
 
 ## Design rules
 
-- **Metadata only.** Structured documents hold IDs, CRS/frame, provenance, evidence flags, seeds, dependencies, validation state and content hashes. Geometry, textures and indexes are referenced by project-relative `AssetRef` paths — never inlined into one giant JSON document.
+- **Metadata only.** Structured documents hold IDs, CRS/frame, provenance, evidence flags, seeds, dependencies, validation state and content hashes. Geometry, textures and indexes live in separate payload documents referenced by project-relative paths; `AssetRef` is the planned typed form of that reference. The IR document itself stays metadata-only and is never one giant inline geometry JSON.
 - **Stable IDs.** `derive_id(namespace, key)` is SHA-256 based and deterministic; names alone are not stable across edits.
 - **Honest uncertainty.** Every object carries `EvidenceKind`: `measured`, `derived_with_confidence`, `inferred_by_rule` or `unknown`. A footprint does not establish height; a centreline is not a road surface.
 - **Precision.** Authoritative geodetic positions are f64; a `LocalFrame` records an f64 ECEF origin for local ENU maths. The GE-0003 golden vectors are preserved through serialization (ADR-0008).
@@ -27,4 +27,4 @@ cargo test --workspace --locked
 cargo clippy --workspace --locked -- -D warnings
 ```
 
-Nine World IR tests (16 Core tests total) cover lossless round-trip, GE-0003 golden vectors (independent Ikeja origin constants, the 1e7 m binary32 contrast and an antimeridian vector), deterministic IDs and deserialization validation, dimension-preserving migration with nested-height precedence, legacy version gating, and structured errors for path traversal, duplicate IDs, empty frames and unresolved dependencies.
+Counts in this page are point-in-time verification snapshots; see `progress.md` for the current total. cover lossless round-trip, GE-0003 golden vectors (independent Ikeja origin constants, the 1e7 m binary32 contrast and an antimeridian vector), deterministic IDs and deserialization validation, dimension-preserving migration with nested-height precedence, legacy version gating, and structured errors for path traversal, duplicate IDs, empty frames and unresolved dependencies.

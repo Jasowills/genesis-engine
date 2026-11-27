@@ -77,8 +77,10 @@ jobs:
         run: cargo test --locked --manifest-path prototype/plugin-sandbox/Cargo.toml
       - name: Genesis Core tests
         run: cargo test --workspace --locked
+      - name: Studio Tauri command wrappers
+        run: cargo test --locked -p genesis-studio --features tauri-bindings
       - name: Genesis Core lint
-        run: cargo clippy --workspace --locked -- -D warnings
+        run: cargo clippy --workspace --locked --all-targets -- -D warnings
       - name: ONNX Runtime 1.32 smoke test (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         shell: bash

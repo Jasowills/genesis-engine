@@ -37,10 +37,13 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 ### Notes
 
 - No product code, crates, UI, datasets, CI or GitHub issues are included in this baseline beyond the approved repository setup.
-- Open decisions (D-007…D-009, D-013…D-018, D-021…D-024 and non-core licence questions) and eight evidence conflicts remain recorded; no capability is claimed as implemented.
+- D-008, D-009, D-013 and D-021 are resolved; D-022 signing is declined; seven of eight evidence conflicts are resolved and one is partial. The entries below record implemented capabilities with their verified evidence.
 - `chore(tickets)`: verify GE-0022 CLI, GE-0027 regeneration planner, GE-0023 worker contract, GE-0028 layers, GE-0025 plugin SDK (with explicit contract-only limitations).
 - `feat(core)`: swappable AI adapter contract with canonical error codes (GE-0026).
 - `feat(integration)`: pinned Blender 4.5.17 LTS GLB round-trip fixture (GE-0029).
 - `feat(core)`: LOD/collision/compression and adversarial-hardening fixes (GE-0030, audits).
 - `test(ai)`: owner-approved named ONNX models (SAM ViT-B quantised encoder, YOLOX-S, Depth Anything V2 Small) executed with checksum and licence records (GE-0006).
 - `fix`: second adversarial audit — index/panic guards, DEM validation, evidence negation, CLI symlink/atomic writes, script defensiveness.
+- `test`: end-to-end vertical slice and frozen benchmark harness (GE-0020).
+- `docs`: contributor and governance documentation sweep (GE-0021).
+- `test`: ADR conformance review — CLI IR validation, lawful-source gate on inference/plugin paths, normalised progress checkpoints, Tauri/Studio render tests, sandbox flake fix, full-adapter descriptor fields.

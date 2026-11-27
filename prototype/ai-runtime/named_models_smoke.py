@@ -163,10 +163,22 @@ def main() -> None:
         ],
     }
     REPORT.write_text(json.dumps(report, indent=2) + "\n")
+    # Evidence gate: a missing, tampered or nondeterministic model must fail
+    # the script rather than silently producing a green report.
+    failures = [
+        model["name"]
+        for model in report["models"]
+        if model.get("status") != "ran"
+        or not model.get("outputs_finite", False)
+        or not model.get("deterministic_exact", False)
+    ]
     print(json.dumps({
         "ort_version": report["ort_version"],
         "models": [(m["name"], m["status"]) for m in report["models"]],
+        "failures": failures,
     }))
+    if failures:
+        raise SystemExit(f"named-model evidence failed: {failures}")
 
 
 if __name__ == "__main__":

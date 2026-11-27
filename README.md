@@ -2,7 +2,7 @@
 
 An open-source, cross-platform platform for reconstructing real-world environments into editable, validated, game-ready 3D worlds.
 
-> **Status: M1 foundation in progress.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a Rust Core crate implementing the portable project model, versioned World IR, lawful-source gate, geospatial import, deterministic procedural geometry, structural validation gates and a validated GLB export. A Core-backed Studio foundation (Rust scene snapshot + React/TypeScript shell) and a headless Rust CLI exist; no Tauri window has been visually verified. No worker pipeline or game-engine integration yet. Do not interpret planning documents as shipped features.
+> **Status: approved slice complete — 30 of 32 tickets verified.** The repository contains the specification, research, accepted architecture, product requirements, roadmap, ticket backlog and a Rust Core crate implementing the portable project model, versioned World IR, lawful-source gate, geospatial import, deterministic procedural geometry, structural validation gates and a validated GLB export. A Core-backed Studio foundation (Rust scene snapshot + React/TypeScript shell) and a headless Rust CLI exist; no Tauri window has been visually verified. Worker/plugin/AI contracts are shipped; real process execution, plugin components and game-engine fixtures are deliberately deferred. Do not interpret planning documents as shipped features.
 
 ## What Genesis is
 
@@ -26,7 +26,7 @@ Local-first with optional cloud; desktop-first; Windows, macOS and Linux; game d
 | [research/](research/) | Ecosystem, competitive, licence, format and standards evidence |
 | [engineering/](engineering/) | Environment, workflow, architecture discovery, test/security/performance/release plans |
 | [TICKETS/](TICKETS/) | 32 tracer-bullet tickets with blocking edges |
-| [docs/developer/](docs/developer/) | Implemented Core primitives: project layout, World IR, lawful sources, boundary/OSM import, procedural meshes, validation, GLB export |
+| [docs/developer/](docs/developer/) | Implemented contracts: project layout, World IR, lawful sources, boundary/OSM import, procedural meshes, validation, GLB export, CLI, jobs, plugins, AI adapters, layers, incremental regeneration, optimization, profiles, Blender round-trip, vertical slice, Unreal fixture scaffold |
 
 ## Accepted architecture foundation (2026-11-27)
 

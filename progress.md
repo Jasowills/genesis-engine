@@ -10,7 +10,7 @@ M4 — 30 verified, 1 deferred (GE-0031), 1 declined (GE-0032). M1–M4 contract
 No dependency-ready implementation work remains. Each code-changing ticket passed tests, lint, formatting and independent review before `verified`. No release, publication, purchase or deployment without owner approval.
 
 ## Overall status
-M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; a headless CLI, but no worker pipeline or game-engine integration yet.
+Implementation complete for the approved slice. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; a headless CLI, but no worker pipeline or game-engine integration yet.
 
 ## Last updated
 2026-11-27 (all dependency-ready tickets verified; adversarial audit remediated and independently confirmed; Blender round-trip measured; final cross-platform CI green on the implementation commits).
@@ -22,15 +22,15 @@ D-001 engine + platform progressively; D-002 desktop-first Studio; D-003 local-f
 All seven: thin versioned World IR + adapters (`adr/0002`); Tauri + React/TS + three.js with shell/viewport as two PoC-gated decisions (`0003`); external-process workers with normalised progress (`0004`); ONNX Runtime primary behind swappable adapter (`0005`); Wasmtime/WASI 0.2 sandbox (`0006`); lawful-source gate + provenance-first metadata (`0007`); floating-origin/ENU precision (`0008`). PoC and spike gates are retained; acceptance of direction is not a waiver of verification.
 
 ## Open owner questions
-D-007 platform boundaries; D-015 cloud execution; D-016 collaboration/marketplace scope; D-017 skill identity (assumed `to-tickets`); D-018 setup-skill tracker (GitHub Issues assumed via D-027); D-022 signing identities and budget; D-023 Rust MSRV; D-024 ODbL §4.6 publication legal review; non-core/plugin/model-weight licences under D-014; named AI model weights cost/licence. Resolved: D-008, D-009, D-013, D-021 (D-029…D-031), D-032 fixture licence, D-033 named model weights, D-034 Unreal first target engine. Questions Q1–Q8 are in `engineering/ARCHITECTURE_DISCOVERY.md` §7. None blocks the approved first slice; no purchase or publication happens without approval.
+D-007 platform boundaries; D-015 cloud execution; D-016 collaboration/marketplace scope; D-017 skill identity (assumed `to-tickets`); D-018 setup-skill tracker (GitHub Issues assumed via D-027); D-022 signing identities and budget (**declined by owner**); D-023 Rust MSRV; D-024 ODbL §4.6 publication legal review; non-core/plugin/model-weight licences under D-014; named AI model weights cost/licence (**approved and executed**, D-033). Resolved: D-008, D-009, D-013, D-021 (D-029…D-031), D-032 fixture licence, D-033 named model weights, D-034 Unreal first target engine. Questions Q1–Q8 are in `engineering/ARCHITECTURE_DISCOVERY.md` §7. None blocks the approved first slice; no purchase or publication happens without approval.
 
 ## Current repository state
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
 - Latest commit: **read live with `git rev-parse HEAD`** (this file is itself committed after each update, so a hard-coded hash would always lag by one commit). Reconciliation baseline: `15e5b4548c180cc4cf4160cf81a837c50efa04ef`; earlier commits `5fb68abba2f1ec801d2c887f63b4c30f4360f545` (issue links) and `aa728fd9a9aa5e0bf2ca05b94006434816be973d` (initial 81-file documentation-only commit).
-- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. GitHub uses `status:ready` (green) for locally `verified` tickets because no `status:verified` label exists. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export, headless CLI commands) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified; the headless CLI is implemented and reviewed.
+- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. GitHub uses `status:ready` (green) for locally `verified` tickets because no `status:verified` label exists. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export), `crates/genesis-cli` (headless commands) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified; the headless CLI is implemented and reviewed.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
-- Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
+- Platforms tested: macOS/x86_64, Windows/x86_64 and Ubuntu/x86_64 via three-OS CI (prototype, Core, CLI, Studio); Apple Silicon/ARM64 and CUDA untested.
 
 ## Completed and verified tickets
 GE-0008 — GitHub repository and issue setup (independent post-execution review `APPROVED`; evidence recorded in its ticket).
@@ -83,18 +83,18 @@ Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARC
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
 
 ## Key data contracts and schema versions
-World IR schema v2 with v1 migrations is implemented and verified (GE-0011); provenance/metric records and versioned job records (GE-0023) are implemented in `crates/genesis-core`. AI adapter contract and real worker payload execution remain requirements in `ARCHITECTURE.md` §2 and `engineering/ARCHITECTURE_DISCOVERY.md` §2.1, not yet shipped.
+World IR schema v2 with v1 migrations is implemented and verified (GE-0011); provenance/metric records and versioned job records (GE-0023) are implemented in `crates/genesis-core`. The typed AI adapter contract is shipped and verified (GE-0026, `docs/developer/ai-adapters.md`); real worker payload execution, plugin component execution and external provider transport remain follow-up contracts, not shipped runtime behaviour.
 
 ## Research completed
 All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md`, `COMPETITIVE_ANALYSIS.md`, `LICENCE_AND_DATA_RIGHTS.md`, `FORMAT_AND_STANDARDS.md`, `RESEARCH_REGISTER.md`), 8 logged conflicts.
 
 ## Research still required
-Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
+Seven of eight research conflicts are resolved and one is partial (GE-0002); obtain owner answers to remaining open questions; legal review of ODbL §4.6 and AGPL worker boundaries; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 124 passed, 0 failed (Core incl. 6 incremental + 11 job + 6 layer + 6 profile + 5 plugin + 5 AI + 2 Blender + 3 optimization tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
-- Platform coverage: environment discovery commands only; host macOS/x86_64.
-- Known failures: historical CI runs `45979438978`/`45979776607` failed on prototype workspace formatting (fixed by `4a78f0e`, re-run `45980065945` green). CI run `46046257230` (intermediate GE-0030 commit `cf874c5`) failed the lint gate on two one-line Clippy findings; both fixed in `e0abbe6` and `66f44da`, with `46046601712`/`46046663754` green. Latest commit `d29a07a` CI run `46047346586` pending. No product-code test failures.
+- Last full test run: `cargo test --workspace --locked` → 124 passed, 0 failed (Core incl. 7 incremental + 11 job + 9 layer + 6 profile + 7 plugin + 6 AI + 2 Blender + 4 optimization tests + CLI 5 + Studio Rust 7; Studio Vitest 6; rustc 1.98.1).
+- Platform coverage: three-OS CI matrix (Ubuntu, Windows, macOS) plus local macOS/x86_64; Apple Silicon/ARM64 and CUDA untested.
+- Known failures: historical CI runs `45979438978`/`45979776607` failed on prototype workspace formatting (fixed by `4a78f0e`, re-run `45980065945` green). CI run `46046257230` (intermediate GE-0030 commit `cf874c5`) failed the lint gate on two one-line Clippy findings; both fixed in `e0abbe6` and `66f44da`, with `46046601712`/`46046663754` green. Latest CI runs on the final commits are green (`46064199831`, `46064116195`, `46066651577`). No product-code test failures.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
 
 ## Known bugs and technical debt
@@ -110,7 +110,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-Finish GE-0024/GE-0025 reviews; blocked tickets require owner/tooling decisions. Every code-changing ticket needs tests, lint, formatting and independent review before `verified`. GitHub: https://github.com/Jasowills/genesis-engine, branch `main`, 32 issues.
+No action required: 30 tickets verified, GE-0031 deferred and GE-0032 declined by owner. Any future ticket must still pass tests, lint, formatting and independent review before `verified`. GitHub: https://github.com/Jasowills/genesis-engine, branch `main`, 32 issues.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Foundation implementation is complete; no release, publication or purchase without owner approval. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.

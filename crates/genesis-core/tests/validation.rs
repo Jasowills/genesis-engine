@@ -1,7 +1,8 @@
 use genesis_core::{
     CoreResult, CrsMetadata, EvidenceKind, GeneratedGeometry, GeneratedKind, LicenceElection,
     LocalFrame, Provenance, QualityProfile, SourceDescriptor, ValidationReport, WorldIr,
-    WorldLayer, WorldObject, check_export_ready, derive_id, validate_mesh, validate_world,
+    WorldLayer, WorldObject, check_export_ready, derive_id, referenced_sources, validate_mesh,
+    validate_world,
 };
 
 fn mesh(vertices: Vec<[f64; 3]>, indices: Vec<u32>) -> GeneratedGeometry {
@@ -238,4 +239,11 @@ fn unsupported_validation_report_schema_blocks_export() {
     report.schema_version = 999;
     let message = check_export_ready(&report).unwrap_err();
     assert!(message.contains("unsupported validation report schema version"));
+}
+
+#[test]
+fn referenced_sources_collects_distinct_source_ids() {
+    let w = world();
+    let sources = referenced_sources(&w);
+    assert!(sources.contains("osm:test"));
 }

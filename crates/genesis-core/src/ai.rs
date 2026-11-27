@@ -6,7 +6,7 @@
 //! weights are deliberately NOT loaded (owner cost/licence decision pending);
 //! see GE-0006. No external provider call is made by default.
 
-use crate::CoreError;
+use crate::{CoreError, SourceDescriptor, check_source};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -37,7 +37,14 @@ impl ModelLicence {
 pub struct ModelDescriptor {
     pub id: String,
     pub version: String,
+    /// Licence of the model code/graph.
     pub licence: ModelLicence,
+    /// Licence of the weight artefact (may differ from the code licence).
+    pub weight_licence: ModelLicence,
+    /// Vendor-neutral execution-provider preference order; first available wins.
+    pub execution_provider_priority: Vec<String>,
+    /// Adapter settings recorded with the run (no runtime behaviour here).
+    pub settings: std::collections::BTreeMap<String, String>,
     /// SHA-256 of the intended weight file. Checksum verification of real
     /// weights is a follow-up; this field records the expected value only.
     pub expected_sha256: String,
@@ -51,7 +58,10 @@ impl ModelDescriptor {
                 "model needs id and version".to_string(),
             ));
         }
-        if !self.commercial_use_permitted || !self.licence.commercial_use_permitted() {
+        if !self.commercial_use_permitted
+            || !self.licence.commercial_use_permitted()
+            || !self.weight_licence.commercial_use_permitted()
+        {
             return Err(CoreError::LicenseBlocked(
                 "non-commercial model weights are not permitted".to_string(),
             ));
@@ -70,6 +80,8 @@ impl ModelDescriptor {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SegmentationRequest {
     pub source_object_id: String,
+    /// The source whose data is being inferred from; S12 is checked before run.
+    pub source: SourceDescriptor,
     pub width_px: u32,
     pub height_px: u32,
 }
@@ -84,6 +96,8 @@ pub struct SegmentationResult {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DepthRequest {
     pub source_object_id: String,
+    /// The source whose data is being inferred from; S12 is checked before run.
+    pub source: SourceDescriptor,
     pub width_px: u32,
     pub height_px: u32,
 }
@@ -211,6 +225,7 @@ impl InferenceAdapter for FakeAdapter {
         request: &SegmentationRequest,
         token: &CancelToken,
     ) -> Result<SegmentationOutput, CoreError> {
+        check_source(&request.source)?;
         check_request(
             &request.source_object_id,
             request.width_px,
@@ -229,6 +244,7 @@ impl InferenceAdapter for FakeAdapter {
     }
 
     fn depth(&self, request: &DepthRequest, token: &CancelToken) -> Result<DepthOutput, CoreError> {
+        check_source(&request.source)?;
         check_request(
             &request.source_object_id,
             request.width_px,

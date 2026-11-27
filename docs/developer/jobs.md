@@ -2,7 +2,7 @@
 
 `WorkerDescriptor` carries argv-only data (no shell execution is implemented), a project-relative working-directory check, an **empty** environment (no inherited credentials), a memory cap and a timeout field. `JobRecord` records job type/version, input hashes, seed, parameters, worker descriptor, state and normalised events. `Supervisor::execute` drives stages and emits `StageStarted`, `Progress`, `Log`, `Checkpoint`, `Done`, `Error` or `Cancelled` events with canonical error codes.
 
-A cancellation token checked between stages stops the job before the next stage. Provider failures map to `WorkerStageFailed`; timeouts are mapped to `TimedOut` **after** a stage returns — intra-stage preemption is not implemented. Terminal jobs cannot be re-executed. Provider text is passed through bounded `redact()` before persistence. All output is JSON-serialisable for the versioned job record contract; progress is a 0..1 fraction.
+A cancellation token checked between stages stops the job before the next stage. Provider failures map to `WorkerStageFailed`; timeouts are mapped to `TimedOut` **after** a stage returns — intra-stage preemption is not implemented. Terminal jobs cannot be re-executed. Provider text is passed through bounded `redact()` before persistence. All output is JSON-serialisable for the versioned job record contract; progress is a 0..1 fraction emitted after each completed stage, reaching 1.0 before `Done`, and carries that stage's checkpoint hash.
 
 ## Scope limit
 

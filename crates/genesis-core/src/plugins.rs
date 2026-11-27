@@ -7,7 +7,7 @@
 //! bindings, asymmetric signature verification and component execution are
 //! explicitly follow-up work.
 
-use crate::CoreError;
+use crate::{CoreError, SourceDescriptor, check_source};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
@@ -71,7 +71,7 @@ pub struct IntegritySeal {
     pub digest: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PluginManifest {
     pub schema_version: u32,
     pub name: String,
@@ -79,6 +79,8 @@ pub struct PluginManifest {
     pub wit_world_version: String,
     /// SHA-256 of the guest artefact bytes.
     pub artifact_digest: String,
+    /// Provenance of the guest artefact; S12 is checked before activation.
+    pub artifact_source: SourceDescriptor,
     pub grants: CapabilityGrants,
     /// Exact dependency pins in `name@version` form.
     pub dependency_pins: Vec<String>,
@@ -91,6 +93,7 @@ struct SealPayload<'a> {
     version: &'a str,
     wit_world_version: &'a str,
     artifact_digest: &'a str,
+    artifact_source: &'a SourceDescriptor,
     grants: &'a BTreeSet<Capability>,
     dependency_pins: &'a [String],
 }
@@ -141,6 +144,7 @@ impl PluginManifest {
             version: &self.version,
             wit_world_version: &self.wit_world_version,
             artifact_digest: &self.artifact_digest,
+            artifact_source: &self.artifact_source,
             grants: &self.grants.granted,
             dependency_pins: &self.dependency_pins,
         };
@@ -177,6 +181,7 @@ impl PluginManifest {
                 "artifact digest must be sha256 hex".to_string(),
             ));
         }
+        check_source(&self.artifact_source)?;
         if !wit_world_is_deny_by_default() {
             return Err(CoreError::InvalidManifest(
                 "WIT world exposes an ambient capability".to_string(),

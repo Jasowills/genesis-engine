@@ -122,6 +122,9 @@ async fn wasi_context_has_no_env_stdio_preopens_and_probe_codes() {
     println!("probe: host listener live on 127.0.0.1:{port}");
     let config = RunConfig {
         probe_port: Some(port),
+        // This benign fixture only reports five codes; a 2-tick (~50 ms)
+        // deadline can trap it before completion under parallel CI load.
+        epoch_deadline_ticks: 1000,
         ..RunConfig::default()
     };
 
@@ -214,6 +217,9 @@ async fn wasi_preview1_lacks_sock_connect_import() {
     let (_listener, port) = bind_probe_listener().unwrap();
     let config = RunConfig {
         probe_port: Some(port),
+        // This benign fixture only reports five codes; a 2-tick (~50 ms)
+        // deadline can trap it before completion under parallel CI load.
+        epoch_deadline_ticks: 1000,
         ..RunConfig::default()
     };
 

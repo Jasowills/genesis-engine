@@ -46,6 +46,9 @@ pub struct RunConfig {
     /// Port of a real, live host `TcpListener`. Callers must keep the listener
     /// alive for the duration of the run; see `bind_probe_listener`.
     pub probe_port: Option<u16>,
+    /// Epoch deadline for this run. Keep the default low for adversarial
+    /// fixtures; benign capability probes need a larger budget to finish.
+    pub epoch_deadline_ticks: u64,
 }
 
 impl Default for RunConfig {
@@ -55,6 +58,7 @@ impl Default for RunConfig {
             trap_on_grow_failure: false,
             timeout: RUN_TIMEOUT,
             probe_port: None,
+            epoch_deadline_ticks: EPOCH_DEADLINE_TICKS,
         }
     }
 }
@@ -202,7 +206,7 @@ pub async fn run_module(
     let reports = state.reports.clone();
     let mut store = Store::new(engine, state);
     store.limiter(|state| &mut state.limits);
-    store.set_epoch_deadline(EPOCH_DEADLINE_TICKS);
+    store.set_epoch_deadline(config.epoch_deadline_ticks);
 
     let instance = linker.instantiate_async(&mut store, module).await?;
     let start = instance.get_typed_func::<(), ()>(&mut store, "_start")?;

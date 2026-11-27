@@ -33,6 +33,8 @@ pub enum JobEvent {
         stage: String,
         progress: f32,
         units: String,
+        /// Checkpoint produced by the completed stage, when available.
+        checkpoint: Option<String>,
     },
     Log {
         level: String,
@@ -270,17 +272,19 @@ impl Supervisor {
                 level: "info".to_string(),
                 message: redact(&format!("stage {stage} started")),
             });
-            job.events.push(JobEvent::Progress {
-                stage: stage.clone(),
-                progress: index as f32 / stages.len() as f32,
-                units: "fraction_of_stages".to_string(),
-            });
-
             match worker.run_stage(stage) {
-                Ok(hash) => job.events.push(JobEvent::Checkpoint {
-                    id: stage.clone(),
-                    hash,
-                }),
+                Ok(hash) => {
+                    job.events.push(JobEvent::Progress {
+                        stage: stage.clone(),
+                        progress: (index + 1) as f32 / stages.len() as f32,
+                        units: "fraction_of_stages".to_string(),
+                        checkpoint: Some(hash.clone()),
+                    });
+                    job.events.push(JobEvent::Checkpoint {
+                        id: stage.clone(),
+                        hash,
+                    });
+                }
                 Err(provider_error) => {
                     job.state = JobState::Failed {
                         code: "WorkerStageFailed".to_string(),
