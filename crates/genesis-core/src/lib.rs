@@ -25,8 +25,8 @@ pub use procedural::{
     generate_road_surfaces, verify_mesh,
 };
 pub use validation::{
-    MetricRecord, QualityProfile, ValidationReport, check_export_ready, referenced_sources,
-    validate_mesh, validate_world,
+    MetricRecord, QualityProfile, ValidationReport, check_export_ready, mesh_subject_hash,
+    referenced_sources, validate_mesh, validate_world,
 };
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,

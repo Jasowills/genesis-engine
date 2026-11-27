@@ -10,7 +10,7 @@ M1 — Foundation and first vertical slice. Research, architecture, repository s
 Advance M1 tickets in dependency order: Studio shell/viewport, E2E vertical slice, and remaining foundation tickets. Each code-changing ticket must pass tests, lint, formatting and independent review before `verified`. No release or deployment without owner approval.
 
 ## Overall status
-M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; no CLI, worker pipeline or game-engine integration yet.
+M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. A Core-backed Studio foundation (Rust snapshot + React shell) exists but no Tauri window has been visually verified; a headless CLI, but no worker pipeline or game-engine integration yet.
 
 ## Last updated
 2026-11-27 (Phase 8 approvals recorded; GitHub setup executed; post-execution documentation reconciliation).
@@ -28,7 +28,7 @@ D-007 platform boundaries; D-015 cloud; D-016 collaboration; D-017 skill identit
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
 - Latest commit: **read live with `git rev-parse HEAD`** (this file is itself committed after each update, so a hard-coded hash would always lag by one commit). Reconciliation baseline: `15e5b4548c180cc4cf4160cf81a837c50efa04ef`; earlier commits `5fb68abba2f1ec801d2c887f63b4c30f4360f545` (issue links) and `aa728fd9a9aa5e0bf2ca05b94006434816be973d` (initial 81-file documentation-only commit).
-- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export, headless CLI commands) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified and no CLI exists.
+- Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. Product code exists in `crates/genesis-core` (project model, World IR, import, procedural, validation, GLB export, headless CLI commands) and `crates/genesis-studio` with a React shell in `apps/studio`; no Tauri window has been visually verified; the headless CLI is implemented and reviewed.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
 

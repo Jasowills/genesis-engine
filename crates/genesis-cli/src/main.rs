@@ -10,6 +10,7 @@ use genesis_core::{
     import_glb, import_osm_geojson, to_world_objects, validate_world,
 };
 use serde_json::{Value, json};
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 const OUTPUT_SCHEMA_VERSION: u32 = 1;
@@ -321,7 +322,18 @@ fn run(cli: Cli) -> Result<Value, String> {
             let meshes = load_meshes(&project)?;
             Ok(ok(
                 "scene",
-                json!({"schema_version": 1, "world_id": world.world_id.to_string(), "mesh_count": meshes.len(), "ids": meshes.iter().map(|m| m.asset_id.to_string()).collect::<Vec<_>>()}),
+                json!({
+                    "schema_version": 1,
+                    "world_id": world.world_id.to_string(),
+                    "mesh_count": meshes.len(),
+                    "ids": meshes.iter().map(|m| m.asset_id.to_string()).collect::<Vec<_>>(),
+                    "reproducibility": {
+                        "generator_version": meshes.first().map(|m| m.generator_version.clone()).unwrap_or_default(),
+                        "seeds": meshes.iter().map(|m| m.generation_seed).collect::<Vec<_>>(),
+                        "source_ids": meshes.iter().map(|m| m.provenance.source_id.clone()).collect::<BTreeSet<_>>().into_iter().collect::<Vec<_>>(),
+                        "subject_hash": genesis_core::mesh_subject_hash(&meshes)
+                    }
+                }),
             ))
         }
         Command::JobStatus { project: _, id } => Ok(json!({

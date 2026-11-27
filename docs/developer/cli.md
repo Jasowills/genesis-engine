@@ -12,7 +12,7 @@
 | `genesis generate <project-path> <seed> [--road-width N]` | Deterministic procedural meshes |
 | `genesis validate <project-path> [--profile preview\|game_ready\|high_fidelity\|survey_reference]` | Structural validation report |
 | `genesis export <project-path> <output.glb>` | Validated GLB plus attribution sidecar |
-| `genesis scene <project-path>` | Versioned scene descriptor (IDs only) |
+| `genesis scene <project-path>` | Versioned scene descriptor with stable IDs, seed, generator version, source IDs and subject hash |
 | `genesis job <project-path> <id>` / `genesis job-cancel ...` | Structured `unsupported` until Core job orchestration (GE-0023) exists |
 
 Command names are flat (the first token selects the operation). Project CRS is read from the project manifest and provenance is read from `metadata/source.json`, so later commands cannot silently substitute defaults. Unknown source data is never attributed to OpenStreetMap unless the caller passes `--attribution`. Run `genesis --help` for exact arguments.
