@@ -3,7 +3,7 @@ id: GE-0017
 title: Select, inspect and provenance display
 type: feature
 priority: P1
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:feature, area:studio]
 depends_on: [GE-0016]
@@ -44,10 +44,10 @@ Delivers spec §50 steps 8-9 and the honest-uncertainty principle.
 DOM panels use ARIA tree/grid semantics; viewport emits selection events only.
 
 ## Acceptance criteria
-- [ ] Pick maps to correct stable ID
-- [ ] Provenance fields visible and accurate
-- [ ] Keyboard path selects and inspects an object
-- [ ] Tests and documentation updated
+- [x] Pick maps to correct stable ID
+- [x] Provenance fields visible and accurate
+- [x] Keyboard path selects and inspects an object
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Component tests
@@ -79,7 +79,12 @@ axe and keyboard tests planned.
 ## Verification evidence
 
 GitHub issue: **#15** — https://github.com/Jasowills/genesis-engine/issues/15
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `apps/studio/src/selection.test.tsx` (4 component tests), `apps/studio/vite.config.ts` (vitest/jsdom), `apps/studio/package.json` (`test` script + vitest/jsdom/testing-library dev deps), CI step for Studio frontend.
+- `cd apps/studio && npx vitest run` → **4 passed, 0 failed**: keyboard Enter selects stable node id; inspector renders source/attribution/licence/method; negative numeric input commits `-7.5`; selecting a node in the shell reveals attribution.
+- `cd apps/studio && npx tsc --noEmit` clean; `cargo test --workspace --locked` still 64 passed (Core + Studio Rust).
+- No domain logic in React; selection/inspector present only presentation of Core snapshot fields. No network calls from UI.
+- Actual webview/visual verification remains UNVERIFIED (inherited from GE-0016).
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

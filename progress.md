@@ -56,6 +56,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0017 — select/inspect/provenance display; 4 React component tests pass, independent review pending (issue #15).
 GE-0006 — ORT 1.32.0 CI evidence recorded; named-model gap explicit (issue #9).
 GE-0016 — Studio shell/viewport scene snapshot + React UI; 64 tests pass, independent review pending (issue #14).
 GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, independent review pending (issue #16).
