@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "journey": {
+    "project_create": {
+      "id": "ge-Ikeja-product-journey-1795819112",
+      "path": "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+      "schema_version": 1
+    },
+    "boundary": {
+      "bbox": [
+        3.348,
+        6.5985,
+        3.3552,
+        6.6051
+      ],
+      "checksum": "41f8a94fc4b6538c9cf1a48a791a03765f7f07243d189953cac66a1c5aa35a52",
+      "id": "id-c620e0f045b5455957561cbac2a2c90a3e22de792a5cab7fb78d5a3d7cf0d520",
+      "name": "Ikeja study area",
+      "schema_version": 2
+    },
+    "features": {
+      "feature_count": 2,
+      "world_id": "id-5d36fabb70e51e268f26ed53440a6bb929e8221d80437eb7afb6432651b4d753"
+    },
+    "generate": {
+      "generator_version": "procedural-v0.1",
+      "mesh_count": 2,
+      "seed": 42
+    },
+    "validate": {
+      "accuracy_claim": "none",
+      "passed": true,
+      "subject_hash": "7bbf6661c0de01ccada85b4456c94e3db662b8096248dc120c1fe8f16ca76f5c",
+      "warnings": []
+    },
+    "export": {
+      "gltf_version": "2.0",
+      "mesh_count": 2,
+      "output": "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/world.glb",
+      "triangle_count": 14
+    },
+    "scene": {
+      "ids": [
+        "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+        "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef"
+      ],
+      "mesh_count": 2,
+      "reproducibility": {
+        "generator_versions": [
+          "procedural-v0.1"
+        ],
+        "seeds": [
+          42,
+          42
+        ],
+        "source_ids": [
+          "osm:fixture:ikeja"
+        ],
+        "subject_hash": "7bbf6661c0de01ccada85b4456c94e3db662b8096248dc120c1fe8f16ca76f5c"
+      },
+      "schema_version": 1,
+      "world_id": "id-5d36fabb70e51e268f26ed53440a6bb929e8221d80437eb7afb6432651b4d753"
+    }
+  },
+  "asset_quality": {
+    "meshes": [
+      {
+        "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+        "kind": "building_volume",
+        "evidence": "measured",
+        "vertices": 8,
+        "triangles": 10,
+        "finite": true,
+        "degenerate_triangles": 0,
+        "downward_facing_triangles": 0,
+        "bounds_m": {
+          "east": [
+            -398.11310331695057,
+            44.23478928612522
+          ],
+          "north": [
+            -364.9435048332375,
+            22.119228718869167
+          ],
+          "up": [
+            0.0,
+            9.0
+          ]
+        },
+        "generator_version": "procedural-v0.1",
+        "seed": 42,
+        "attribution": "© OpenStreetMap contributors",
+        "licence": "ODbL-1.0",
+        "source_feature_ids": [
+          "way/101"
+        ],
+        "source_fit_m": {
+          "east_error": [
+            0.0,
+            0.0
+          ],
+          "north_error": [
+            0.0,
+            0.0
+          ],
+          "note": "road strip is offset by half the configured width; small errors are expected"
+        }
+      },
+      {
+        "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+        "kind": "road_surface",
+        "evidence": "inferred_by_rule",
+        "vertices": 6,
+        "triangles": 4,
+        "finite": true,
+        "degenerate_triangles": 0,
+        "downward_facing_triangles": 0,
+        "bounds_m": {
+          "east": [
+            -344.3048473125291,
+            268.44313562967005
+          ],
+          "north": [
+            -313.36188850249493,
+            190.60498991879132
+          ],
+          "up": [
+            0.0,
+            0.0
+          ]
+        },
+        "generator_version": "procedural-v0.1",
+        "seed": 42,
+        "attribution": "© OpenStreetMap contributors",
+        "licence": "ODbL-1.0",
+        "source_feature_ids": [
+          "way/102"
+        ],
+        "source_fit_m": {
+          "east_error": [
+            -1.4855743039202594,
+            3.037062528884803
+          ],
+          "north_error": [
+            -3.7139021241184764,
+            2.6031233539046923
+          ],
+          "note": "road strip is offset by half the configured width; small errors are expected"
+        }
+      }
+    ],
+    "glb": {
+      "valid_header": true,
+      "version": 2,
+      "size_bytes": 3328,
+      "meshes": 2,
+      "nodes": 2,
+      "triangles": 14,
+      "generator": "genesis-core GE-0019",
+      "has_genesis_extras": true
+    },
+    "validation_metrics": [
+      {
+        "name": "object_count",
+        "value": 2.0,
+        "unit": "objects",
+        "method": "World IR layer traversal",
+        "tool_version": "cli-1.0",
+        "parameters": {},
+        "limitations": [
+          "no completeness claim without reference data"
+        ]
+      },
+      {
+        "name": "missing_provenance",
+        "value": 0.0,
+        "unit": "objects",
+        "method": "source/licence/attribution presence check",
+        "tool_version": "cli-1.0",
+        "parameters": {},
+        "limitations": []
+      },
+      {
+        "name": "zero_area_faces",
+        "value": 0.0,
+        "unit": "faces",
+        "method": "cross-product magnitude of triangle edges",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "near-degenerate slivers require a numeric threshold (not applied)"
+        ]
+      },
+      {
+        "name": "non_manifold_edges",
+        "value": 0.0,
+        "unit": "edges",
+        "method": "count edges used by more than two triangles",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "open surfaces are expected to have boundary edges"
+        ]
+      },
+      {
+        "name": "boundary_edges",
+        "value": 4.0,
+        "unit": "edges",
+        "method": "count edges used by exactly one triangle",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "not an error for road surfaces"
+        ]
+      },
+      {
+        "name": "normal_orientation_conflicts",
+        "value": 0.0,
+        "unit": "shared-edges",
+        "method": "up-direction heuristic on shared edges (coarse)",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "does not replace a full adjacency-consistency test"
+        ]
+      },
+      {
+        "name": "self_intersections",
+        "value": -1.0,
+        "unit": "pairs",
+        "method": "not implemented in this slice",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "UNVERIFIED: requires triangle-triangle intersection tests"
+        ]
+      },
+      {
+        "name": "triangle_count",
+        "value": 10.0,
+        "unit": "triangles",
+        "method": "index count / 3",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "no target-engine budget has been calibrated"
+        ]
+      },
+      {
+        "name": "zero_area_faces",
+        "value": 0.0,
+        "unit": "faces",
+        "method": "cross-product magnitude of triangle edges",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "near-degenerate slivers require a numeric threshold (not applied)"
+        ]
+      },
+      {
+        "name": "non_manifold_edges",
+        "value": 0.0,
+        "unit": "edges",
+        "method": "count edges used by more than two triangles",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "open surfaces are expected to have boundary edges"
+        ]
+      },
+      {
+        "name": "boundary_edges",
+        "value": 6.0,
+        "unit": "edges",
+        "method": "count edges used by exactly one triangle",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "not an error for road surfaces"
+        ]
+      },
+      {
+        "name": "normal_orientation_conflicts",
+        "value": 0.0,
+        "unit": "shared-edges",
+        "method": "up-direction heuristic on shared edges (coarse)",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "does not replace a full adjacency-consistency test"
+        ]
+      },
+      {
+        "name": "self_intersections",
+        "value": -1.0,
+        "unit": "pairs",
+        "method": "not implemented in this slice",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "UNVERIFIED: requires triangle-triangle intersection tests"
+        ]
+      },
+      {
+        "name": "triangle_count",
+        "value": 4.0,
+        "unit": "triangles",
+        "method": "index count / 3",
+        "tool_version": "cli-1.0",
+        "parameters": {
+          "asset_id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+          "generator_version": "procedural-v0.1"
+        },
+        "limitations": [
+          "no target-engine budget has been calibrated"
+        ]
+      }
+    ],
+    "source_expected_extent_m": {
+      "east": [
+        -398.11310331695057,
+        265.40607310078525
+      ],
+      "north": [
+        -364.9435048332375,
+        188.00186656488663
+      ]
+    }
+  },
+  "adverse_journeys": [
+    {
+      "journey": "missing file",
+      "exit_code": 1,
+      "structured_error": true,
+      "message": "No such file or directory (os error 2)"
+    },
+    {
+      "journey": "unsupported profile",
+      "exit_code": 1,
+      "structured_error": true,
+      "message": "unknown profile 'bogus'"
+    },
+    {
+      "journey": "export after valid report",
+      "exit_code": 0,
+      "structured_error": false,
+      "message": ""
+    }
+  ],
+  "transcript": [
+    {
+      "command": [
+        "project",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "Ikeja product journey",
+        "--datum",
+        "EGM96"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"project_create\",\n  \"data\": {\n    \"id\": \"ge-Ikeja-product-journey-1795819112\",\n    \"path\": \"/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project\",\n    \"schema_version\": 1\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "boundary",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "/Users/jasonamadi/genesis-engine/fixtures/ikeja-boundary.geojson",
+        "Ikeja study area",
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"boundary_import\",\n  \"data\": {\n    \"bbox\": [\n      3.348,\n      6.5985,\n      3.3552,\n      6.6051\n    ],\n    \"checksum\": \"41f8a94fc4b6538c9cf1a48a791a03765f7f07243d189953cac66a1c5aa35a52\",\n    \"id\": \"id-c620e0f045b5455957561cbac2a2c90a3e22de792a5cab7fb78d5a3d7cf0d520\",\n    \"name\": \"Ikeja study area\",\n    \"schema_version\": 2\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "features",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "/Users/jasonamadi/genesis-engine/fixtures/ikeja-small.geojson",
+        "--source-id",
+        "osm:fixture:ikeja",
+        "--licence",
+        "odbl",
+        "--attribution",
+        "© OpenStreetMap contributors"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"features_import\",\n  \"data\": {\n    \"feature_count\": 2,\n    \"world_id\": \"id-5d36fabb70e51e268f26ed53440a6bb929e8221d80437eb7afb6432651b4d753\"\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "generate",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "42",
+        "--road-width",
+        "8"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"generate\",\n  \"data\": {\n    \"generator_version\": \"procedural-v0.1\",\n    \"mesh_count\": 2,\n    \"seed\": 42\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "validate",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "--profile",
+        "game_ready"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"validate\",\n  \"data\": {\n    \"accuracy_claim\": \"none\",\n    \"passed\": true,\n    \"subject_hash\": \"7bbf6661c0de01ccada85b4456c94e3db662b8096248dc120c1fe8f16ca76f5c\",\n    \"warnings\": []\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "export",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/world.glb"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"export\",\n  \"data\": {\n    \"gltf_version\": \"2.0\",\n    \"mesh_count\": 2,\n    \"output\": \"/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/world.glb\",\n    \"triangle_count\": 14\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "scene",
+        "/private/var/folders/81/y4t1vltx4jb4qr3y2j2ff8q00000gn/T/opencode/product-e2e/project"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"command\": \"scene\",\n  \"data\": {\n    \"ids\": [\n      \"id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f\",\n      \"id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef\"\n    ],\n    \"mesh_count\": 2,\n    \"reproducibility\": {\n      \"generator_versions\": [\n        \"procedural-v0.1\"\n      ],\n      \"seeds\": [\n        42,\n        42\n      ],\n      \"source_ids\": [\n        \"osm:fixture:ikeja\"\n      ],\n      \"subject_hash\": \"7bbf6661c0de01ccada85b4456c94e3db662b8096248dc120c1fe8f16ca76f5c\"\n    },\n    \"schema_version\": 1,\n    \"world_id\": \"id-5d36fabb70e51e268f26ed53440a6bb929e8221d80437eb7afb6432651b4d753\"\n  },\n  \"schema_version\": 1,\n  \"status\": \"ok\"\n}",
+      "stderr": ""
+    }
+  ]
+}

@@ -48,3 +48,5 @@ Owner-approved at the Phase 8 checkpoint: all seven architecture ADRs (`adr/0002
 - `docs`: contributor and governance documentation sweep (GE-0021).
 - `test`: ADR conformance review — CLI IR validation, lawful-source gate on inference/plugin paths, normalised progress checkpoints, Tauri/Studio render tests, sandbox flake fix, full-adapter descriptor fields.
 - `feat(core)`: WGS84 ECEF→ENU product precision path and local-frame origin from boundary bbox (ADR-0008).
+- `feat(core)`: shared local-frame origin for CLI and procedural generators; ADR-0008 product precision path.
+- `docs(product)`: end-to-end product journey and asset-quality verdict with a repeatable harness and captured Studio evidence.

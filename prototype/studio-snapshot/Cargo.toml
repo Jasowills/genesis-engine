@@ -1,0 +1,12 @@
+[package]
+name = "studio-snapshot-probe"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+genesis-core = { path = "../../crates/genesis-core" }
+genesis-studio = { path = "../../crates/genesis-studio" }
+serde_json = "1"
+
+[workspace]

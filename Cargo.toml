@@ -4,6 +4,7 @@ exclude = [
   "prototype/precision-crs",
   "prototype/plugin-sandbox",
   "prototype/plugin-sandbox/guest",
+  "prototype/studio-snapshot",
 ]
 resolver = "2"
 

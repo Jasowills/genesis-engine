@@ -6,8 +6,9 @@ use clap::{Parser, Subcommand};
 use genesis_core::{
     CURRENT_SCHEMA_VERSION, CrsMetadata, GeneratedGeometry, LicenceElection, LocalFrame,
     QualityProfile, SourceDescriptor, WorldIr, WorldLayer, check_export_ready, create_project,
-    derive_id, export_glb, generate_building_volumes, generate_road_surfaces, import_geojson,
-    import_glb, import_osm_geojson, to_world_objects, validate_world,
+    derive_id, export_glb, generate_building_volumes_with_origin,
+    generate_road_surfaces_with_origin, import_geojson, import_glb, import_osm_geojson,
+    to_world_objects, validate_world,
 };
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
@@ -312,14 +313,23 @@ fn run(cli: Cli) -> Result<Value, String> {
         } => {
             let source = load_source(&project)?;
             let crs = load_crs(&project)?;
+            let frame = load_frame(&project)?;
+            let origin_lon_lat = frame.origin_lon_lat;
             let path = project.join("sources/features.geojson");
             let bytes = std::fs::read(&path).map_err(|e| e.to_string())?;
             let features = import_osm_geojson(&bytes, &source, &crs).map_err(|e| e.to_string())?;
             let mut meshes =
-                generate_building_volumes(&features, &source, seed).map_err(|e| e.to_string())?;
+                generate_building_volumes_with_origin(&features, &source, seed, origin_lon_lat)
+                    .map_err(|e| e.to_string())?;
             meshes.extend(
-                generate_road_surfaces(&features, &source, seed, road_width)
-                    .map_err(|e| e.to_string())?,
+                generate_road_surfaces_with_origin(
+                    &features,
+                    &source,
+                    seed,
+                    road_width,
+                    origin_lon_lat,
+                )
+                .map_err(|e| e.to_string())?,
             );
             std::fs::create_dir_all(project.join("payloads")).map_err(|e| e.to_string())?;
             std::fs::write(

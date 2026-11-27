@@ -56,6 +56,10 @@ fn object_rng(seed: u64, key: &str) -> ChaCha8Rng {
 
 /// Deterministic frame origin: lexicographically smallest coordinate across
 /// all features, independent of input ordering or ring winding.
+fn references(features: &[OsmFeature]) -> Vec<&OsmFeature> {
+    features.iter().collect()
+}
+
 fn frame_origin(features: &[&OsmFeature]) -> [f64; 2] {
     features
         .iter()
@@ -196,6 +200,21 @@ pub fn generate_building_volumes(
     source: &SourceDescriptor,
     seed: u64,
 ) -> Result<Vec<GeneratedGeometry>> {
+    // Default origin for direct callers; the product CLI passes its own frame.
+    generate_building_volumes_with_origin(
+        features,
+        source,
+        seed,
+        frame_origin(&references(features)),
+    )
+}
+
+pub fn generate_building_volumes_with_origin(
+    features: &[OsmFeature],
+    source: &SourceDescriptor,
+    seed: u64,
+    origin: [f64; 2],
+) -> Result<Vec<GeneratedGeometry>> {
     check_source(source)?;
     let mut buildings: Vec<&OsmFeature> = features
         .iter()
@@ -206,7 +225,7 @@ pub fn generate_building_volumes(
     if buildings.is_empty() {
         return Ok(Vec::new());
     }
-    let [origin_lon, origin_lat] = frame_origin(&buildings);
+    let [origin_lon, origin_lat] = origin;
     let mut output = Vec::with_capacity(buildings.len());
     for feature in buildings {
         let (height, evidence, height_source) = height_for(feature, seed);
@@ -295,6 +314,22 @@ pub fn generate_road_surfaces(
     seed: u64,
     width_m: f64,
 ) -> Result<Vec<GeneratedGeometry>> {
+    generate_road_surfaces_with_origin(
+        features,
+        source,
+        seed,
+        width_m,
+        frame_origin(&references(features)),
+    )
+}
+
+pub fn generate_road_surfaces_with_origin(
+    features: &[OsmFeature],
+    source: &SourceDescriptor,
+    seed: u64,
+    width_m: f64,
+    origin: [f64; 2],
+) -> Result<Vec<GeneratedGeometry>> {
     check_source(source)?;
     if !width_m.is_finite() || width_m <= 0.0 {
         return Err(CoreError::InvalidManifest(
@@ -310,7 +345,7 @@ pub fn generate_road_surfaces(
     if roads.is_empty() {
         return Ok(Vec::new());
     }
-    let [origin_lon, origin_lat] = frame_origin(&roads);
+    let [origin_lon, origin_lat] = origin;
     let mut mesh = MeshBuilder::default();
     let mut indices = Vec::new();
     for feature in &roads {

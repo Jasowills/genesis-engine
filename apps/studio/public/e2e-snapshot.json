@@ -1,0 +1,210 @@
+{
+  "snapshot_version": 1,
+  "world_id": "id-5d36fabb70e51e268f26ed53440a6bb929e8221d80437eb7afb6432651b4d753",
+  "frame_id": "ikeja-local",
+  "selected_node_id": null,
+  "nodes": [
+    {
+      "id": "id-2ba4a8e9268d0d93eeb232bbd8509e5f7c9ec81da4eda038dcd858070c1d66ef",
+      "label": "Road surface — way/102",
+      "kind": "road_surface",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.3516,
+        6.6018
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            -344.3048473125291,
+            -305.934084254258,
+            0.0
+          ],
+          [
+            -341.3336987046886,
+            -313.36188850249493,
+            0.0
+          ],
+          [
+            -68.68050707341008,
+            -195.8076884188876,
+            0.0
+          ],
+          [
+            -64.02346150805401,
+            -202.3124502594316,
+            0.0
+          ],
+          [
+            262.36901057190045,
+            190.60498991879132,
+            0.0
+          ],
+          [
+            268.44313562967005,
+            185.39874321098193,
+            0.0
+          ]
+        ],
+        "indices": [
+          0,
+          1,
+          3,
+          0,
+          3,
+          2,
+          2,
+          3,
+          5,
+          2,
+          5,
+          4
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "procedural-v0.1:road_surface",
+      "provenance": {
+        "source_id": "osm:fixture:ikeja",
+        "licence_elected": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "publisher": "user-provided",
+        "url": "local-file",
+        "version": "n/a",
+        "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "way/102"
+        ],
+        "derivation_chain": [
+          "procedural-v0.1:seed=42:road-surface"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
+      "id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
+      "label": "Building — way/101",
+      "kind": "building_volume",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.3516,
+        6.6018
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            -398.11310331695057,
+            -364.94208466552226,
+            0.0
+          ],
+          [
+            -398.11310331695057,
+            -364.94208466552226,
+            9.0
+          ],
+          [
+            44.23478928612522,
+            -364.9435048332375,
+            0.0
+          ],
+          [
+            44.23478928612522,
+            -364.9435048332375,
+            9.0
+          ],
+          [
+            44.234478691540865,
+            22.11780856118445,
+            0.0
+          ],
+          [
+            44.234478691540865,
+            22.11780856118445,
+            9.0
+          ],
+          [
+            -398.1103079653892,
+            22.119228718869167,
+            0.0
+          ],
+          [
+            -398.1103079653892,
+            22.119228718869167,
+            9.0
+          ]
+        ],
+        "indices": [
+          0,
+          2,
+          3,
+          0,
+          3,
+          1,
+          2,
+          4,
+          5,
+          2,
+          5,
+          3,
+          4,
+          6,
+          7,
+          4,
+          7,
+          5,
+          6,
+          0,
+          1,
+          6,
+          1,
+          7,
+          1,
+          3,
+          5,
+          1,
+          5,
+          7
+        ]
+      },
+      "evidence": "measured",
+      "method": "procedural-v0.1:building_volume",
+      "provenance": {
+        "source_id": "osm:fixture:ikeja",
+        "licence_elected": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "publisher": "user-provided",
+        "url": "local-file",
+        "version": "2",
+        "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "vintage": "2026-10-01T08:00:00Z",
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "way/101"
+        ],
+        "derivation_chain": [
+          "procedural-v0.1:seed=42:chacha8"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    }
+  ]
+}

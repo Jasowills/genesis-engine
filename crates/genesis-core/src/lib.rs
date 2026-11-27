@@ -48,7 +48,8 @@ pub use plugins::{
 };
 pub use procedural::{
     GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, generate_building_volumes,
-    generate_road_surfaces, verify_mesh,
+    generate_building_volumes_with_origin, generate_road_surfaces,
+    generate_road_surfaces_with_origin, verify_mesh,
 };
 pub use profiles::{
     CapabilityReport, EstimateRange, EvidenceTier, HostCapabilities, PreflightReport,
