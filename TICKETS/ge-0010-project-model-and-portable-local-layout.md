@@ -3,7 +3,7 @@ id: GE-0010
 title: Project model and portable local layout
 type: feature
 priority: P0
-status: ready
+status: in-review
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0007]
@@ -43,10 +43,10 @@ Foundation for all generation, storage and reproducibility behaviour.
 Implement the minimal manifest and layout behind Core commands usable headlessly.
 
 ## Acceptance criteria
-- [ ] Project create/open/save round-trip passes
-- [ ] All paths relative and portable
-- [ ] Unknown/malformed manifest produces structured error
-- [ ] Tests and documentation updated
+- [x] Project create/open/save round-trip passes
+- [x] All paths relative and portable
+- [x] Unknown/malformed manifest produces structured error
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Manifest serialization and path validation
@@ -78,7 +78,14 @@ Headless-drivable is the test that this is a Core capability.
 ## Verification evidence
 
 GitHub issue: **#27** — https://github.com/Jasowills/genesis-engine/issues/27
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: root `Cargo.toml` (minimal workspace), `crates/genesis-core/` (Cargo.toml, src/lib.rs, tests/project.rs), `docs/developer/project-layout.md`, `Cargo.lock`, CI Core test/lint steps.
+- `cargo test --workspace --locked` → **6 passed, 0 failed** (round-trip, portability after move, unknown schema version, malformed/missing manifest, path containment, duplicate project).
+- `cargo clippy --workspace --locked -- -D warnings` → clean after fixing a collapsible-if warning.
+- Path validator hardened after a failing test: `C:secret` and backslash paths are rejected on Unix too, not only where Rust reports a Prefix component.
+- Atomic manifest write via temp file + rename; Windows fallback documented as non-atomic in code.
+- Documentation: `docs/developer/project-layout.md` describes layout, API and schema version 1.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Project model implemented and tested; status moved to in-review.

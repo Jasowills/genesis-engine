@@ -1,0 +1,7 @@
+[workspace]
+members = ["crates/genesis-core"]
+resolver = "2"
+
+# Minimal workspace implementing Genesis Core for the first vertical slice.
+# This is not a final crate-layout decision (spec §42): new crates are added only
+# when a verified ticket needs them.
