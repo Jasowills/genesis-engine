@@ -52,7 +52,7 @@ impl ModelDescriptor {
             ));
         }
         if !self.commercial_use_permitted || !self.licence.commercial_use_permitted() {
-            return Err(CoreError::InvalidManifest(
+            return Err(CoreError::LicenseBlocked(
                 "non-commercial model weights are not permitted".to_string(),
             ));
         }
@@ -209,9 +209,7 @@ impl InferenceAdapter for FakeAdapter {
             request.height_px,
         )?;
         if token.is_cancelled() {
-            return Err(CoreError::InvalidManifest(
-                "segmentation cancelled".to_string(),
-            ));
+            return Err(CoreError::Cancelled("segmentation cancelled".to_string()));
         }
         Ok(SegmentationOutput {
             result: SegmentationResult {
@@ -229,7 +227,7 @@ impl InferenceAdapter for FakeAdapter {
             request.height_px,
         )?;
         if token.is_cancelled() {
-            return Err(CoreError::InvalidManifest("depth cancelled".to_string()));
+            return Err(CoreError::Cancelled("depth cancelled".to_string()));
         }
         let count = request.width_px as usize * request.height_px as usize;
         Ok(DepthOutput {
@@ -273,7 +271,7 @@ impl InferenceAdapter for ExternalProviderStub {
         _request: &SegmentationRequest,
         _token: &CancelToken,
     ) -> Result<SegmentationOutput, CoreError> {
-        Err(CoreError::InvalidManifest(
+        Err(CoreError::ProviderUnavailable(
             if self.consent_token.is_none() {
                 "external provider disabled: no consent token".to_string()
             } else {
@@ -287,7 +285,7 @@ impl InferenceAdapter for ExternalProviderStub {
         _request: &DepthRequest,
         _token: &CancelToken,
     ) -> Result<DepthOutput, CoreError> {
-        Err(CoreError::InvalidManifest(
+        Err(CoreError::ProviderUnavailable(
             if self.consent_token.is_none() {
                 "external provider disabled: no consent token".to_string()
             } else {

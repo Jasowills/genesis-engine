@@ -63,13 +63,13 @@ fn cancellation_is_demonstrated_on_both_ports() {
         adapter.segment(&SegmentationRequest {
             source_object_id: "building/1".to_string(), width_px: 1, height_px: 1,
         }, &token),
-        Err(CoreError::InvalidManifest(m)) if m.contains("cancelled")
+        Err(CoreError::Cancelled(m)) if m.contains("cancelled")
     ));
     assert!(matches!(
         adapter.depth(&DepthRequest {
             source_object_id: "building/1".to_string(), width_px: 1, height_px: 1,
         }, &token),
-        Err(CoreError::InvalidManifest(m)) if m.contains("cancelled")
+        Err(CoreError::Cancelled(m)) if m.contains("cancelled")
     ));
 }
 
@@ -78,7 +78,7 @@ fn non_commercial_weights_are_rejected() {
     let mut bad = model();
     bad.licence = ModelLicence::NonCommercial;
     assert!(
-        matches!(FakeAdapter::new(bad), Err(CoreError::InvalidManifest(m)) if m.contains("non-commercial"))
+        matches!(FakeAdapter::new(bad), Err(CoreError::LicenseBlocked(m)) if m.contains("non-commercial"))
     );
     let mut bad = model();
     bad.commercial_use_permitted = false;
@@ -95,12 +95,12 @@ fn external_provider_never_calls_out_by_default() {
         height_px: 1,
     };
     assert!(
-        matches!(stub.segment(&req, &CancelToken::default()), Err(CoreError::InvalidManifest(m)) if m.contains("no consent token"))
+        matches!(stub.segment(&req, &CancelToken::default()), Err(CoreError::ProviderUnavailable(m)) if m.contains("no consent token"))
     );
     let stub_with_consent =
         ExternalProviderStub::new(model(), Some("consent:x:granted".to_string())).unwrap();
     assert!(
-        matches!(stub_with_consent.segment(&req, &CancelToken::default()), Err(CoreError::InvalidManifest(m)) if m.contains("transport not implemented"))
+        matches!(stub_with_consent.segment(&req, &CancelToken::default()), Err(CoreError::ProviderUnavailable(m)) if m.contains("transport not implemented"))
     );
 }
 

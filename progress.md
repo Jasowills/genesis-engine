@@ -49,6 +49,7 @@ GE-0021 — contributor/governance documentation sweep (independent review `APPR
 GE-0022 — headless CLI over Core (72 tests; final independent confirmation `APPROVED`).
 GE-0027 — selective regeneration planner (planning seam only; independent confirmation `APPROVED`).
 GE-0023 — external worker supervision contract (contract only; independent re-review `APPROVED`).
+GE-0026 — AI adapter contract (adapter only; independent review `APPROVED`).
 GE-0028 — terrain/secondary layer generators (5 layer tests; independent re-review `APPROVED`).
 GE-0025 — plugin SDK contract (contract only; independent review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
@@ -62,7 +63,6 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0026 — AI adapter contract (5 adapter tests; independent review pending, issue #20).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).

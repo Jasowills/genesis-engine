@@ -130,8 +130,19 @@ pub struct ProjectManifest {
 pub enum CoreError {
     Io(io::Error),
     Json(serde_json::Error),
-    UnsupportedSchemaVersion { found: u32, supported: u32 },
+    UnsupportedSchemaVersion {
+        found: u32,
+        supported: u32,
+    },
     InvalidManifest(String),
+    /// Cooperative cancellation (AI adapters, worker stages).
+    Cancelled(String),
+    /// Model or data licence forbids the requested use.
+    LicenseBlocked(String),
+    /// External provider is disabled or has no transport in this build.
+    ProviderUnavailable(String),
+    /// Expected artefact digest did not match a loaded artefact.
+    ChecksumMismatch(String),
     PathEscapesProject(String),
     SourceDenied(String),
     AlreadyExists(PathBuf),
@@ -147,6 +158,10 @@ impl fmt::Display for CoreError {
                 "unsupported project schema version {found} (this build supports {supported})"
             ),
             Self::InvalidManifest(msg) => write!(f, "invalid project manifest: {msg}"),
+            Self::Cancelled(msg) => write!(f, "cancelled: {msg}"),
+            Self::LicenseBlocked(msg) => write!(f, "licence blocked: {msg}"),
+            Self::ProviderUnavailable(msg) => write!(f, "provider unavailable: {msg}"),
+            Self::ChecksumMismatch(msg) => write!(f, "checksum mismatch: {msg}"),
             Self::PathEscapesProject(path) => write!(f, "path escapes project root: {path}"),
             Self::SourceDenied(reason) => {
                 write!(f, "source denied by lawful-source policy: {reason}")

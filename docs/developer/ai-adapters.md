@@ -8,6 +8,8 @@ Domain code depends on the typed `InferenceAdapter` port, never on an inference 
 
 ## Scope limit
 
+Canonical `CoreError` variants let consumers discriminate cancellation (`Cancelled`), licence refusal (`LicenseBlocked`) and provider unavailability (`ProviderUnavailable`) without string matching. `InferenceEvidence` is a reduced evidence shape: input/output checksums, runtime/execution provider, precision and a provenance chain to source imagery are follow-up fields.
+
 Named models (SAM ViT-B, YOLOX, Depth Anything V2 Small) are **not** loaded; this requires an owner cost/licence decision (GE-0006, D-022-adjacent). Real ONNX inference, weight checksum verification against a loaded artefact, GPU execution providers and external provider transport are follow-up work. No non-commercial weight is used. Do not describe this slice as working model inference.
 
 ## Verification

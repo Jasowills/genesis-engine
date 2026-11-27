@@ -71,6 +71,11 @@ fn cli_drives_the_full_slice_headlessly() {
     let scene = run(&["scene", project_s]);
     assert_eq!(scene["data"]["mesh_count"], 2);
     assert_eq!(scene["data"]["ids"].as_array().unwrap().len(), 2);
+    let reproducibility = &scene["data"]["reproducibility"];
+    assert_eq!(reproducibility["generator_version"], "procedural-v0.1");
+    assert_eq!(reproducibility["seeds"].as_array().unwrap().len(), 2);
+    assert_eq!(reproducibility["source_ids"][0], "osm:fixture:ikeja");
+    assert_eq!(reproducibility["subject_hash"].as_str().unwrap().len(), 64);
 
     let imported = import_glb(&std::fs::read(&glb).unwrap()).unwrap();
     assert_eq!(imported.mesh_count, 2);
