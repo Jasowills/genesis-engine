@@ -3,7 +3,7 @@ id: GE-0029
 title: Blender export and round-trip fixture
 type: integration
 priority: P2
-status: in-review
+status: verified
 milestone: M3
 labels: [type:integration, area:export]
 depends_on: [GE-0019]
@@ -61,7 +61,7 @@ GPL process boundary; output not covered by GPL.
 Blender bake data not guaranteed portable across versions.
 
 ## Implementation notes
-D-009 first integration decision still open.
+D-009 resolved by D-030 (GLB first, Blender as the first DCC fixture).
 
 ## Reviewer checklist
 - [ ] Correctness
@@ -82,7 +82,8 @@ GitHub issue: **#25** — https://github.com/Jasowills/genesis-engine/issues/25
 - `cargo test --workspace --locked` → **114 passed, 0 failed** (2 new round-trip tests: Core re-import of the Blender GLB with provenance/attribution assertions; pinned report validation). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - Metadata loss recorded: none observed for extras; Blender may rename objects/merge materials across versions; material round-trip unverified (fixture has no materials); non-macOS platforms and component overhead unmeasured.
 - No GPL code in Core; Blender is an external process only.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (false clippy-clean claim, stale progress count, vacuous name/array evidence, stale D-009 note); all findings fixed, re-review pending. Limitations recorded: single pinned macOS Blender 4.5.17 LTS build; 67→63 character node-name truncation observed; array extras now compared as arrays; flat hierarchy and no materials exercised; non-macOS platforms and component overhead unmeasured.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent review findings remediated; ticket marked verified with recorded limitations.

@@ -21,6 +21,8 @@ def plain(value):
     """Convert Blender ID properties (including nested groups) to JSON values."""
     if value is None or isinstance(value, (str, int, float, bool)):
         return value
+    if hasattr(value, "to_list"):
+        return [plain(v) for v in value.to_list()]
     if hasattr(value, "items"):
         return {str(k): plain(v) for k, v in value.items()}
     if isinstance(value, (list, tuple)):

@@ -31,7 +31,10 @@
             "evidence": "inferred_by_rule",
             "generation_seed": 42,
             "generator_version": "procedural-v0.1",
-            "origin_lon_lat": "<bpy id property array [2]>",
+            "origin_lon_lat": [
+              3.3485,
+              6.599
+            ],
             "provenance": {
               "attribution": "\u00a9 OpenStreetMap contributors",
               "checksum": null,
@@ -39,8 +42,8 @@
                 "procedural-v0.1:seed=42:road-surface"
               ],
               "derivative_database_status": null,
-              "display_obligations": "<bpy id property array [0]>",
-              "filters": "<bpy id property array [0]>",
+              "display_obligations": [],
+              "filters": [],
               "licence_elected": "ODbL-1.0",
               "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
               "publisher": "user-provided",
@@ -49,7 +52,7 @@
                 "way/102"
               ],
               "source_id": "osm:fixture:ikeja",
-              "third_party_terms": "<bpy id property array [0]>",
+              "third_party_terms": [],
               "url": "local-file",
               "version": "n/a",
               "vintage": null
@@ -71,7 +74,10 @@
             "evidence": "measured",
             "generation_seed": 42,
             "generator_version": "procedural-v0.1",
-            "origin_lon_lat": "<bpy id property array [2]>",
+            "origin_lon_lat": [
+              3.348,
+              6.5985
+            ],
             "provenance": {
               "attribution": "\u00a9 OpenStreetMap contributors",
               "checksum": null,
@@ -79,8 +85,8 @@
                 "procedural-v0.1:seed=42:chacha8"
               ],
               "derivative_database_status": null,
-              "display_obligations": "<bpy id property array [0]>",
-              "filters": "<bpy id property array [0]>",
+              "display_obligations": [],
+              "filters": [],
               "licence_elected": "ODbL-1.0",
               "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
               "publisher": "user-provided",
@@ -89,7 +95,7 @@
                 "way/101"
               ],
               "source_id": "osm:fixture:ikeja",
-              "third_party_terms": "<bpy id property array [0]>",
+              "third_party_terms": [],
               "url": "local-file",
               "version": "2",
               "vintage": "2026-10-01T08:00:00Z"
@@ -116,7 +122,10 @@
             "evidence": "inferred_by_rule",
             "generation_seed": 42,
             "generator_version": "procedural-v0.1",
-            "origin_lon_lat": "<bpy id property array [2]>",
+            "origin_lon_lat": [
+              3.3485,
+              6.599
+            ],
             "provenance": {
               "attribution": "\u00a9 OpenStreetMap contributors",
               "checksum": null,
@@ -124,8 +133,8 @@
                 "procedural-v0.1:seed=42:road-surface"
               ],
               "derivative_database_status": null,
-              "display_obligations": "<bpy id property array [0]>",
-              "filters": "<bpy id property array [0]>",
+              "display_obligations": [],
+              "filters": [],
               "licence_elected": "ODbL-1.0",
               "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
               "publisher": "user-provided",
@@ -134,7 +143,7 @@
                 "way/102"
               ],
               "source_id": "osm:fixture:ikeja",
-              "third_party_terms": "<bpy id property array [0]>",
+              "third_party_terms": [],
               "url": "local-file",
               "version": "n/a",
               "vintage": null
@@ -156,7 +165,10 @@
             "evidence": "measured",
             "generation_seed": 42,
             "generator_version": "procedural-v0.1",
-            "origin_lon_lat": "<bpy id property array [2]>",
+            "origin_lon_lat": [
+              3.348,
+              6.5985
+            ],
             "provenance": {
               "attribution": "\u00a9 OpenStreetMap contributors",
               "checksum": null,
@@ -164,8 +176,8 @@
                 "procedural-v0.1:seed=42:chacha8"
               ],
               "derivative_database_status": null,
-              "display_obligations": "<bpy id property array [0]>",
-              "filters": "<bpy id property array [0]>",
+              "display_obligations": [],
+              "filters": [],
               "licence_elected": "ODbL-1.0",
               "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
               "publisher": "user-provided",
@@ -174,7 +186,7 @@
                 "way/101"
               ],
               "source_id": "osm:fixture:ikeja",
-              "third_party_terms": "<bpy id property array [0]>",
+              "third_party_terms": [],
               "url": "local-file",
               "version": "2",
               "vintage": "2026-10-01T08:00:00Z"

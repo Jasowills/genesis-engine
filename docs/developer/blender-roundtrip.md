@@ -12,7 +12,7 @@ The round-trip uses Blender strictly as an **external process**. Genesis Core co
 
 ## Known limitations / metadata loss
 
-No loss was observed for `genesis` extras in this pinned version. Blender may rename objects or merge materials across versions; custom-property preservation depends on glTF `extras` support and on extras landing on mesh data rather than objects. The fixture carries no materials, so material round-trip is **unverified**. Component overhead and non-macOS platforms are not measured here. The generated GLB is output data, not Blender GPL code.
+No loss was observed for `genesis` extras **content** in this pinned version (array-valued extras are preserved as arrays in the report). Two evidence limitations are recorded: (1) Blender truncated the 67-character Core node/mesh names to 63 characters in the exported GLB, even though the before/after in-memory names matched — hierarchical identity is tracked by `genesis.asset_id`, not by node name; (2) the fixture has a flat hierarchy (`parent: null`) and no materials, so deeper hierarchy and material round-trip are **unverified**. Blender may rename objects or merge materials across versions; custom-property preservation depends on glTF `extras` support and on extras landing on mesh data rather than objects. Component overhead and non-macOS platforms are not measured here. The generated GLB is output data, not Blender GPL code.
 
 ## Verification
 
