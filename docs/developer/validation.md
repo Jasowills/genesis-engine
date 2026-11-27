@@ -12,7 +12,7 @@
 
 ## Honest accuracy
 
-Without independent checkpoints, `geographic_accuracy_claim` is exactly `"none"`. With checkpoints the report says ASPRS-style reporting is not implemented; it never invents an accuracy number. `check_export_ready` rejects a `survey_reference` profile without checkpoints, and rejects zero-area faces or non-manifold edges.
+Without independent checkpoints, `geographic_accuracy_claim` is exactly `"none"`. With checkpoints the report says ASPRS-style reporting is not implemented; it never invents an accuracy number. `check_export_ready` rejects a `survey_reference` profile without checkpoints, and rejects zero-area faces or non-manifold edges. `ValidationReport.passed` covers provenance and profile only — it is **not** the structural export gate; callers must use `check_export_ready`.
 
 ## Profiles
 

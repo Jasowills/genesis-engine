@@ -42,6 +42,7 @@ GE-0012 — lawful-source gate and provenance sidecar (22 Core tests pass; indep
 GE-0013 — GeoJSON boundary import and CRS validation (31 Core tests pass; independent re-review `APPROVED`).
 GE-0014 — OSM footprint and road feature ingestion (39 Core tests pass; independent re-review `APPROVED`).
 GE-0015 — deterministic procedural road/building meshes (48 Core tests pass; independent re-review `APPROVED`).
+GE-0018 — structural validation gates (53 Core tests pass; independent review `APPROVED`).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -50,7 +51,6 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0018 — structural validation gates; 53 Core tests pass, independent review assigned (issue #8).
 GE-0004 — desktop shell/viewport capability PoC; all three OS probes green in CI, independent review pending (issue #2).
 
 ## Blocked tickets
