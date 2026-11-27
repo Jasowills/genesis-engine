@@ -4,7 +4,7 @@
 Phase 8 owner checkpoint approved; M1–M4 dependency-ready work implemented and independently reviewed. M5 release work awaits owner decisions.
 
 ## Current milestone
-M4 — 31 verified, 1 deferred, 1 declined; 1 partial (GE-0005). M1–M4 contracts, CI and the Blender round-trip are complete; only the Unreal fixture (manual engine install), M5 signing identities and the WASIp1 network-policy UNVERIFIED item remain.
+M4 — 29 verified, 1 in-review partial (GE-0005), 1 deferred (GE-0031), 1 declined (GE-0032). M1–M4 contracts, CI and the Blender round-trip are complete; only the Unreal fixture (manual engine install), M5 signing identities and the WASIp1 network-policy UNVERIFIED item remain.
 
 ## Current objective
 No dependency-ready implementation work remains. Each code-changing ticket passed tests, lint, formatting and independent review before `verified`. No release, publication, purchase or deployment without owner approval.
@@ -74,7 +74,7 @@ GE-0031 — target engine export fixtures: **owner-deferred** (D-034); no engine
 GE-0032 — signed release/auto-update: **owner declined** (D-022); closed as declined, no purchase or pipeline.
 
 ## Ready next tickets
-None. 31 tickets verified. GE-0031 needs a manual Unreal Editor install/Epic login; GE-0032 needs signing identities/budget (owner left unanswered); GE-0005 retains an infeasible-to-verify WASIp1 network-policy item.
+None. 29 tickets verified. GE-0031 needs a manual Unreal Editor install/Epic login; GE-0032 needs signing identities/budget (owner left unanswered); GE-0005 retains an infeasible-to-verify WASIp1 network-policy item.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), worker/plugin/AI/optimization **contracts** (no process execution, real model inference, codec binaries or game-engine integration), plus a pinned Blender round-trip fixture.
