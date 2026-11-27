@@ -10,11 +10,19 @@ fn provenance() -> Provenance {
         source_id: "osm:pbf:fixture".to_string(),
         licence_elected: "ODbL-1.0".to_string(),
         attribution: "© OpenStreetMap contributors".to_string(),
+        publisher: Some("OpenStreetMap contributors".to_string()),
+        url: Some("https://www.openstreetmap.org/copyright".to_string()),
+        version: Some("2026-11-27".to_string()),
+        licence_url: Some("https://opendatacommons.org/licenses/odbl/1-0/".to_string()),
         vintage: Some("2026-11-27".to_string()),
         filters: vec!["bbox=ikeja".to_string()],
         checksum: Some("abc123".to_string()),
         source_feature_ids: vec!["way/123".to_string()],
         derivation_chain: vec!["clip".to_string(), "extrude".to_string()],
+        derivative_database_status: Some("possible".to_string()),
+        display_obligations: vec!["credit in viewport".to_string()],
+        third_party_terms: Vec::new(),
+        recorded_at_unix: Some(1_764_192_000),
     }
 }
 

@@ -8,6 +8,7 @@ pub mod world_ir;
 
 pub use lawful_source::{
     LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
+    enforce_sources, prepare_import,
 };
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,

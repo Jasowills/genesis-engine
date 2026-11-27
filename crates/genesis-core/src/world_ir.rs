@@ -73,6 +73,14 @@ pub struct Provenance {
     pub licence_elected: String,
     pub attribution: String,
     #[serde(default)]
+    pub publisher: Option<String>,
+    #[serde(default)]
+    pub url: Option<String>,
+    #[serde(default)]
+    pub version: Option<String>,
+    #[serde(default)]
+    pub licence_url: Option<String>,
+    #[serde(default)]
     pub vintage: Option<String>,
     #[serde(default)]
     pub filters: Vec<String>,
@@ -82,6 +90,14 @@ pub struct Provenance {
     pub source_feature_ids: Vec<String>,
     #[serde(default)]
     pub derivation_chain: Vec<String>,
+    #[serde(default)]
+    pub derivative_database_status: Option<String>,
+    #[serde(default)]
+    pub display_obligations: Vec<String>,
+    #[serde(default)]
+    pub third_party_terms: Vec<String>,
+    #[serde(default)]
+    pub recorded_at_unix: Option<u64>,
 }
 
 /// Reference to a binary payload stored outside the metadata document.

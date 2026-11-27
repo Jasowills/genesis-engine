@@ -3,7 +3,7 @@ id: GE-0012
 title: Lawful-source gate and provenance record
 type: feature
 priority: P0
-status: proposed
+status: in-review
 milestone: M1
 labels: [type:feature, area:core, type:security]
 depends_on: [GE-0002, GE-0011]
@@ -78,11 +78,12 @@ Do not defer: hard blocker for any data import.
 
 GitHub issue: **#10** — https://github.com/Jasowills/genesis-engine/issues/10
 - Files: `crates/genesis-core/src/lawful_source.rs`, `crates/genesis-core/tests/lawful_source.rs`, `docs/developer/lawful-sources.md`, `CoreError::SourceDenied` variant.
-- `cargo test --workspace --locked` → **20 passed, 0 failed** (7 project + 9 World IR + 4 lawful-source), including all deny-list patterns and the CesiumJS-allowed carve-out.
+- `cargo test --workspace --locked` → **22 passed, 0 failed** (7 project + 9 World IR + 6 lawful-source), covering all 15 deny patterns, case/hyphen variants, licence spellings, purpose behaviour, full provenance and export gating.
 - `cargo clippy --workspace --locked -- -D warnings` → clean; `cargo fmt --all -- --check` → clean.
-- Deny-list covers Google Maps/Street View/Photorealistic 3D Tiles and Cesium ion content, plus non-commercial licences; open standards software remains permitted.
-- Attribution + licence election verified through IR round-trip and machine-readable export sidecar.
-- Reviewer result: pending independent review.
+- Deny-list checks publisher, url, id, version, attribution and filters; covers Google Maps/Street View/Photorealistic 3D Tiles and Cesium ion content (hosts, hyphens, casing) plus non-commercial licences; open CesiumJS/3D Tiles software remains permitted.
+- `prepare_import` gates import; `enforce_sources`/`attribution_sidecar` gate export. Provenance now carries publisher, url, version, licence URL, source feature IDs, derivation chain and evidence; sidecar dedups on full source identity and cannot export unregistered or denied sources.
+- Reviewer result: first pass `CHANGES_REQUESTED` (deny-list bypasses, isolated helper, incomplete provenance, overclaimed evidence, stale bookkeeping); fixes applied, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Gate wired into import/export, deny-list and provenance hardened; status in-review.

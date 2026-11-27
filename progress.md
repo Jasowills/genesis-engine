@@ -46,7 +46,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0012 — lawful-source gate and provenance sidecar; 20 Core tests pass, independent review assigned (issue #10).
+GE-0012 — lawful-source gate and provenance sidecar; first review found bypasses and incomplete provenance, fixes applied (22 tests pass), re-review assigned (issue #10).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
@@ -56,7 +56,7 @@ GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`
 GE-0013 (GeoJSON boundary import and CRS validation) after GE-0012 is verified. GE-0004 remains proposed; GE-0005/GE-0006 blocked on platform gaps.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model and versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations). Not yet implemented: lawful-source gate, geospatial/worker/AI adapters, Studio/CLI, validation gates, exports, plugin runtime.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: geospatial/worker/AI adapters, Studio/CLI, validation gates, 3D exports, plugin runtime.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
@@ -71,7 +71,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: n/a (no code).
+- Last full test run: `cargo test --workspace --locked` → 22 passed, 0 failed (macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: none outstanding. Independent reviewer returned `CHANGES_REQUESTED` twice on governance/reconciliation defects; all findings corrected and final verdict `APPROVED` (2026-11-27).
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.

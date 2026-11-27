@@ -1,10 +1,10 @@
 # Lawful-source gate and provenance (GE-0012)
 
-Genesis enforces the owner-approved hard source constraint (D-028/ADR-0007) in code, not only in documentation. `check_source(&SourceDescriptor)` must pass before any source enters import, inference or export.
+Genesis enforces the owner-approved hard source constraint (D-028/ADR-0007) in code, not only in documentation. `prepare_import(&SourceDescriptor)` gates import; `enforce_sources` and `attribution_sidecar(&WorldIr, &[SourceDescriptor])` gate export. `check_source` is the underlying deny-list check.
 
 ## Deny-list
 
-Sources whose publisher or URL matches these patterns are rejected with `CoreError::SourceDenied`:
+The deny-list checks publisher, URL, id, version, attribution and filters (case-insensitive) and rejects matches with `CoreError::SourceDenied`. Patterns include Google Maps Platform hosts (`maps.googleapis.com`, `tile.googleapis.com`), Street View (`street view`, `street-view`, `streetview`), Photorealistic 3D Tiles, and Cesium ion (`cesium ion`, `cesium-ion`, `ion.cesium.com`, `assets.cesium.com`, `api.cesium.com`, `cesium.com/ion/`).
 
 - Google Maps Platform endpoints (`maps.googleapis.com`, `maps.google.com`, `google maps`)
 - Street View and Photorealistic 3D Tiles content
@@ -21,4 +21,4 @@ Open standards software (CesiumJS, 3D Tiles) is **allowed** with Genesis-owned c
 
 ## Verification
 
-`cargo test --workspace --locked` runs four dedicated tests covering allowed OSM sources, all deny-list patterns, non-commercial licences, malformed descriptors, and attribution survival through IR serialization and the export sidecar. Twenty Core tests pass in total.
+`cargo test --workspace --locked` runs six dedicated tests covering allowed OSM sources, all deny-list patterns with case/hyphen variants, licence spellings, purpose behaviour, malformed descriptors, full provenance preservation, and export gating with distinct-source sidecars. Twenty-two Core tests pass in total.

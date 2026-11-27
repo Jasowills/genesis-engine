@@ -1,6 +1,7 @@
 use genesis_core::{
-    CoreError, CoreResult, CrsMetadata, EvidenceKind, LicenceElection, LocalFrame,
-    SourceDescriptor, SourcePurpose, attribution_sidecar, check_source, derive_id,
+    CURRENT_SCHEMA_VERSION, CoreError, CoreResult, CrsMetadata, EvidenceKind, LicenceElection,
+    LocalFrame, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source, derive_id,
+    enforce_sources, prepare_import,
     world_ir::{Provenance, WorldIr},
 };
 use serde_json::Value;
@@ -17,24 +18,37 @@ fn osm() -> SourceDescriptor {
         filters: vec!["bbox=ikeja".to_string()],
         checksum: Some("abc123".to_string()),
         purpose: SourcePurpose::ReconstructionInput,
+        licence_url: None,
+        source_feature_ids: vec!["way/123".to_string()],
+        derivation_chain: vec!["clip".to_string()],
     }
 }
 
 #[test]
-fn allowed_source_passes_and_denied_sources_are_rejected() {
+fn allowed_source_passes_and_every_denied_pattern_is_rejected() {
     assert!(check_source(&osm()).is_ok());
 
-    for (publisher, url) in [
-        (
-            "Google Maps Platform",
-            "https://maps.googleapis.com/maps/api/tile",
-        ),
+    let blocked = [
+        ("Google", "https://maps.googleapis.com/maps/api/tile"),
+        ("Google", "https://tile.googleapis.com/v1/3dtiles/root.json"),
+        ("Google Maps Platform", "https://maps.google.com/maps"),
+        ("Google Maps", "https://example.test/tiles"),
         ("Google", "https://streetview.example.test/pano"),
+        ("Google", "https://example.test/street-view?pano=1"),
+        (
+            "Google",
+            "https://example.test/photorealistic-3d-tiles/root",
+        ),
+        ("Google", "https://example.test/Photorealistic 3D Tiles"),
         ("Cesium ion", "https://ion.cesium.com/assets/123"),
         ("Cesium", "https://cesium.com/ion/credits"),
-    ] {
+        ("Cesium", "https://assets.cesium.com/123/tileset.json"),
+        ("Cesium", "https://api.cesium.com/v1/assets"),
+        ("Cesium", "https://example.test/cesium-ion-content"),
+    ];
+    for (publisher, url) in blocked {
         let mut source = osm();
-        source.id = format!("blocked:{publisher}");
+        source.id = format!("blocked:{publisher}:{url}");
         source.publisher = publisher.to_string();
         source.url = url.to_string();
         assert!(
@@ -43,7 +57,23 @@ fn allowed_source_passes_and_denied_sources_are_rejected() {
         );
     }
 
-    // Open-standards software with Genesis-owned content remains allowed.
+    // Deny patterns also apply to id/version/attribution/filters, not just URL.
+    let mut by_id = osm();
+    by_id.id = "google-maps-photorealistic-3d-tiles".to_string();
+    assert!(matches!(
+        check_source(&by_id),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    // Case folding works.
+    let mut upper = osm();
+    upper.publisher = "GOOGLE MAPS PLATFORM".to_string();
+    assert!(matches!(
+        check_source(&upper),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    // Open-standards software remains allowed.
     let mut cesiumjs = osm();
     cesiumjs.id = "cesiumjs:software".to_string();
     cesiumjs.publisher = "CesiumJS".to_string();
@@ -53,12 +83,42 @@ fn allowed_source_passes_and_denied_sources_are_rejected() {
 }
 
 #[test]
-fn non_commercial_weights_and_model_training_are_denied() {
-    let mut source = osm();
-    source.licence = LicenceElection::Other("CC BY-NC-SA 4.0".to_string());
-    source.purpose = SourcePurpose::ModelTraining;
+fn restricted_licence_variants_are_denied_and_empty_custom_licence_is_invalid() {
+    for text in [
+        "CC BY-NC-SA 4.0",
+        "Attribution-NonCommercial 4.0 International",
+        "research/evaluation only",
+        "research only",
+    ] {
+        let mut source = osm();
+        source.licence = LicenceElection::Other(text.to_string());
+        assert!(
+            matches!(check_source(&source), Err(CoreError::SourceDenied(_))),
+            "licence not denied: {text}"
+        );
+    }
+    let mut empty = osm();
+    empty.licence = LicenceElection::Other("  ".to_string());
     assert!(matches!(
-        check_source(&source),
+        check_source(&empty),
+        Err(CoreError::InvalidManifest(_))
+    ));
+}
+
+#[test]
+fn purpose_is_recorded_but_not_a_gate_in_this_release() {
+    let mut training = osm();
+    training.purpose = SourcePurpose::ModelTraining;
+    assert!(
+        check_source(&training).is_ok(),
+        "purpose must not bypass the hard deny"
+    );
+
+    let mut basemap = osm();
+    basemap.publisher = "Cesium ion".to_string();
+    basemap.purpose = SourcePurpose::VisualBasemapOnly;
+    assert!(matches!(
+        check_source(&basemap),
         Err(CoreError::SourceDenied(_))
     ));
 }
@@ -73,15 +133,7 @@ fn malformed_source_is_structured_error() {
     ));
 }
 
-#[test]
-fn provenance_survives_ir_and_export_sidecar() -> CoreResult<()> {
-    let source = osm();
-    check_source(&source)?;
-    let provenance: Provenance = (&source).into();
-    assert_eq!(provenance.licence_elected, "ODbL-1.0");
-    assert_eq!(provenance.attribution, "© OpenStreetMap contributors");
-    assert_eq!(provenance.filters, vec!["bbox=ikeja".to_string()]);
-
+fn world_with(provenance: Provenance) -> WorldIr {
     let object = genesis_core::WorldObject {
         id: derive_id("object", "road-1"),
         object_type: "road".to_string(),
@@ -95,8 +147,8 @@ fn provenance_survives_ir_and_export_sidecar() -> CoreResult<()> {
         validation_state: Default::default(),
         payloads: Vec::new(),
     };
-    let world = WorldIr {
-        schema_version: genesis_core::CURRENT_SCHEMA_VERSION,
+    WorldIr {
+        schema_version: CURRENT_SCHEMA_VERSION,
         world_id: derive_id("world", "ikeja"),
         crs: CrsMetadata::default(),
         local_frame: LocalFrame::default(),
@@ -104,15 +156,75 @@ fn provenance_survives_ir_and_export_sidecar() -> CoreResult<()> {
             id: derive_id("layer", "roads"),
             objects: vec![object],
         }],
-    };
+    }
+}
 
+#[test]
+fn prepare_import_and_sidecar_preserve_full_provenance() -> CoreResult<()> {
+    let source = osm();
+    let provenance = prepare_import(&source)?;
+    assert_eq!(provenance.licence_elected, "ODbL-1.0");
+    assert_eq!(
+        provenance.publisher.as_deref(),
+        Some("OpenStreetMap contributors")
+    );
+    assert_eq!(
+        provenance.url.as_deref(),
+        Some("https://www.openstreetmap.org/copyright")
+    );
+    assert_eq!(
+        provenance.licence_url.as_deref(),
+        Some("https://opendatacommons.org/licenses/odbl/1-0/")
+    );
+    assert_eq!(provenance.source_feature_ids, vec!["way/123".to_string()]);
+    assert_eq!(provenance.derivation_chain, vec!["clip".to_string()]);
+
+    let world = world_with(provenance);
     let restored = WorldIr::from_bytes(&world.to_bytes()?)?;
-    let sidecar = attribution_sidecar(&restored)?;
+    let sidecar = attribution_sidecar(&restored, &[source])?;
     let value: Value = serde_json::from_slice(&sidecar)?;
     let record = &value["records"][0];
     assert_eq!(record["attribution"], "© OpenStreetMap contributors");
     assert_eq!(record["licence_elected"], "ODbL-1.0");
     assert_eq!(record["source_id"], "osm:extract:ikeja");
-    assert_eq!(value["world_id"], derive_id("world", "ikeja").as_str());
+    assert_eq!(record["filters"][0], "bbox=ikeja");
+    assert_eq!(record["derivation_chain"][0], "clip");
+    assert_eq!(record["evidence"], "measured");
+    Ok(())
+}
+
+#[test]
+fn export_is_gated_and_sidecar_keeps_distinct_sources() -> CoreResult<()> {
+    let june = osm();
+    let mut july = osm();
+    july.id = "osm:extract:ikeja-july".to_string();
+    july.vintage = Some("2026-07".to_string());
+    july.checksum = Some("def456".to_string());
+
+    let mut world = world_with((&june).into());
+    let second = genesis_core::WorldObject {
+        id: derive_id("object", "building-2"),
+        provenance: (&july).into(),
+        ..world.layers[0].objects[0].clone()
+    };
+    world.layers[0].objects.push(second);
+
+    let sidecar = attribution_sidecar(&world, &[june.clone(), july.clone()])?;
+    let value: Value = serde_json::from_slice(&sidecar)?;
+    assert_eq!(value["records"].as_array().map(Vec::len), Some(2));
+
+    // A denied source cannot be used for export.
+    let mut bad = osm();
+    bad.publisher = "Cesium ion".to_string();
+    assert!(matches!(
+        attribution_sidecar(&world, &[bad]),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    // An object whose source is not registered cannot be exported.
+    assert!(matches!(
+        enforce_sources(&world, &[june]),
+        Err(CoreError::InvalidManifest(_))
+    ));
     Ok(())
 }
