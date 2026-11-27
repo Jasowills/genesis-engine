@@ -78,10 +78,10 @@ Continuously maintained, not a one-off dump.
 
 GitHub issue: **#29** — https://github.com/Jasowills/genesis-engine/issues/29
 - Root docs present: README.md, LICENSE, NOTICE, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md, CHANGELOG.md, DECISIONS.md, PRD.md, ARCHITECTURE.md, ROADMAP.md, progress.md, .gitignore, .editorconfig, .github templates/workflows.
-- Verified examples: `cargo test --workspace --locked` (56 passed), `cargo clippy --workspace --locked -- -D warnings`, `cd prototype/gltf-fixture && node validate.mjs fixture.glb` (0 errors), `cargo run --locked --quiet --manifest-path prototype/viewport-capability/Cargo.toml` (native adapter report).
+- Verified examples: `cargo test --workspace --locked` (57 passed), `cargo clippy --workspace --locked -- -D warnings`, `cd prototype/gltf-fixture && node validate.mjs fixture.glb` (0 errors), `cargo run --locked --quiet --manifest-path prototype/viewport-capability/Cargo.toml` (native adapter report).
 - Doc sweep removed stale claims: README now says GLB export exists and no Studio/CLI/worker; SECURITY no longer says pre-implementation; README links `docs/developer/`.
 - `docs/developer/` documents only implemented primitives; deferred features are labelled as such in PRD/ROADMAP.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (concurrent test failure, stale index and governance state, minor doc precision); fixes applied, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

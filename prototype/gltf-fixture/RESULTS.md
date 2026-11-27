@@ -9,7 +9,7 @@
 $ GENESIS_GLB_FIXTURE=$PWD/prototype/gltf-fixture/fixture.glb cargo test --test export_glb glb_round_trip
 test result: ok. 1 passed; 0 failed
 
-$ cd prototype/gltf-fixture && npm install && node validate.mjs fixture.glb
+$ cd prototype/gltf-fixture && npm ci --ignore-scripts && node validate.mjs fixture.glb
 {
   "validator": "gltf-validator 2.0.0-dev.3.10",
   "file": "fixture.glb",
@@ -18,7 +18,7 @@ $ cd prototype/gltf-fixture && npm install && node validate.mjs fixture.glb
   "numInfos": 0,
   "messages": []
 }
-exit code 0
+exit code 0 (fails only on numErrors > 0; warnings/infos are reported but do not fail the gate)
 ```
 
 ## Development iterations (honest record)

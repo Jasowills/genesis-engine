@@ -10,7 +10,7 @@ M0 — Research, architecture and approval. Research and planning complete; repo
 Create the approved public GitHub repository with a small verified documentation-only commit, labels, milestones and issues from the 32 approved tickets with native blocking links; report exact URL/branch/hash/issue count. Then run the unblocked M0 spikes with independent review. No product implementation.
 
 ## Overall status
-Pre-implementation. All research, architecture, ADRs, PRD, roadmap and tickets are complete. Owner approved seven ADRs, Apache-2.0 core, a public repository and a hard source deny-list. No product code, crates, UI, datasets or CI exist. The public repository now has 2 documentation-only commits, 40 labels, 6 milestones and 32 issues with native blocking links. Independent review of the governance records ended `APPROVED`; post-execution verification of GitHub setup returned `CHANGES_REQUESTED` only for stale local documentation (being corrected here).
+M1 implementation in progress. Research, architecture, ADRs, PRD, roadmap, tickets and GitHub setup are complete. Rust Core implements project model, World IR, lawful-source gate, geospatial import, procedural meshes, validation gates and validated GLB export. No Studio UI, CLI, worker pipeline or game-engine integration yet.
 
 ## Last updated
 2026-11-27 (Phase 8 approvals recorded; GitHub setup executed; post-execution documentation reconciliation).
@@ -64,13 +64,13 @@ GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`
 GE-0016 (Studio shell and viewport scene rendering) — now ready (GE-0004 PoC complete). GE-0005/GE-0006 remain blocked on platform-specific gaps.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: geospatial/worker/AI adapters, Studio/CLI, validation gates, 3D exports, plugin runtime.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: Studio/CLI, worker/AI adapters, plugin runtime and game-engine integrations. GLB export, structural validation and procedural geometry are implemented.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
 
 ## Key data contracts and schema versions
-World IR schema v0 not yet implemented (GE-0011). Job records, AI adapter contract, provenance/metric records defined as requirements in `ARCHITECTURE.md` §2 and `engineering/ARCHITECTURE_DISCOVERY.md` §2.1. No schema is shipped.
+World IR schema v2 with v1 migrations is implemented and verified (GE-0011); provenance/metric records are implemented in `crates/genesis-core`. Job records, AI adapter contract and worker payloads remain requirements in `ARCHITECTURE.md` §2 and `engineering/ARCHITECTURE_DISCOVERY.md` §2.1, not yet shipped.
 
 ## Research completed
 All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md`, `COMPETITIVE_ANALYSIS.md`, `LICENCE_AND_DATA_RIGHTS.md`, `FORMAT_AND_STANDARDS.md`, `RESEARCH_REGISTER.md`), 8 logged conflicts.
@@ -79,7 +79,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 56 passed, 0 failed (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 5 validation + 3 GLB + 7 project + 9 World IR; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 57 passed, 0 failed (9 GeoJSON + 6 lawful-source + 8 OSM + 9 procedural + 5 validation + 4 GLB + 7 project + 9 World IR; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.

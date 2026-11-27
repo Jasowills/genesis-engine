@@ -52,6 +52,31 @@ pub fn export_glb(
 ) -> Result<GlbExport> {
     enforce_sources(world, sources)?;
     crate::check_export_ready(report).map_err(CoreError::InvalidManifest)?;
+    if report.world_id != world.world_id.to_string() {
+        return Err(CoreError::InvalidManifest(
+            "validation report belongs to a different world".to_string(),
+        ));
+    }
+    if report.subject_hash != crate::validation::mesh_subject_hash(meshes) {
+        return Err(CoreError::InvalidManifest(
+            "validation report does not match the meshes being exported".to_string(),
+        ));
+    }
+    for mesh in meshes {
+        let source_id = mesh.provenance.source_id.as_str();
+        if !sources.iter().any(|source| source.id == source_id) {
+            return Err(CoreError::InvalidManifest(format!(
+                "mesh {} has unregistered source '{source_id}'",
+                mesh.asset_id
+            )));
+        }
+        if mesh.provenance.licence_elected.is_empty() || mesh.provenance.attribution.is_empty() {
+            return Err(CoreError::InvalidManifest(format!(
+                "mesh {} has incomplete provenance",
+                mesh.asset_id
+            )));
+        }
+    }
 
     let mut warnings = vec![
         "materials and textures are not exported in this slice".to_string(),
@@ -143,7 +168,7 @@ pub fn export_glb(
         nodes.push(json!({"mesh": index, "name": mesh.asset_id.to_string()}));
     }
 
-    let mut json_value = json!({
+    let json_value = json!({
         "asset": {"version": "2.0", "generator": "genesis-core GE-0019"},
         "scene": 0,
         "scenes": [{"nodes": (0..nodes.len()).collect::<Vec<_>>()}],

@@ -151,3 +151,39 @@ fn malformed_glb_is_rejected_and_format_metric_is_recorded() -> CoreResult<()> {
     assert!(metric.limitations.iter().any(|s| s.contains("externally")));
     Ok(())
 }
+
+#[test]
+fn export_rejects_report_data_mismatch_and_unregistered_mesh_source() -> CoreResult<()> {
+    let meshes = vec![mesh()];
+    let w = world();
+    let report = validate_world(&w, QualityProfile::Preview, &meshes, false, "test-1.0");
+
+    let mut other_world = w.clone();
+    other_world.world_id = derive_id("world", "other");
+    assert!(matches!(
+        export_glb(&meshes, &other_world, &[source()], &report),
+        Err(CoreError::InvalidManifest(m)) if m.contains("different world")
+    ));
+
+    let mut other_meshes = meshes.clone();
+    other_meshes[0].indices = vec![0, 1, 2, 0, 2, 1];
+    assert!(matches!(
+        export_glb(&other_meshes, &w, &[source()], &report),
+        Err(CoreError::InvalidManifest(m)) if m.contains("does not match the meshes")
+    ));
+
+    let mut unregistered = meshes.clone();
+    unregistered[0].provenance.source_id = "unknown:source".to_string();
+    let unregistered_report = validate_world(
+        &w,
+        QualityProfile::Preview,
+        &unregistered,
+        false,
+        "test-1.0",
+    );
+    assert!(matches!(
+        export_glb(&unregistered, &w, &[source()], &unregistered_report),
+        Err(CoreError::InvalidManifest(m)) if m.contains("unregistered source")
+    ));
+    Ok(())
+}

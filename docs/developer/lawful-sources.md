@@ -17,7 +17,7 @@ Open standards software (CesiumJS, 3D Tiles) is **allowed** with Genesis-owned c
 
 `SourceDescriptor` records licence election, attribution, vintage, filters, checksum and purpose. `From<&SourceDescriptor> for Provenance` transfers those fields into World IR objects. The object's `EvidenceKind` records whether a value was measured, derived with confidence, inferred by rule or unknown — a footprint is not a height, and a centreline is not a road surface.
 
-`attribution_sidecar(&WorldIr)` emits a machine-readable export sidecar with distinct attribution/licence/source/vintage/checksum records. Attribution and the elected licence survive IR → export.
+`attribution_sidecar(&WorldIr, &[SourceDescriptor])` emits a machine-readable export sidecar with distinct attribution/licence/source/vintage/checksum records. Attribution and the elected licence survive IR → export.
 
 ## Verification
 

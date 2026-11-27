@@ -5,6 +5,7 @@
 
 use crate::{GeneratedGeometry, WorldIr};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -31,6 +32,8 @@ pub struct MetricRecord {
 pub struct ValidationReport {
     pub schema_version: u32,
     pub world_id: String,
+    /// Hash of the exact mesh set this report validates.
+    pub subject_hash: String,
     pub profile: QualityProfile,
     pub metrics: Vec<MetricRecord>,
     pub geographic_accuracy_claim: String,
@@ -178,6 +181,13 @@ pub fn validate_mesh(mesh: &GeneratedGeometry, tool_version: &str) -> Vec<Metric
     records
 }
 
+/// Hash the exact mesh set a report applies to, so an export cannot reuse a
+/// report that validated different geometry.
+pub fn mesh_subject_hash(meshes: &[GeneratedGeometry]) -> String {
+    let bytes = serde_json::to_vec(meshes).unwrap_or_default();
+    format!("{:x}", Sha256::digest(bytes))
+}
+
 /// Validate world structure and emit an honest quality report.
 pub fn validate_world(
     world: &WorldIr,
@@ -247,19 +257,31 @@ pub fn validate_world(
     ValidationReport {
         schema_version: 1,
         world_id: world.world_id.to_string(),
+        subject_hash: mesh_subject_hash(meshes),
         profile,
         metrics,
         geographic_accuracy_claim: accuracy.to_string(),
         checkpoints_available,
-        passed: missing_provenance == 0.0 && profile != QualityProfile::SurveyReference,
+        passed: missing_provenance == 0.0
+            && !(profile == QualityProfile::SurveyReference && !checkpoints_available),
         warnings,
     }
 }
 
 /// Export gate: fail on structural errors or an unsupported survey claim.
 pub fn check_export_ready(report: &ValidationReport) -> Result<(), String> {
+    if report
+        .metrics
+        .iter()
+        .any(|m| m.name == "missing_provenance" && m.value > 0.0)
+    {
+        return Err("objects have incomplete provenance".to_string());
+    }
     if report.profile == QualityProfile::SurveyReference && !report.checkpoints_available {
         return Err("survey_reference requires independent checkpoints".to_string());
+    }
+    if !report.passed {
+        return Err("validation report did not pass (check provenance and profile)".to_string());
     }
     if report
         .metrics

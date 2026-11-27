@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file. Format foll
 - `feat(geodata)`: GeoJSON boundary import with CRS/epoch validation (GE-0013).
 - `feat(geodata)`: OSM footprint and road centreline ingestion (GE-0014).
 - `feat(geometry)`: deterministic procedural road/building meshes (GE-0015).
+- `feat(quality)`: structural validation gates with honest accuracy reporting (GE-0018).
+- `feat(export)`: validated GLB interchange with provenance sidecar (GE-0019).
 - `chore(ci)`: cross-platform test matrix, later fixed for workspace excludes.
 
 ### Added — 2026-11-27 (planning baseline, not product functionality)

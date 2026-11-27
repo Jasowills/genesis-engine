@@ -1,6 +1,6 @@
 # Genesis Engine — Roadmap
 
-**Date:** 2026-11-27. **Status:** Milestone sequence accepted with the foundational plan (D-025); **individual milestone scopes are not all approved** — D-013 (first-release layers), D-008 (CLI timing), D-009 (first integration), D-015/D-016 (cloud/collaboration) remain open. Dates are intentionally absent — commitments require approved scope and measured throughput.
+**Date:** 2026-11-27. **Status:** Milestone sequence accepted with the foundational plan (D-025); M1 scope approved (D-029), CLI timing and first export order approved (D-030), benchmark boundary delegated (D-031); D-007, D-015, D-016 and non-core licence questions remain open. Dates are intentionally absent — commitments require approved scope and measured throughput.
 
 ## Milestones
 
