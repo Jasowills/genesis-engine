@@ -42,7 +42,7 @@ Gates ADR A02 and prevents an untested framework commitment.
 Small throwaway PoCs per candidate; capture version numbers and measured results in a comparison report.
 
 ## Acceptance criteria
-- [x] Capability matrix verified on all three OSes (CI where local host cannot) (CI run pending at recording time)
+- [x] Capability matrix verified on all three OSes (CI where local host cannot)
 - [x] PoC report cites exact versions and commands
 - [x] Shell and viewport recommendations kept separable
 - [x] Tests and documentation updated
@@ -80,7 +80,7 @@ GitHub issue: **#2** — https://github.com/Jasowills/genesis-engine/issues/2
 - Files: `prototype/viewport-capability/` (Rust wgpu probe, `batched-pick.mjs`, package manifests, README, RESULTS.md) and two informational CI steps.
 - Local macOS/x86_64: `cargo tree -p wgpu --depth 0` → wgpu 30.0.2; `cargo run --locked --quiet` → compiled backend `Backends(METAL)`, 2 adapters (AMD Radeon Pro 5300M discrete, Intel UHD Graphics 630 integrated), status ok. Native adapter enumeration only — no device/surface creation.
 - `npm ls --depth=0` → three 0.187.0, @react-three/fiber 9.8.2, drei 10.7.9, typescript 7.0.2; `node batched-pick.mjs` → 100,000 instances, 16 picks, 16 matches, 0 mismatches, pass true; `npx tsc --version` → 7.0.2.
-- CI run `45996397293` on commit `194d7a9` added to cover Ubuntu/Windows/macOS; results to be recorded when complete.
+- CI run `45996397293` on commit `194d7a9` and run `45996483515` on `c375a68`: **all jobs success**. Probe output per OS: macOS/aarch64 wgpu 30.0.2 METAL, 1 adapter, status ok; Windows/x86_64 1 adapter, status ok; Linux/x86_64 0 adapters, status `no_adapter` (graceful empty path exercised). three.js probe: 100,000 instances, 0 mismatches, `pass: true`, TypeScript 7.0.2 on all three OSes.
 - Explicitly UNVERIFIED: WebView2/WKWebView/WebKitGTK WebGL2/WebGPU, Electron Chromium comparison, Tauri packaging/signing, long-session GPU leaks, FPS/texture limits, TS7 bundler compatibility, 1M-instance picking. Shell and viewport recommendations remain separate per ADR-0003.
 - Floating-origin vectors remain in GE-0003; not duplicated here.
 - Reviewer result: pending independent review.

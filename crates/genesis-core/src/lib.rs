@@ -7,6 +7,7 @@ pub mod geojson_boundary;
 pub mod lawful_source;
 pub mod osm_ingest;
 pub mod procedural;
+pub mod validation;
 pub mod world_ir;
 
 pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, validate_crs};
@@ -18,6 +19,10 @@ pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_ob
 pub use procedural::{
     GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, generate_building_volumes,
     generate_road_surfaces, verify_mesh,
+};
+pub use validation::{
+    MetricRecord, QualityProfile, ValidationReport, check_export_ready, referenced_sources,
+    validate_mesh, validate_world,
 };
 pub use world_ir::{
     AssetRef, CURRENT_SCHEMA_VERSION, Dimensions, EvidenceKind, LEGACY_SCHEMA_VERSION, LocalFrame,
