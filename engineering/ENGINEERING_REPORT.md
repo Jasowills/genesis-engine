@@ -16,7 +16,7 @@ No product code is implemented. The architecture **was accepted by the owner on 
 
 ## 3. What is incomplete
 
-No **product** code, crates or UI. Four M0 tickets are independently verified (GE-0001, GE-0002, GE-0003, GE-0008). Two spikes are deliberately `blocked`, not `verified`: GE-0005 (plugin sandbox — macOS only; WASIp1 network-policy proof unavailable) and GE-0006 (ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally). GE-0009 CI skeleton is in review pending its `--locked` Actions run; GE-0007 is blocked on remaining owner answers; GE-0004 is proposed pending GE-0003. Seven ADRs accepted and four owner answers recorded (D-025…D-028). Still open: D-007…D-009, D-013…D-018, D-021…D-024 and Q1…Q8. Eight evidence conflicts unresolved. No benchmark or performance measurement performed. A public repository was approved (D-027) and setup is complete and verified (GE-0008).
+No **product** code, crates or UI. Four M0 tickets are independently verified (GE-0001, GE-0002, GE-0003, GE-0008). Two spikes are deliberately `blocked`, not `verified`: GE-0005 (plugin sandbox: WASIp1 network-policy proof unavailable) and GE-0006 (ORT 1.32.0 proven on Ubuntu CI; named model weights not loaded). GE-0009 CI skeleton is in review pending its `--locked` Actions run; GE-0007 is blocked on remaining owner answers; GE-0004 is proposed pending GE-0003. Seven ADRs accepted and four owner answers recorded (D-025…D-028). Still open: D-007…D-009, D-013…D-018, D-021…D-024 and Q1…Q8. Eight evidence conflicts unresolved. No benchmark or performance measurement performed. A public repository was approved (D-027) and setup is complete and verified (GE-0008).
 
 ## 4. Quality of implementation and known limitations
 

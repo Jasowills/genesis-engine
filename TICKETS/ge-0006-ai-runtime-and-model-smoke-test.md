@@ -82,7 +82,7 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - Fallback `onnxruntime==1.23.2 onnx` installed; `smoke.py` re-run by the independent reviewer → exact output match, deterministic inference, cooperative cancellation via `RunOptions.terminate`.
 - Model SHA-256 verified by reviewer: `model_add4.onnx` `c8bdea77…eed2b8`, `model_loop.onnx` `45b3491d…742ac33`.
 - Static inspection of the downloaded 1.32.0 Linux wheel found `RunOptions.terminate` but no Python `set_terminate`; labelled static, never executed.
-- Reviewer verdict **`APPROVED`** for evidence recording (session `ses_de3db3b9affemBI3BQCzIZcj4i`), with an explicit instruction: **do not mark verified** — ORT 1.32.0 and the named models were never executed.
+- Reviewer verdict for the original macOS evidence: `APPROVED` for recording only (session `ses_de3db3b9affemBI3BQCzIZcj4i`), explicitly **not** `verified`. Ubuntu CI run **`46001781425`** (step "ONNX Runtime 1.32 smoke test (Ubuntu)", conclusion success) later executed ORT 1.32.0: `onnxruntime_actual: 1.32.0`, `is_1_32_0: true`, `exact_match: true`, `deterministic: true`, `verdict: CANCELLED (cooperative terminate via RunOptions.terminate)`. Named models were still never executed.
 - Residual UNVERIFIED: SAM/YOLOX/DA-V2 Small weights; CoreML/DirectML/GPU/EP fallback; Windows/macOS hosts; 1.32.0 behaviour on macOS x86_64 (no wheel). Ubuntu x86_64 1.32.0 runtime now MEASURED in CI.
 - **Status rationale:** `blocked` pending a host/CI lane with 1.32.0 wheels and licensed model weights; not `verified`.
 
@@ -90,3 +90,4 @@ GitHub issue: **#9** — https://github.com/Jasowills/genesis-engine/issues/9
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `blocked`; ORT 1.32.0 wheel unavailable on this host.
 - 2026-11-27: Independent review APPROVED for evidence; ticket partially complete and blocked on a compatible host.
 - 2026-11-27: CI executed ORT 1.32.0 on Ubuntu; evidence updated and ticket moved to in-review.
+- 2026-11-27: CI run link and partial-status rationale recorded; ticket remains in-review pending named-model decision.

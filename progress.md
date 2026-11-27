@@ -54,16 +54,17 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
+GE-0006 — ORT 1.32.0 CI evidence recorded; named-model gap explicit (issue #9).
 GE-0016 — Studio shell/viewport scene snapshot + React UI; 64 tests pass, independent review pending (issue #14).
 GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, independent review pending (issue #16).
 None.
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), independent re-review previously APPROVED; in-review for final bookkeeping (issue #22).
-GE-0006 — AI runtime smoke test evidence independently APPROVED, but `blocked`: ORT 1.32.0 has no macOS x86_64 wheel; only 1.23.2 executed locally, no named models loaded (issue #9).
+GE-0006 — Ubuntu CI executed ORT 1.32.0 (`is_1_32_0: true`, cancellation passed, run `46001781425`); in-review, deliberately not `verified` because named model weights were never loaded (issue #9).
 
 ## Ready next tickets
-GE-0016 (Studio shell and viewport scene rendering) — ready (GE-0004 PoC complete). GE-0020 (E2E slice) still waits on GE-0016/GE-0017. GE-0005/GE-0006 remain blocked on platform-specific gaps.
+GE-0016 (Studio shell and viewport scene rendering) — ready (GE-0004 PoC complete). GE-0020 (E2E slice) still waits on GE-0016/GE-0017. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
 
 ## Current architecture snapshot
 Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with one Core crate (`crates/genesis-core`) providing the portable project model, versioned World IR (stable IDs, provenance/evidence fields, f64 local-frame origin, v1↔v2 migrations), and the lawful-source gate with provenance-carrying export sidecar. Not yet implemented: Studio/CLI, worker/AI adapters, plugin runtime and game-engine integrations. GLB export, structural validation and procedural geometry are implemented.

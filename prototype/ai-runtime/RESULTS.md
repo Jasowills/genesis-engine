@@ -1,6 +1,6 @@
 # GE-0006 — AI runtime smoke test: RESULTS (throwaway evidence)
 
-Run date: **2026-11-27**. Host: **macOS 26.5.2, x86_64**, `uname -m` = `x86_64`.
+Local run date: **2026-11-27**. Host: **macOS 26.5.2, x86_64**. This file documents the **local host run only**; separate CI evidence for Ubuntu x86_64 with ORT 1.32.0 is in GitHub Actions run `46001781425` (step "ONNX Runtime 1.32 smoke test (Ubuntu)").
 Python venv: **3.13.15** (an initial 3.15.2 venv was also tried). The prototype
 source, scripts and evidence files are committed (commit `b53d0c2`); only the
 `.venv/` and wheel cache are ignored by the local `.gitignore`.
@@ -11,7 +11,7 @@ source, scripts and evidence files are committed (commit `b53d0c2`); only the
 | --- | --- |
 | Install `onnxruntime==1.32.0` from PyPI on this host | **FAILED — no compatible wheel.** PyPI has 1.32.0 wheels for macOS arm64, Linux and Windows, but **no macOS x86_64 wheel**. Last macOS x86_64 wheel is 1.23.2. |
 | 1.32.0 licence from PyPI metadata | **VERIFIED: MIT License** (classifier `License :: OSI Approved :: MIT License`). Source: `https://pypi.org/pypi/onnxruntime/json`. GitHub repo deliberately NOT fetched (404 per RESEARCH_REGISTER §4 #4). |
-| Load a locally generated ONNX model, exact + deterministic inference | **VERIFIED on fallback ORT 1.23.2 only.** 1.32.0 runtime inference = **UNVERIFIED** on this host. |
+| Load a locally generated ONNX model, exact + deterministic inference | **VERIFIED locally on ORT 1.23.2; ORT 1.32.0 verified separately in Ubuntu CI run `46001781425`.** 1.32.0 runtime inference = **UNVERIFIED** on this host. |
 | Cancellation | **VERIFIED on fallback ORT 1.23.2** via `RunOptions.terminate = True`. For 1.32.0: **UNVERIFIED at runtime**; Python `set_terminate` = **not found** in static inspection. |
 | Model weights / external providers / GPU EPs | **NOT TESTED** (out of scope; see limits). |
 
@@ -260,7 +260,7 @@ written.
 
 ## 7. Limits and what was NOT proven
 
-* **No ONNX Runtime 1.32.0 runtime evidence at all** on this host: no install,
+* **No **local macOS x86_64** ONNX Runtime 1.32.0 runtime evidence (no wheel); 1.32.0 is evidenced in Ubuntu CI run `46001781425`** on this host: no install,
   no model load, no inference, no runtime cancellation. Only PyPI licence
   metadata and static wheel inspection are verified for 1.32.0.
 * `RunOptions::SetTerminate()` (C++/C ABI) was **not** exercised; Python 1.23.2
@@ -271,6 +271,6 @@ written.
   CUDA/GPU, ARM64, Linux and Windows remain **UNVERIFIED** on this host.
 * **No external provider calls, no API keys/secrets, no paid costs, no GitHub
   repo access.** Only PyPI package registry fetches occurred.
-* Single macOS x86_64 host; no Linux/Windows CI evidence.
+* Single macOS x86_64 host; no Linux/Windows **local** evidence; Ubuntu CI is recorded in run `46001781425`, Windows CI not executed for this spike.
 * This is a throwaway prototype; no product code, no commit, no documentation
   changes outside `prototype/ai-runtime/`.
