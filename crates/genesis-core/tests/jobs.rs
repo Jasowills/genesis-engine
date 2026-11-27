@@ -1,6 +1,8 @@
 use genesis_core::{
     CoreResult, JobEvent, JobRecord, JobState, Supervisor, Worker, WorkerDescriptor,
 };
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 struct FakeWorker {
     descriptor: WorkerDescriptor,
@@ -196,7 +198,7 @@ fn terminal_jobs_cannot_be_reexecuted() -> CoreResult<()> {
 fn redaction_replaces_credential_like_words() {
     assert_eq!(
         genesis_core::redact("worker token abc123 failed"),
-        "worker [REDACTED] abc123 failed"
+        "worker [REDACTED] [REDACTED] failed"
     );
 }
 
@@ -214,4 +216,85 @@ fn descriptor_validation_covers_identity_and_path() {
     let mut w = worker(&["fetch"]);
     w.descriptor.working_directory = "../outside".to_string();
     assert!(w.descriptor().validate().is_err());
+    let mut w = worker(&["fetch"]);
+    w.descriptor.working_directory = "C:\\evil".to_string();
+    assert!(
+        w.descriptor().validate().is_err(),
+        "Windows drive paths must be rejected"
+    );
+    let mut w = worker(&["fetch"]);
+    w.descriptor.working_directory = "C:evil".to_string();
+    assert!(
+        w.descriptor().validate().is_err(),
+        "drive-relative paths must be rejected"
+    );
+}
+
+#[test]
+fn redaction_covers_key_value_and_bearer_forms() {
+    let cases = [
+        "error token=abc123 leaked",
+        "Authorization: Bearer sk-live-SECRET",
+        "password:hunter2",
+        "apikey:ABCDEF",
+        "worker token abc123 failed",
+    ];
+    for case in cases {
+        let redacted = genesis_core::redact(case);
+        assert!(!redacted.contains("abc123"), "leaked: {redacted}");
+        assert!(!redacted.contains("sk-live-SECRET"), "leaked: {redacted}");
+        assert!(!redacted.contains("hunter2"), "leaked: {redacted}");
+        assert!(!redacted.contains("ABCDEF"), "leaked: {redacted}");
+        assert!(redacted.contains("[REDACTED]"), "no redaction for {case}");
+    }
+}
+
+struct NoStages {
+    descriptor: WorkerDescriptor,
+}
+
+impl Worker for NoStages {
+    fn descriptor(&self) -> &WorkerDescriptor {
+        &self.descriptor
+    }
+    fn stages(&self) -> Vec<String> {
+        Vec::new()
+    }
+    fn run_stage(&self, _stage: &str) -> Result<String, String> {
+        unreachable!()
+    }
+}
+
+#[test]
+fn empty_stage_lists_are_rejected() -> CoreResult<()> {
+    let w = NoStages {
+        descriptor: worker(&[]).descriptor().clone(),
+    };
+    let mut job = record(&FakeWorker {
+        descriptor: w.descriptor().clone(),
+        stages: vec![],
+        fail_at: None,
+    });
+    assert!(matches!(
+        Supervisor::new().execute(&mut job, &w),
+        Err(genesis_core::CoreError::InvalidManifest(m)) if m.contains("no stages")
+    ));
+    Ok(())
+}
+
+#[test]
+fn running_jobs_cannot_be_reexecuted_or_duplicate_history() -> CoreResult<()> {
+    let w = worker(&["first", "second"]);
+    let mut job = record(&w);
+    job.state = JobState::Running {
+        stage: "first".to_string(),
+        progress: 0.5,
+    };
+    let before = job.events.len();
+    assert!(matches!(
+        Supervisor::new().execute(&mut job, &w),
+        Err(genesis_core::CoreError::InvalidManifest(m)) if m.contains("running job")
+    ));
+    assert_eq!(job.events.len(), before, "no duplicate history appended");
+    Ok(())
 }

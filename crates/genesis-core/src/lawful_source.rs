@@ -121,6 +121,44 @@ const DENIED_PATTERNS: [&str; 15] = [
     "api.cesium.com",
 ];
 
+/// Normalise text before deny-pattern matching. Percent-encoded hosts and
+/// Unicode separator/hyphen variants must not defeat the hard source deny.
+fn normalise_for_matching(text: &str) -> String {
+    let mut decoded = text.to_string();
+    for _ in 0..3 {
+        let bytes = decoded.as_bytes();
+        let mut next = String::with_capacity(decoded.len());
+        let mut index = 0;
+        while index < bytes.len() {
+            if bytes[index] == b'%' && index + 2 < bytes.len() {
+                let hex = &decoded[index + 1..index + 3];
+                let decoded = u8::from_str_radix(hex, 16).ok().filter(|v| v.is_ascii());
+                if let Some(value) = decoded {
+                    next.push(value as char);
+                    index += 3;
+                    continue;
+                }
+            }
+            let ch = decoded[index..].chars().next().unwrap();
+            next.push(ch);
+            index += ch.len_utf8();
+        }
+        if next == decoded {
+            break;
+        }
+        decoded = next;
+    }
+    decoded
+        .chars()
+        .map(|c| match c {
+            '\u{00a0}' | '\u{202f}' | '\u{2000}'..='\u{200a}' | '\u{205f}' | '\u{3000}' => ' ',
+            '\u{2010}' | '\u{2011}' | '\u{2012}' | '\u{2013}' | '\u{2212}' => '-',
+            _ => c,
+        })
+        .collect::<String>()
+        .to_lowercase()
+}
+
 /// Check a source before it can enter import, inference or export.
 pub fn check_source(source: &SourceDescriptor) -> Result<()> {
     source.validate()?;
@@ -136,8 +174,8 @@ pub fn check_source(source: &SourceDescriptor) -> Result<()> {
         source.vintage.as_deref().unwrap_or(""),
         source.source_feature_ids.join(" "),
         source.derivation_chain.join(" ")
-    )
-    .to_lowercase();
+    );
+    let haystack = normalise_for_matching(&haystack);
     for pattern in DENIED_PATTERNS {
         if haystack.contains(pattern) {
             return Err(CoreError::SourceDenied(format!(
@@ -147,11 +185,13 @@ pub fn check_source(source: &SourceDescriptor) -> Result<()> {
         }
     }
     if let LicenceElection::Other(text) = &source.licence {
-        let lower = text.to_lowercase();
+        let lower = normalise_for_matching(text);
         for forbidden in [
             "non-commercial",
+            "non commercial",
             "noncommercial",
             "by-nc",
+            "by nc",
             "research only",
             "research/evaluation",
             "evaluation only",

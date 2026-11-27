@@ -224,3 +224,18 @@ fn incomplete_provenance_is_flagged() {
         1.0
     );
 }
+
+#[test]
+fn unsupported_validation_report_schema_blocks_export() {
+    let mut report = validate_world(
+        &world(),
+        QualityProfile::GameReady,
+        &[good_mesh()],
+        false,
+        "test-1.0",
+    );
+    assert!(check_export_ready(&report).is_ok());
+    report.schema_version = 999;
+    let message = check_export_ready(&report).unwrap_err();
+    assert!(message.contains("unsupported validation report schema version"));
+}

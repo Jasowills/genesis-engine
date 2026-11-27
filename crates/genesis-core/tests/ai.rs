@@ -120,3 +120,17 @@ fn invalid_requests_and_descriptors_are_rejected() {
     bad_model.version.clear();
     assert!(bad_model.validate().is_err());
 }
+
+#[test]
+fn oversized_requests_are_rejected_without_overflow() {
+    let adapter = FakeAdapter::new(model()).unwrap();
+    let result = adapter.segment(
+        &SegmentationRequest {
+            source_object_id: "huge".to_string(),
+            width_px: u32::MAX,
+            height_px: u32::MAX,
+        },
+        &CancelToken::default(),
+    );
+    assert!(matches!(result, Err(CoreError::InvalidManifest(m)) if m.contains("exceeds")));
+}

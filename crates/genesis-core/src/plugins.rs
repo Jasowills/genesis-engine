@@ -100,9 +100,13 @@ fn is_hex64(value: &str) -> bool {
 }
 
 fn is_semver(value: &str) -> bool {
-    // SemVer 2.0.0 core: numeric identifiers with no leading zeros. Optional
-    // prerelease/build suffixes are permitted but not validated here.
-    let core = value.split(['-', '+']).next().unwrap_or("");
+    // SemVer 2.0.0: numeric core identifiers with no leading zeros, plus
+    // validated prerelease/build identifiers.
+    let suffix_pos = value.find(['-', '+']);
+    let (core, rest) = match suffix_pos {
+        Some(index) => (&value[..index], &value[index + 1..]),
+        None => (value, ""),
+    };
     let mut parts = core.split('.');
     let take = |p: Option<&str>| -> bool {
         p.is_some_and(|s| {
@@ -111,7 +115,21 @@ fn is_semver(value: &str) -> bool {
                 && !(s.len() > 1 && s.starts_with('0'))
         })
     };
-    take(parts.next()) && take(parts.next()) && take(parts.next()) && parts.next().is_none()
+    if !(take(parts.next()) && take(parts.next()) && take(parts.next()) && parts.next().is_none()) {
+        return false;
+    }
+    if suffix_pos.is_none() {
+        return true;
+    }
+    if rest.is_empty() || rest.ends_with('.') {
+        return false;
+    }
+    rest.split(['-', '+']).all(|segment| {
+        !segment.is_empty()
+            && segment.split('.').all(|id| {
+                !id.is_empty() && id.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-')
+            })
+    })
 }
 
 impl PluginManifest {
@@ -228,13 +246,17 @@ impl ActivationStore {
     }
 
     pub fn rollback(&mut self) -> Result<(), CoreError> {
-        if self.staged.is_none() && self.previous.is_none() {
-            return Err(CoreError::InvalidManifest(
-                "nothing to roll back".to_string(),
-            ));
+        // A merely staged candidate is discarded without touching the
+        // committed plugin. Only a committed activation can be rolled back.
+        if self.staged.is_some() {
+            self.staged = None;
+            return Ok(());
         }
-        self.staged = None;
-        self.active = self.previous.take();
+        let previous = self
+            .previous
+            .take()
+            .ok_or_else(|| CoreError::InvalidManifest("nothing to roll back".to_string()))?;
+        self.active = Some(previous);
         Ok(())
     }
 }

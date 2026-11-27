@@ -126,3 +126,19 @@ fn removed_dependents_are_not_scheduled_for_regeneration() -> CoreResult<()> {
     assert_eq!(missing_objects(&previous, &current), vec![id("old_sign")]);
     Ok(())
 }
+
+#[test]
+fn removed_dependency_dirties_surviving_dependents() -> CoreResult<()> {
+    let previous = vec![
+        record("building", "h1", &[], 42, "v1"),
+        record("road", "h2", &["building"], 42, "v1"),
+        record("sign", "h3", &["road"], 42, "v1"),
+    ];
+    let current = inputs(&[("road", "h2"), ("sign", "h3")]);
+    let plan = plan_regeneration(&previous, &current, 42, "v1")?;
+    assert_eq!(plan.regenerate, vec![id("road"), id("sign")]);
+    assert_eq!(missing_objects(&previous, &current), vec![id("building")]);
+    assert!(plan.reasons[&id("road").to_string()].contains("removed"));
+    assert!(plan.reasons[&id("sign").to_string()].contains("dependency"));
+    Ok(())
+}

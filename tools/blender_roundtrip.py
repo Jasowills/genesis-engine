@@ -17,17 +17,31 @@ from pathlib import Path
 import bpy
 
 
+def plain(value):
+    """Convert Blender ID properties (including nested groups) to JSON values."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if hasattr(value, "items"):
+        return {str(k): plain(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [plain(v) for v in value]
+    return str(value)
+
+
 def scene_state():
     objects = []
     for obj in bpy.data.objects:
         parent = obj.parent.name if obj.parent else None
         props = {}
-        for key in obj.keys():
-            if key == "_RNA_UI":
+        # glTF extras can land on the object or on its mesh data depending on
+        # the importer version; record both, object values take precedence.
+        for source in (getattr(obj, "data", None), obj):
+            if source is None:
                 continue
-            value = obj[key]
-            if isinstance(value, (str, int, float, bool)):
-                props[key] = value
+            for key in source.keys():
+                if key == "_RNA_UI":
+                    continue
+                props[key] = plain(source[key])
         materials = [slot.material.name for slot in obj.material_slots if slot.material]
         objects.append(
             {
@@ -69,6 +83,11 @@ def main():
     after_names = {o["name"] for o in after["objects"]}
     props_before = {k for o in before["objects"] for k in o["custom_properties"]}
     props_after = {k for o in after["objects"] for k in o["custom_properties"]}
+    meta_before = {o["name"]: o["custom_properties"] for o in before["objects"]}
+    meta_after = {o["name"]: o["custom_properties"] for o in after["objects"]}
+    metadata_loss = sorted(
+        name for name in meta_before if meta_before[name] != meta_after.get(name)
+    )
 
     report = {
         "schema_version": 1,

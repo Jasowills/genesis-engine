@@ -328,7 +328,7 @@ fn run(cli: Cli) -> Result<Value, String> {
                     "mesh_count": meshes.len(),
                     "ids": meshes.iter().map(|m| m.asset_id.to_string()).collect::<Vec<_>>(),
                     "reproducibility": {
-                        "generator_version": meshes.first().map(|m| m.generator_version.clone()).unwrap_or_default(),
+                        "generator_versions": meshes.iter().map(|m| m.generator_version.clone()).collect::<BTreeSet<_>>().into_iter().collect::<Vec<_>>(),
                         "seeds": meshes.iter().map(|m| m.generation_seed).collect::<Vec<_>>(),
                         "source_ids": meshes.iter().map(|m| m.provenance.source_id.clone()).collect::<BTreeSet<_>>().into_iter().collect::<Vec<_>>(),
                         "subject_hash": genesis_core::mesh_subject_hash(&meshes)

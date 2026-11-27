@@ -115,3 +115,26 @@ fn invalid_state_transitions_are_structured_errors() {
         good
     );
 }
+
+#[test]
+fn staging_a_replacement_does_not_deactivate_the_committed_plugin() {
+    let mut store = ActivationStore::default();
+    let first = manifest("first", "1.0.0");
+    store.stage(first.clone()).unwrap();
+    store.commit().unwrap();
+    let replacement = manifest("replacement", "2.0.0");
+    store.stage(replacement).unwrap();
+    store.rollback().unwrap();
+    assert_eq!(store.active(), Some(&first));
+    assert!(store.staged().is_none());
+}
+
+#[test]
+fn malformed_semver_suffixes_are_rejected() {
+    for bad in ["1.0.0-", "1.0.0+", "1.0.0-alpha..1"] {
+        let m = manifest("bad", bad);
+        assert!(m.verify().is_err(), "accepted invalid semver {bad}");
+    }
+    let good = manifest("good", "1.0.0-beta.1+build.5");
+    assert!(good.verify().is_ok());
+}

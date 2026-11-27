@@ -83,6 +83,8 @@ impl WorkerDescriptor {
         if self.working_directory.is_empty()
             || self.working_directory.starts_with('/')
             || self.working_directory.contains("..")
+            || self.working_directory.contains('\\')
+            || self.working_directory.contains(':')
         {
             return Err(CoreError::InvalidManifest(
                 "worker working directory must be a safe project-relative path".to_string(),
@@ -141,17 +143,49 @@ impl JobRecord {
 /// Remove obvious credential values from provider text before persisting it.
 /// This is a bounded best-effort helper, not a guarantee against all secrets.
 pub fn redact(text: &str) -> String {
+    const SECRETS: [&str; 5] = ["token", "key", "secret", "password", "apikey"];
+    let words: Vec<&str> = text.split_whitespace().take(64).collect();
     let mut out = String::with_capacity(text.len().min(512));
-    for word in text.split_whitespace().take(64) {
-        let key = word
-            .trim_matches(|c: char| !c.is_ascii_alphanumeric())
-            .to_ascii_lowercase();
-        if ["token", "key", "secret", "password", "apikey"].contains(&key.as_str()) {
+    let mut index = 0;
+    while index < words.len() {
+        let word = words[index];
+        let lower = word.to_ascii_lowercase();
+        let bare = lower.trim_matches(|c: char| !c.is_ascii_alphanumeric());
+        if bare.contains("authorization") {
             out.push_str("[REDACTED] ");
-        } else {
-            out.push_str(word);
-            out.push(' ');
+            index += 1;
+            if index < words.len() && words[index].eq_ignore_ascii_case("bearer") {
+                index += 1;
+            }
+            if index < words.len() {
+                out.push_str("[REDACTED] ");
+                index += 1;
+            }
+            continue;
         }
+        if let Some(delimiter) = word.find(['=', ':']) {
+            let (label, value) = word.split_at(delimiter);
+            let normalised = label.to_ascii_lowercase();
+            if SECRETS.contains(&normalised.as_str()) {
+                out.push_str(label);
+                out.push_str("=[REDACTED] ");
+                let _ = value;
+                index += 1;
+                continue;
+            }
+        }
+        if SECRETS.contains(&bare) {
+            out.push_str("[REDACTED] ");
+            index += 1;
+            if !word.contains(['=', ':']) && index < words.len() {
+                out.push_str("[REDACTED] ");
+                index += 1;
+            }
+            continue;
+        }
+        out.push_str(word);
+        out.push(' ');
+        index += 1;
     }
     out.trim_end().to_string()
 }
@@ -193,15 +227,25 @@ impl Supervisor {
     /// cancellation and timeout all produce deterministic terminal states.
     pub fn execute<W: Worker>(&self, job: &mut JobRecord, worker: &W) -> Result<(), CoreError> {
         worker.descriptor().validate()?;
-        if matches!(
-            job.state,
-            JobState::Completed | JobState::Failed { .. } | JobState::Cancelled
-        ) {
-            return Err(CoreError::InvalidManifest(
-                "terminal job cannot be re-executed".to_string(),
-            ));
+        match job.state {
+            JobState::Proposed | JobState::Queued => {}
+            JobState::Completed | JobState::Failed { .. } | JobState::Cancelled => {
+                return Err(CoreError::InvalidManifest(
+                    "terminal job cannot be re-executed".to_string(),
+                ));
+            }
+            JobState::Running { .. } => {
+                return Err(CoreError::InvalidManifest(
+                    "running job cannot be re-executed".to_string(),
+                ));
+            }
         }
         let stages = worker.stages();
+        if stages.is_empty() {
+            return Err(CoreError::InvalidManifest(
+                "worker declares no stages".to_string(),
+            ));
+        }
         job.state = JobState::Queued;
         let started = Instant::now();
 

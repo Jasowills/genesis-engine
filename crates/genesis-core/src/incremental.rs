@@ -85,8 +85,29 @@ pub fn plan_regeneration(
     }
 
     // Removed objects do not need regeneration; they must be deleted by the
-    // caller, which is reported separately via `missing_objects`.
+    // caller, which is reported separately via `missing_objects`. Surviving
+    // dependents of a removed object DO need regeneration: their geometry can
+    // still reference the deleted input.
+    let removed: Vec<StableId> = previous
+        .iter()
+        .filter(|record| !current_inputs.contains_key(&record.object_id))
+        .map(|record| record.object_id.clone())
+        .collect();
     let mut queue: VecDeque<StableId> = dirty.iter().cloned().collect();
+    for record in previous {
+        if !current_inputs.contains_key(&record.object_id) {
+            continue;
+        }
+        for gone in &removed {
+            if record.dependencies.contains(gone) && dirty.insert(record.object_id.clone()) {
+                reasons
+                    .entry(record.object_id.to_string())
+                    .or_insert_with(|| format!("dependency {gone} removed"));
+                queue.push_back(record.object_id.clone());
+                break;
+            }
+        }
+    }
     while let Some(changed) = queue.pop_front() {
         for record in previous {
             // Never schedule an object that is no longer part of the world.

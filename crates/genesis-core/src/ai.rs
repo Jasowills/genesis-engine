@@ -166,11 +166,19 @@ fn evidence(model: &ModelDescriptor, adapter: &str) -> InferenceEvidence {
     }
 }
 
+const MAX_PIXELS: u64 = 16_777_216;
+
 fn check_request(id: &str, width: u32, height: u32) -> Result<(), CoreError> {
     if id.trim().is_empty() || width == 0 || height == 0 {
         return Err(CoreError::InvalidManifest(
             "inference request needs an object id and non-zero dimensions".to_string(),
         ));
+    }
+    let pixels = width as u64 * height as u64;
+    if pixels > MAX_PIXELS {
+        return Err(CoreError::InvalidManifest(format!(
+            "inference request exceeds {MAX_PIXELS} pixels"
+        )));
     }
     Ok(())
 }

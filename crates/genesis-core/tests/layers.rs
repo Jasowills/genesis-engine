@@ -50,7 +50,11 @@ fn terrain_records_resolution_and_does_not_claim_upsampling() -> CoreResult<()> 
     assert!(mesh.parameters["resolution_claim"].contains("no upsampling"));
     assert_eq!(mesh.parameters["source_resolution_m"], "30");
     assert_eq!(mesh.parameters["vertical_accuracy_m"], "12");
-    assert_eq!(mesh.evidence, EvidenceKind::Measured);
+    assert_eq!(
+        mesh.evidence,
+        EvidenceKind::InferredByRule,
+        "synthetic DEM must not be labelled measured"
+    );
     assert_eq!(
         mesh.provenance.attribution,
         "Synthetic demonstration fixture"
@@ -121,7 +125,11 @@ fn normal_z(mesh: &genesis_core::GeneratedGeometry) -> f64 {
 fn observed_marking_is_measured_and_sidewalks_keep_osm_attribution() -> CoreResult<()> {
     let observed = br#"{"type":"FeatureCollection","features":[{"type":"Feature","id":"mark/observed","properties":{"observed":true},"geometry":{"type":"LineString","coordinates":[[3.0,6.0],[3.01,6.0]]}}]}"#;
     let marks = generate_markings(observed, &source())?;
-    assert_eq!(marks[0].evidence, EvidenceKind::Measured);
+    assert_ne!(
+        marks[0].evidence,
+        EvidenceKind::Measured,
+        "a synthetic source cannot make observed=true measured"
+    );
     let sidewalks = generate_sidewalks(&std::fs::read(SIDEWALKS)?, &osm_source())?;
     assert!(
         sidewalks
@@ -129,5 +137,29 @@ fn observed_marking_is_measured_and_sidewalks_keep_osm_attribution() -> CoreResu
             .all(|m| m.provenance.attribution == "© OpenStreetMap contributors")
     );
     assert!(normal_z(&sidewalks[0]) > 0.0, "sidewalks must face +Z");
+    Ok(())
+}
+
+fn surveyed_source() -> SourceDescriptor {
+    SourceDescriptor {
+        id: "survey:ikeja".to_string(),
+        publisher: "Licensed survey".to_string(),
+        url: "https://example.invalid/survey".to_string(),
+        version: "2026-11-27".to_string(),
+        licence: LicenceElection::Other("survey-licence".to_string()),
+        attribution: " surveyed ground truth with checkpoints ".to_string(),
+        ..Default::default()
+    }
+}
+
+#[test]
+fn declared_survey_sources_may_produce_measured_evidence() -> CoreResult<()> {
+    let mut grid = DemGrid::from_bytes(&std::fs::read(DEM)?)?;
+    grid.attribution = "surveyed ground truth DEM with checkpoints".to_string();
+    let terrain = generate_terrain(&grid, &surveyed_source())?;
+    assert_eq!(terrain.evidence, EvidenceKind::Measured);
+    let observed = br#"{"type":"FeatureCollection","features":[{"type":"Feature","id":"m/1","properties":{"observed":true},"geometry":{"type":"LineString","coordinates":[[3.0,6.0],[3.01,6.0]]}}]}"#;
+    let marks = generate_markings(observed, &surveyed_source())?;
+    assert_eq!(marks[0].evidence, EvidenceKind::Measured);
     Ok(())
 }

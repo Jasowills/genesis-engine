@@ -228,3 +228,34 @@ fn export_is_gated_and_sidecar_keeps_distinct_sources() -> CoreResult<()> {
     ));
     Ok(())
 }
+
+#[test]
+fn obfuscated_deny_patterns_are_still_rejected() {
+    let mut encoded = osm();
+    encoded.url = "https://maps%2Egoogleapis%2Ecom/maps".to_string();
+    assert!(matches!(
+        check_source(&encoded),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    let mut unicode_space = osm();
+    unicode_space.publisher = "Cesium\u{202f}ion".to_string();
+    assert!(matches!(
+        check_source(&unicode_space),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    let mut hyphen = osm();
+    hyphen.publisher = "Cesium\u{2011}ion".to_string();
+    assert!(matches!(
+        check_source(&hyphen),
+        Err(CoreError::SourceDenied(_))
+    ));
+
+    let mut licence = osm();
+    licence.licence = LicenceElection::Other("non\u{00a0}commercial".to_string());
+    assert!(matches!(
+        check_source(&licence),
+        Err(CoreError::SourceDenied(_))
+    ));
+}

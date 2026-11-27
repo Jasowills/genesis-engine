@@ -94,6 +94,37 @@ fn mesh(
     Ok(geometry)
 }
 
+/// Evidence tier is derived from the source declaration, never from a
+/// fixture-local flag or a generator default. Synthetic/demo sources cannot
+/// produce `Measured` geometry, even if a fixture claims an observation.
+fn evidence_for_source(source: &SourceDescriptor, note: &str) -> EvidenceKind {
+    let text = format!(
+        "{} {} {} {} {}",
+        source.id, source.publisher, source.attribution, source.url, note
+    )
+    .to_lowercase();
+    if [
+        "synthetic",
+        "not a surveyed",
+        "not surveyed",
+        "demo",
+        "fake",
+        "proxy",
+    ]
+    .iter()
+    .any(|marker| text.contains(marker))
+    {
+        return EvidenceKind::InferredByRule;
+    }
+    if ["surveyed", "measured", "ground truth", "checkpoint"]
+        .iter()
+        .any(|marker| text.contains(marker))
+    {
+        return EvidenceKind::Measured;
+    }
+    EvidenceKind::DerivedWithConfidence
+}
+
 /// Convert a lon/lat grid to a local-metre heightfield. Resolution and
 /// vertical accuracy are recorded as parameters; no upsampling claim is made.
 pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<GeneratedGeometry> {
@@ -143,7 +174,7 @@ pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<Gen
         indices,
         source,
         MeshMeta {
-            evidence: EvidenceKind::Measured,
+            evidence: evidence_for_source(source, &grid.attribution),
             origin_lon_lat: grid.origin_lon_lat,
             source_feature_ids: Vec::new(),
             parameters,
@@ -277,7 +308,7 @@ pub fn generate_markings(
             source,
             MeshMeta {
                 evidence: if observed {
-                    EvidenceKind::Measured
+                    evidence_for_source(source, "")
                 } else {
                     EvidenceKind::InferredByRule
                 },

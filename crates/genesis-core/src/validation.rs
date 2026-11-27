@@ -270,6 +270,12 @@ pub fn validate_world(
 
 /// Export gate: fail on structural errors or an unsupported survey claim.
 pub fn check_export_ready(report: &ValidationReport) -> Result<(), String> {
+    if report.schema_version != 1 {
+        return Err(format!(
+            "unsupported validation report schema version {}",
+            report.schema_version
+        ));
+    }
     if report
         .metrics
         .iter()
