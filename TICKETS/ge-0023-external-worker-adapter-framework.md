@@ -3,7 +3,7 @@ id: GE-0023
 title: External worker adapter framework
 type: engineering
 priority: P1
-status: in-review
+status: verified
 milestone: M2
 labels: [type:engineering, area:core]
 depends_on: [GE-0007, GE-0022]
@@ -82,7 +82,8 @@ GitHub issue: **#19** — https://github.com/Jasowills/genesis-engine/issues/19
 - `cargo test --workspace --locked` → **85 passed, 0 failed** (8 job tests: completion with checkpoints/JSON round-trip, cancellation, provider-failure mapping, descriptor validation, post-stage timeout mapping, terminal-state guard, redaction). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - WorkerDescriptor rejects non-empty environments, zero memory cap and zero timeout; argv-only contract. Supervisor emits normalised events and canonical errors; no shell invocation.
 - NOT IMPLEMENTED: OS process spawning, argv execution, kill-tree termination, per-OS sandbox profiles, CPU caps, real worker version probes, checkpoint resume, intra-stage timeout preemption. This ticket delivers the supervision contract and fake-worker state machine only. This ticket delivers the contract and fake-worker validation only.
-- Reviewer result: first pass `CHANGES_REQUESTED` (unmet ACs checked, stale index, terminal-state corruption, progress semantics, redaction); code and claims fixed, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED`; all findings fixed; re-review **`APPROVED`** (session `ses_de207f532ffeQj86bgV5KRC7vW`). Limitation: supervision contract and fake-worker state machine only — no OS process spawning, argv execution, kill-tree, per-OS sandbox, CPU caps, checkpoint resume, real version probe or intra-stage timeout preemption.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified with explicit limitations.
