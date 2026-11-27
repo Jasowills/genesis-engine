@@ -80,11 +80,11 @@ Independent review mandatory; schema is foundational.
 
 GitHub issue: **#5** — https://github.com/Jasowills/genesis-engine/issues/5
 - Files: `crates/genesis-core/src/world_ir.rs`, new tests `crates/genesis-core/tests/world_ir.rs`, `docs/developer/world-ir.md`, `Cargo.toml` (sha2 dependency), `Cargo.lock`.
-- `cargo test --workspace --locked` → **12 passed, 0 failed** (7 project tests + 5 World IR tests), including f64 golden-vector preservation at ~1e7 m, deterministic IDs, idempotent forward/backward migration and structured errors.
+- `cargo test --workspace --locked` → **16 passed, 0 failed** (7 project + 9 World IR), including independent GE-0003 golden constants, the 1e7 m binary32 contrast, antimeridian vector, deterministic IDs with deserialization validation, dimension-preserving v1↔v2 migration and structured errors.
 - `cargo clippy --workspace --locked -- -D warnings` → clean (derived Default and collapsed conditionals fixed).
 - `cargo fmt --all -- --check` → clean.
-- Schema v2 current / v1 legacy; migration fixtures verified both directions. No inline geometry; payloads by relative path; ODbL/provenance fields are data.
-- Reviewer result: pending independent review.
+- Schema v2 current / v1 legacy; migration verified both directions **without losing dimensions fields**. Raw version gate now precedes deserialization. StableId validated on deserialization.
+- Reviewer result: first pass `CHANGES_REQUESTED` (dimensions loss in backward migration, forward height drop, version-gate bypass, ID-validation bypass, overstated golden-vector evidence, stale issue label); all fixed, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

@@ -45,7 +45,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0011 — World IR schema v2 with v1 migrations; 12 tests pass, independent review assigned (issue #5).
+GE-0011 — World IR schema v2 with v1 migrations; first review found data-loss/validation defects, fixes applied (16 tests pass), re-review assigned (issue #5).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).

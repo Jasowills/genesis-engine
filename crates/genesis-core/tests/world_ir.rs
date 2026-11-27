@@ -78,16 +78,31 @@ fn schema_round_trips_losslessly() -> CoreResult<()> {
 
 #[test]
 fn golden_vector_f64_precision_is_preserved() -> CoreResult<()> {
+    // Independent constants from GE-0003 (Ikeja origin computed by the
+    // throwaway precision prototype), not values taken from this object.
+    const GE0003_ORIGIN: [f64; 3] = [6_325_680.944472361, 364_736.4683773493, 728_214.141724354];
     let original = ir();
+    assert_eq!(original.local_frame.origin_ecef, GE0003_ORIGIN);
     let bytes = original.to_bytes()?;
     let restored = WorldIr::from_bytes(&bytes)?;
-    let a = &restored.local_frame.origin_ecef;
-    let b = &original.local_frame.origin_ecef;
-    let error = ((a[0] - b[0]).powi(2) + (a[1] - b[1]).powi(2) + (a[2] - b[2]).powi(2)).sqrt();
-    assert!(error < 1e-9, "local-frame origin lost precision: {error} m");
+    assert_eq!(restored.local_frame.origin_ecef, GE0003_ORIGIN);
     assert_eq!(
         restored.layers[0].objects[0].local_position,
         [123.456, -45.678, 12.345]
+    );
+
+    // GE-0003 contrast: at 1e7 m a 1 cm offset disappears in binary32.
+    let global = 10_000_000.0_f64;
+    let f32_delta = ((global + 0.01) as f32) as f64 - global;
+    assert_eq!(f32_delta, 0.0);
+
+    // Antimeridian golden vector survives the IR round trip unchanged.
+    let mut near_dateline = original.clone();
+    near_dateline.layers[0].objects[0].geographic_position = [179.999, -16.5, 12.0];
+    let restored = WorldIr::from_bytes(&near_dateline.to_bytes()?)?;
+    assert_eq!(
+        restored.layers[0].objects[0].geographic_position,
+        [179.999, -16.5, 12.0]
     );
     Ok(())
 }
@@ -146,10 +161,11 @@ fn forward_and_backward_migrations_are_lossless() -> CoreResult<()> {
     let restored: Value = serde_json::from_slice(&backward)?;
     assert_eq!(restored["schema_version"], json!(LEGACY_SCHEMA_VERSION));
     assert_eq!(restored["layers"][0]["objects"][0]["height_m"], json!(12.5));
-    assert!(
-        restored["layers"][0]["objects"][0]
-            .get("dimensions")
-            .is_none()
+    // v1 readers gain a top-level height_m; dimensions is retained so other
+    // fields (e.g. footprint_area_m2) are never silently destroyed.
+    assert_eq!(
+        restored["layers"][0]["objects"][0]["dimensions"]["height_m"],
+        json!(12.5)
     );
     assert!(restored.get("local_frame").is_none());
     assert_eq!(
@@ -183,5 +199,95 @@ fn unsupported_and_invalid_documents_are_structured_errors() -> CoreResult<()> {
         WorldIr::from_bytes(&bad_dependency.to_bytes()?),
         Err(CoreError::InvalidManifest(_))
     ));
+    Ok(())
+}
+
+#[test]
+fn migration_preserves_all_dimensions_and_does_not_overwrite_nested_height() -> CoreResult<()> {
+    let mut current = ir();
+    current.layers[0].objects[0].dimensions = Dimensions {
+        height_m: Some(9.5),
+        footprint_area_m2: Some(240.75),
+    };
+    let bytes = current.to_bytes()?;
+
+    let backward = migrate_backward(&bytes)?;
+    let v1: Value = serde_json::from_slice(&backward)?;
+    assert_eq!(v1["layers"][0]["objects"][0]["height_m"], json!(9.5));
+    assert_eq!(
+        v1["layers"][0]["objects"][0]["dimensions"]["footprint_area_m2"],
+        json!(240.75)
+    );
+
+    let forward = migrate_forward(&backward)?;
+    let restored = WorldIr::from_bytes(&forward)?;
+    assert_eq!(
+        restored.layers[0].objects[0].dimensions,
+        current.layers[0].objects[0].dimensions
+    );
+
+    // Raw v1 with both a stale top-level height and a nested height: nested
+    // wins, because it is the already-migrated value.
+    let mut raw: Value = serde_json::from_slice(&backward)?;
+    raw["layers"][0]["objects"][0]["height_m"] = json!(99.0);
+    let forward = migrate_forward(&serde_json::to_vec(&raw)?)?;
+    let restored = WorldIr::from_bytes(&forward)?;
+    assert_eq!(restored.layers[0].objects[0].dimensions.height_m, Some(9.5));
+    Ok(())
+}
+
+#[test]
+fn legacy_shape_document_gets_structured_version_error() -> CoreResult<()> {
+    let legacy_shape = json!({
+        "schema_version": 1,
+        "world_id": "id-legacy",
+        "crs": {"unit": "metre", "up_axis": "Z"},
+        "layers": []
+    });
+    let bytes = serde_json::to_vec(&legacy_shape)?;
+    // No local_frame field: serde would fail on shape before the version gate.
+    assert!(matches!(
+        WorldIr::from_bytes(&bytes),
+        Err(CoreError::UnsupportedSchemaVersion { found: 1, .. })
+    ));
+    Ok(())
+}
+
+#[test]
+fn stable_ids_are_validated_on_deserialization() -> CoreResult<()> {
+    assert!(serde_json::from_str::<StableId>("\"\"").is_err());
+    assert!(serde_json::from_str::<StableId>(&format!("\"{}\"", "x".repeat(300))).is_err());
+    assert!(serde_json::from_str::<StableId>("\"bad\\nid\"").is_err());
+    assert!(serde_json::from_str::<StableId>("\"valid-id\"").is_ok());
+    Ok(())
+}
+
+#[test]
+fn validation_rejects_duplicates_empty_frame_and_escaping_payload() -> CoreResult<()> {
+    let mut duplicate = ir();
+    duplicate.layers[1].id = duplicate.layers[0].id.clone();
+    assert!(matches!(
+        WorldIr::from_bytes(&duplicate.to_bytes()?),
+        Err(CoreError::InvalidManifest(_))
+    ));
+
+    let mut empty_frame = ir();
+    empty_frame.local_frame.frame_id.clear();
+    assert!(matches!(
+        WorldIr::from_bytes(&empty_frame.to_bytes()?),
+        Err(CoreError::InvalidManifest(_))
+    ));
+
+    for evil in ["../x.glb", "/etc/x.glb", "C:\\x.glb"] {
+        let mut bad = ir();
+        bad.layers[0].objects[0].payloads[0].payload_path = evil.to_string();
+        assert!(
+            matches!(
+                WorldIr::from_bytes(&bad.to_bytes()?),
+                Err(CoreError::PathEscapesProject(_))
+            ),
+            "payload path not rejected: {evil}"
+        );
+    }
     Ok(())
 }

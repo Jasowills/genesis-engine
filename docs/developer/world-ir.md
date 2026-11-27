@@ -16,8 +16,9 @@ The World IR is the engine-agnostic, versioned description of a reconstructed wo
 Current schema: **2**. Legacy schema: **1**.
 
 - `migrate_forward(bytes)` upgrades v1 → v2: moves `objects[].height_m` into `objects[].dimensions.height_m` and adds a default `local_frame`.
-- `migrate_backward(bytes)` downgrades v2 → v1: reverses that transformation.
-- Both are idempotent; `WorldIr::from_bytes` rejects any other version with `UnsupportedSchemaVersion`.
+- `migrate_backward(bytes)` downgrades v2 → v1: adds the top-level `height_m` for v1 readers but **retains** the `dimensions` object so fields such as `footprint_area_m2` are never destroyed.
+- Both are idempotent; `WorldIr::from_bytes` checks `schema_version` on the raw document **before** deserialization, so legacy shape-incompatible documents produce `UnsupportedSchemaVersion`, not a JSON error.
+- `StableId` validation runs on deserialization as well as in constructors; `validate()` checks world/layer/object/asset/dependency IDs, duplicate IDs, unresolved dependencies, empty frame IDs and payload path containment.
 
 ## Verification
 
@@ -26,4 +27,4 @@ cargo test --workspace --locked
 cargo clippy --workspace --locked -- -D warnings
 ```
 
-Five World IR tests cover lossless round-trip, f64 golden-vector preservation, deterministic IDs, forward/backward migration and structured errors for unsupported versions, path traversal and unresolved dependencies.
+Nine World IR tests (16 Core tests total) cover lossless round-trip, GE-0003 golden vectors (independent Ikeja origin constants, the 1e7 m binary32 contrast and an antimeridian vector), deterministic IDs and deserialization validation, dimension-preserving migration with nested-height precedence, legacy version gating, and structured errors for path traversal, duplicate IDs, empty frames and unresolved dependencies.

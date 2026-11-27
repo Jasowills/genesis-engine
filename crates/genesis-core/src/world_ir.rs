@@ -5,6 +5,7 @@
 //! document and no embedded geometry payloads.
 
 use crate::{CoreError, CrsMetadata, Result, validate_relative_path};
+use serde::de::Error as DeError;
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value, json};
 use sha2::{Digest, Sha256};
@@ -13,9 +14,18 @@ pub const CURRENT_SCHEMA_VERSION: u32 = 2;
 pub const LEGACY_SCHEMA_VERSION: u32 = 1;
 
 /// Stable, content-derived identity. Names alone are not stable across edits.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize)]
 #[serde(transparent)]
 pub struct StableId(String);
+
+impl<'de> Deserialize<'de> for StableId {
+    fn deserialize<D: serde::Deserializer<'de>>(
+        deserializer: D,
+    ) -> std::result::Result<Self, D::Error> {
+        let raw = String::deserialize(deserializer)?;
+        Self::new(raw).map_err(D::Error::custom)
+    }
+}
 
 impl StableId {
     pub fn new(value: impl Into<String>) -> Result<Self> {
@@ -110,6 +120,16 @@ pub struct LocalFrame {
     pub epoch: Option<f64>,
 }
 
+impl Default for LocalFrame {
+    fn default() -> Self {
+        Self {
+            frame_id: "default".to_string(),
+            origin_ecef: [0.0, 0.0, 0.0],
+            epoch: None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WorldObject {
     pub id: StableId,
@@ -144,6 +164,7 @@ pub struct WorldIr {
     pub schema_version: u32,
     pub world_id: StableId,
     pub crs: CrsMetadata,
+    #[serde(default)]
     pub local_frame: LocalFrame,
     #[serde(default)]
     pub layers: Vec<WorldLayer>,
@@ -155,13 +176,18 @@ impl WorldIr {
     }
 
     pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        let ir: Self = serde_json::from_slice(bytes)?;
-        if ir.schema_version != CURRENT_SCHEMA_VERSION {
+        // Check the version on the raw document before deserializing: a legacy
+        // document is shape-incompatible and must produce a structured version
+        // error, not a JSON shape error.
+        let raw: Value = serde_json::from_slice(bytes)?;
+        let found = version_of(&raw)?;
+        if found != CURRENT_SCHEMA_VERSION {
             return Err(CoreError::UnsupportedSchemaVersion {
-                found: ir.schema_version,
+                found,
                 supported: CURRENT_SCHEMA_VERSION,
             });
         }
+        let ir: Self = serde_json::from_slice(bytes)?;
         ir.validate()?;
         Ok(ir)
     }
@@ -169,11 +195,24 @@ impl WorldIr {
     /// Check stable IDs, dependencies and payload path containment.
     pub fn validate(&self) -> Result<()> {
         let mut ids = std::collections::BTreeSet::new();
+        // StableId::new is also applied during deserialization; re-check here
+        // so hand-constructed documents cannot bypass validation.
+        StableId::new(self.world_id.as_str())?;
+        ids.insert(self.world_id.as_str());
         for layer in &self.layers {
+            StableId::new(layer.id.as_str())?;
             if !ids.insert(layer.id.as_str()) {
                 return Err(CoreError::InvalidManifest("duplicate layer id".to_string()));
             }
             for object in &layer.objects {
+                StableId::new(object.id.as_str())?;
+                StableId::new(object.provenance.source_id.clone())?;
+                for asset in &object.payloads {
+                    StableId::new(asset.asset_id.as_str())?;
+                }
+                for dependency in &object.dependencies {
+                    StableId::new(dependency.as_str())?;
+                }
                 if !ids.insert(object.id.as_str()) {
                     return Err(CoreError::InvalidManifest(format!(
                         "duplicate object id {}",
@@ -247,7 +286,16 @@ pub fn migrate_forward(bytes: &[u8]) -> Result<Vec<u8>> {
         for object in object_maps(layers) {
             if let Some(height) = object.remove("height_m") {
                 let dimensions = object.entry("dimensions").or_insert_with(|| json!({}));
-                if let Some(map) = dimensions.as_object_mut() {
+                if !dimensions.is_object() {
+                    // An invalid non-object dimensions value cannot carry a
+                    // valid height; replace it rather than silently dropping
+                    // the top-level height_m we just removed.
+                    *dimensions = json!({});
+                }
+                if let Some(map) = dimensions.as_object_mut()
+                    && map.get("height_m").is_none()
+                {
+                    // Never overwrite an already-migrated nested height.
                     map.insert("height_m".to_string(), height);
                 }
             }
@@ -279,7 +327,9 @@ pub fn migrate_backward(bytes: &[u8]) -> Result<Vec<u8>> {
     value["schema_version"] = json!(LEGACY_SCHEMA_VERSION);
     if let Some(layers) = value.get_mut("layers") {
         for object in object_maps(layers) {
-            if let Some(dimensions) = object.remove("dimensions")
+            // Keep dimensions intact so fields such as footprint_area_m2 are
+            // not lost; also expose height_m at the top level for v1 readers.
+            if let Some(dimensions) = object.get("dimensions")
                 && let Some(map) = dimensions.as_object()
                 && let Some(height) = map.get("height_m")
             {
