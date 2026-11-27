@@ -16,7 +16,7 @@ No product code is implemented. The architecture **was accepted by the owner on 
 
 ## 3. What is incomplete
 
-No code, crates, UI, datasets, CI, commits or issues. Seven ADRs accepted and four owner answers recorded (D-025…D-028). Still open: D-007…D-009, D-013…D-018, D-021…D-024 and Q1…Q8. Eight evidence conflicts unresolved. No benchmark or performance measurement performed. A public repository was approved (D-027) and setup is the current action.
+No code, crates, UI, datasets, CI, commits or issues. Seven ADRs accepted and four owner answers recorded (D-025…D-028). Still open: D-007…D-009, D-013…D-018, D-021…D-024 and Q1…Q8. Eight evidence conflicts unresolved. No benchmark or performance measurement performed. A public repository was approved (D-027) and setup is complete and verified (GE-0008).
 
 ## 4. Quality of implementation and known limitations
 

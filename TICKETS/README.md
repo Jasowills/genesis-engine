@@ -49,7 +49,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0005 | [#22](https://github.com/Jasowills/genesis-engine/issues/22) | Plugin runtime feasibility spike | spike | P1 | M0 | ready | [] |
 | GE-0006 | [#9](https://github.com/Jasowills/genesis-engine/issues/9) | AI runtime and model smoke test | spike | P1 | M0 | ready | [] |
 | GE-0007 | [#4](https://github.com/Jasowills/genesis-engine/issues/4) | Approve ADR set and decision register | documentation | P0 | M0 | blocked | [GE-0002, GE-0003, GE-0004] |
-| GE-0008 | [#6](https://github.com/Jasowills/genesis-engine/issues/6) | GitHub repository and issue setup | engineering | P0 | M0 | in-progress | [GE-0007] |
+| GE-0008 | [#6](https://github.com/Jasowills/genesis-engine/issues/6) | GitHub repository and issue setup | engineering | P0 | M0 | verified | [GE-0007] |
 | GE-0009 | [#7](https://github.com/Jasowills/genesis-engine/issues/7) | Cross-platform CI skeleton | engineering | P0 | M0 | proposed | [GE-0008] |
 | GE-0010 | [#27](https://github.com/Jasowills/genesis-engine/issues/27) | Project model and portable local layout | feature | P0 | M1 | proposed | [GE-0007] |
 | GE-0011 | [#5](https://github.com/Jasowills/genesis-engine/issues/5) | World IR schema v0 with migrations | feature | P0 | M1 | proposed | [GE-0003, GE-0007] |
@@ -75,4 +75,4 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0031 | [#32](https://github.com/Jasowills/genesis-engine/issues/32) | Target engine export fixtures | integration | P3 | M4 | proposed | [GE-0030] |
 | GE-0032 | [#21](https://github.com/Jasowills/genesis-engine/issues/21) | Signed release and auto-update pipeline | release | P3 | M5 | needs-owner-input | [GE-0008, GE-0009] |
 
-All tickets remain non-`verified`. M0 tickets are `ready` only where blockers are closed; GE-0007 is `blocked` pending remaining owner answers. GE-0008 is `in-progress` under explicit owner authorisation D-027 with the lifecycle exception recorded in `DECISIONS.md` §3a — review/verification gates are not waived. No code-changing ticket may start before its ADR is accepted (all seven accepted) **and** its blockers are verified.
+All tickets remain non-`verified`. M0 tickets are `ready` only where blockers are closed; GE-0007 is `blocked` pending remaining owner answers. GE-0008 is `verified` under explicit owner authorisation D-027 with the lifecycle exception recorded in `DECISIONS.md` §3a — all review/verification gates passed. No code-changing ticket may start before its ADR is accepted (all seven accepted) **and** its blockers are verified.

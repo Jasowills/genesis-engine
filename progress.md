@@ -33,10 +33,11 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
 
 ## Completed and verified tickets
-None. No ticket has passed independent review/evidence requirements.
+GE-0008 — GitHub repository and issue setup (independent post-execution review `APPROVED`; evidence recorded in its ticket).
 
 ## In-progress tickets
-GE-0008 (GitHub repository and issue setup) — executed under D-027; independent post-execution verification confirmed the repository, labels, milestones, 32 issues and blocking links, and requested local documentation corrections (applied here).
+None.
+GE-0008 (GitHub repository and issue setup) — **verified**: executed under D-027; independent post-execution verification `APPROVED` after documentation corrections.
 
 ## Blocked tickets
 GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result. GE-0008 is `in-progress` under the explicit owner authorisation D-027; the lifecycle exception is recorded in `DECISIONS.md` §3a (Phase 7 checklist), not waived.
@@ -78,7 +79,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-All post-execution documentation corrections are committed and pushed; GitHub-side setup remains unchanged and verified. Record the verifier's final `APPROVED` verdict and mark GE-0008 `verified`, then begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of every code-changing ticket. Report final URL/branch/hash/issue count to the owner.
+GE-0008 is `verified` and Phase 7 is complete. Begin the unblocked M0 spikes (GE-0003 precision/CRS golden vectors, GE-0004 shell/viewport PoC, GE-0005 plugin feasibility, GE-0006 AI smoke test) and the GE-0001/GE-0002 documentation/research tickets, with independent review of every code-changing ticket. Final setup report: https://github.com/Jasowills/genesis-engine, branch `main`, 4 commits (latest via `git rev-parse HEAD`), 32 issues.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.
