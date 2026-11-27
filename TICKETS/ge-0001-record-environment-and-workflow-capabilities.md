@@ -3,7 +3,7 @@ id: GE-0001
 title: Record environment and workflow capabilities
 type: documentation
 priority: P0
-status: in-review
+status: verified
 milestone: M0
 labels: [documentation]
 depends_on: []
@@ -44,7 +44,7 @@ Consolidate already-verified observations into durable docs; no new research req
 ## Acceptance criteria
 - [x] Both files contain command evidence and access dates
 - [x] No token values recorded
-- [ ] Reviewer confirms facts match observed commands (pending this review)
+- [x] Reviewer confirms facts match observed commands
 - [x] Documentation updated; tests n/a per test plan (manual command comparison)
 
 ## Test plan
@@ -82,8 +82,9 @@ GitHub issue: **#31** — https://github.com/Jasowills/genesis-engine/issues/31
 - `gh auth status` → github.com; token value masked and not recorded.
 - Secret-pattern scan of both files → no matches.
 - Skill provenance: local `to-tickets/SKILL.md` SHA-1 `12722dac563e097868473f6091270fdccf0b191a` (SHA-256 `5c9fba69845c2519b9b35b9af42ae5142c21f8ca15ac2123dc2722002c8058ae`) matched upstream `mattpocock/skills` commit `0ab1b63a410a03d3627979a109c8695de27af954`.
-- Reviewer result: pending independent review.
+- Reviewer result: first pass `CHANGES_REQUESTED` (issue body sync, premature AC, hash label); fixes applied; re-review **`APPROVED`** (session `ses_de3f743dfffeOc0WCxwiK9o3sY`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Evidence refreshed and ticket moved to in-review.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.
