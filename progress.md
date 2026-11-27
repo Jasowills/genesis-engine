@@ -59,7 +59,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0027 — selective regeneration planning seam (6 new tests; review found a deleted-dependent bug, fix pending, issue #28).
+GE-0027 — selective regeneration planning seam (6 new tests; deleted-dependent bug fixed with regression test, re-review pending, issue #28).
 GE-0022 — headless CLI over Core (67 tests; independent review pending, issue #18).
 GE-0017 — select/inspect/provenance display; 4 React component tests pass, independent review pending (issue #15).
 GE-0006 — ORT 1.32.0 CI evidence recorded; named-model gap explicit (issue #9).
