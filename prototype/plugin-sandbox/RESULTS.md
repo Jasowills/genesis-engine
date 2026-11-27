@@ -245,3 +245,19 @@ through a raw WASI import. This **confirms** the UNVERIFIED label; it must not
 be read as proof that a connect attempt was denied. Closing the gap needs the
 typed WASI 0.2 component path (`wasi:sockets`) on a supported target, which is
 separate follow-up work (ADR-0006 PoC gate).
+
+
+## Typed WASI 0.2 network-policy evidence (2026-11-27)
+
+```
+cargo build --target wasm32-wasip2 --release --bin network_probe_p2 --manifest-path guest/Cargo.toml
+cargo test --test sandbox_p2 -- --nocapture
+p2 policy evidence: "P2_CONNECT_DENIED::Permission denied (os error 2)\n"
+p2 control evidence: "P2_CONNECT_OK\n"
+test result: ok. 2 passed; 0 failed
+```
+
+The p1 limitation above is therefore not a policy failure: the typed WASI 0.2
+sockets path reaches the host policy and is denied, while the permissive
+control connects. This closes the network-policy gap for the component path;
+component overhead and blocking-hostcall cancellation remain UNVERIFIED.

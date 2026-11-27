@@ -43,8 +43,8 @@ Throwaway PoC; record measured overhead, cap behaviour and lifecycle design infe
 
 ## Acceptance criteria
 - [x] Evil plugins are terminated within timeout on all three OSes — CI run `46000916440`: 6/6 plugin tests pass on ubuntu-latest, macos-latest and windows-latest (epoch trap observed locally ~48–68 ms inside the 5 s backstop)
-- [x] Zero preopens/env demonstrated; **network-policy runtime denial UNVERIFIED** (wasm32-wasip1 std has no sockets/DNS; permissive control gave identical results)
-- [x] Component overhead explicitly UNVERIFIED (core Wasm/WASIp1 path used, not typed WASI 0.2 components)
+- [x] Zero preopens/env demonstrated; network-policy runtime denial now **MEASURED on the typed WASI 0.2 path** (denied vs allowed positive control), cross-platform CI pending
+- [x] Component overhead explicitly UNVERIFIED; typed WASI 0.2 component path is now exercised for network policy only, not benchmarked
 - [x] Tests and documentation updated
 
 ## Test plan
@@ -83,8 +83,9 @@ GitHub issue: **#22** — https://github.com/Jasowills/genesis-engine/issues/22
 - `cargo run` → setup listener + normal/probe/infinite_loop/memory_grow results; no stdout/stderr sentinel leak.
 - Reviewer: first pass `CHANGES_REQUESTED` (tautological network probe, unbounded hostcall); fixes applied; narrow re-review **`APPROVED`** (session `ses_de3e654f8ffeuRYs4nb8VLZtDA`) with 6 tests re-run. The reviewer explicitly required retaining UNVERIFIED labels verbatim.
 - **Residual UNVERIFIED (do not promote):** host network-policy denial on wasm32-wasip1; typed WASI 0.2 component/WIT path and component overhead; empty-write/invalid-import fixtures; blocking-hostcall cancellation and bulk-op preemption; Windows/Linux platforms; manifest/signing/rollback.
-- Follow-up 2026-11-27: an explicit `wasi_snapshot_preview1::sock_connect` import fixture was added to the throwaway prototype. Wasmtime's Preview 1 adapter does not define that import (`unknown import ... sock_connect`), so no `wasm32-wasip1` guest — via std or raw WASI — can reach a host TCP policy decision. Test `wasi_preview1_lacks_sock_connect_import` records this; prototype `cargo test` now 7 passed, 0 failed. This **confirms** the UNVERIFIED label; it is not proof of denial. Closing it requires the typed WASI 0.2 component path with `wasi:sockets`, separate follow-up work.
-- **Status rationale:** deliverable evidence independently approved, cross-platform CI green; the network-policy denial cannot be verified on this target and the ticket's "all three OSes" acceptance criterion is not met locally. State remains `in-review` / partial, not `verified`.
+- Follow-up 2026-11-27: an explicit `wasi_snapshot_preview1::sock_connect` import fixture was added to the throwaway prototype. Wasmtime's Preview 1 adapter does not define that import (`unknown import ... sock_connect`), so no `wasm32-wasip1` guest — via std or raw WASI — can reach a host TCP policy decision. Test `wasi_preview1_lacks_sock_connect_import` records this; it is not proof of denial.
+- **Typed WASI 0.2 closure 2026-11-27:** built `guest/src/bin/network_probe_p2.rs` for `wasm32-wasip2`; its `std::net::TcpStream::connect` reaches `wasi:sockets`. Host test `tests/sandbox_p2.rs` runs it against a **live** loopback listener with `allow_tcp(false)` + `socket_addr_check(false)` → `P2_CONNECT_DENIED::Permission denied (os error 2)`; a positive control with `allow_tcp(true)` + `inherit_network()` → `P2_CONNECT_OK`. `cargo test --test sandbox_p2` → 2 passed, 0 failed. CI now builds the p2 guest on all three OSes; cross-platform p2 result pending. Component overhead, blocking-hostcall cancellation and bulk-op preemption remain UNVERIFIED.
+- **Status rationale:** the p1 network-policy limitation is now understood and the typed p2 path proves denial with a positive control locally; cross-platform CI for the p2 step is pending before the ticket can be `verified`.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `ready`. Pending owner approval of scope and independent review where required.

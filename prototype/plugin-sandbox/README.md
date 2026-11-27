@@ -18,6 +18,7 @@ cancellation. The guest fixtures are built separately for `wasm32-wasip1`:
 | `memory_grow` | Requests 64 MiB in one `memory.grow`; the 8 MiB cap must deny it. |
 | `report_flood` | Sends 100 hostcall reports; host must retain at most 64. |
 | `socket_call` | Explicit `wasi_snapshot_preview1::sock_connect` import; demonstrates the import is undefined in this adapter (negative evidence for GE-0005). |
+| `network_probe_p2` | WASI 0.2 component using `std::net::TcpStream::connect`; host tests `tests/sandbox_p2.rs` prove `allow_tcp(false)` denies a connect to a live listener while the permissive control succeeds. |
 
 Host design points:
 
