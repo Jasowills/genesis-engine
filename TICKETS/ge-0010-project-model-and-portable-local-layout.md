@@ -3,7 +3,7 @@ id: GE-0010
 title: Project model and portable local layout
 type: feature
 priority: P0
-status: in-review
+status: verified
 milestone: M1
 labels: [type:feature, area:core]
 depends_on: [GE-0007]
@@ -84,8 +84,9 @@ GitHub issue: **#27** — https://github.com/Jasowills/genesis-engine/issues/27
 - Path validator hardened after a failing test: `C:secret` and backslash paths are rejected on Unix too, not only where Rust reports a Prefix component.
 - Atomic manifest write via temp file + rename; Windows fallback documented as non-atomic in code.
 - Documentation: `docs/developer/project-layout.md` describes layout, API and schema version 1.
-- Reviewer result: first pass `CHANGES_REQUESTED` (destructive Windows fallback, backslash test gap, permissive assertion, stale issue label, weak portability assertion); all fixed, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED` (destructive Windows fallback, backslash test gap, permissive assertion, stale issue label, weak portability assertion); all fixed; narrow re-review **`APPROVED`** (session `ses_de3b31014ffeKHrOyjuv8PWjpc`) with 7 tests, clippy and fmt re-run.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
 - 2026-11-27: Project model implemented and tested; status moved to in-review.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.
