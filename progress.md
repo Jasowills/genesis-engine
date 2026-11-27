@@ -42,7 +42,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-None.
+GE-0009 — cross-platform CI skeleton (`.github/workflows/ci.yml`); independent review assigned (issue #7).
 
 ## Blocked tickets
 GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result.

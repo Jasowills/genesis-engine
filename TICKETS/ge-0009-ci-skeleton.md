@@ -3,7 +3,7 @@ id: GE-0009
 title: Cross-platform CI skeleton
 type: engineering
 priority: P0
-status: in-progress
+status: in-review
 milestone: M0
 labels: [area:infra, type:engineering]
 depends_on: [GE-0008]
@@ -77,7 +77,13 @@ No code yet: skeleton only.
 ## Verification evidence
 
 GitHub issue: **#7** — https://github.com/Jasowills/genesis-engine/issues/7
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `.github/workflows/ci.yml`; prototypes formatted with `cargo fmt --manifest-path …` (behaviour unchanged; tests re-run).
+- Actions pinned to full commit SHAs: checkout `f548e57e…`, dtolnay/rust-toolchain `df2a88e9…`, cache `3edfce90…`.
+- Jobs: `docs` (required-document baseline + 32-ticket count) on ubuntu; `prototype-tests` matrix ubuntu/windows/macos with Rust stable, `wasm32-wasip1` target, cargo cache, fmt check, WASM fixture build, precision (7 tests) and plugin sandbox (6 tests).
+- No GPU runners, no signing, no secrets in workflow; `permissions: contents: read`.
+- Local validation: `ruby -e YAML.load_file('.github/workflows/ci.yml')` → YAML OK; `cargo fmt --check` on all three prototypes → OK; precision tests 7 passed; plugin sandbox 6 integration tests passed.
+- GitHub Actions run evidence: to be appended after workflow execution.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
