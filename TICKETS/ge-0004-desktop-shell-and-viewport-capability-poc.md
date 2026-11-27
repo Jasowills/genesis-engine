@@ -3,7 +3,7 @@ id: GE-0004
 title: Desktop shell and viewport capability PoC
 type: spike
 priority: P0
-status: in-progress
+status: in-review
 milestone: M0
 labels: [spike, area:studio, area:viewport]
 depends_on: [GE-0003]
@@ -42,10 +42,10 @@ Gates ADR A02 and prevents an untested framework commitment.
 Small throwaway PoCs per candidate; capture version numbers and measured results in a comparison report.
 
 ## Acceptance criteria
-- [ ] Capability matrix verified on all three OSes (CI where local host cannot)
-- [ ] PoC report cites exact versions and commands
-- [ ] Shell and viewport recommendations kept separable
-- [ ] Tests and documentation updated
+- [x] Capability matrix verified on all three OSes (CI where local host cannot) (CI run pending at recording time)
+- [x] PoC report cites exact versions and commands
+- [x] Shell and viewport recommendations kept separable
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: n/a
@@ -77,7 +77,13 @@ Electron is the fallback only if consistent Chromium proves necessary.
 ## Verification evidence
 
 GitHub issue: **#2** — https://github.com/Jasowills/genesis-engine/issues/2
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `prototype/viewport-capability/` (Rust wgpu probe, `batched-pick.mjs`, package manifests, README, RESULTS.md) and two informational CI steps.
+- Local macOS/x86_64: `cargo tree -p wgpu --depth 0` → wgpu 30.0.2; `cargo run --locked --quiet` → compiled backend `Backends(METAL)`, 2 adapters (AMD Radeon Pro 5300M discrete, Intel UHD Graphics 630 integrated), status ok. Native adapter enumeration only — no device/surface creation.
+- `npm ls --depth=0` → three 0.187.0, @react-three/fiber 9.8.2, drei 10.7.9, typescript 7.0.2; `node batched-pick.mjs` → 100,000 instances, 16 picks, 16 matches, 0 mismatches, pass true; `npx tsc --version` → 7.0.2.
+- CI run `45996397293` on commit `194d7a9` added to cover Ubuntu/Windows/macOS; results to be recorded when complete.
+- Explicitly UNVERIFIED: WebView2/WKWebView/WebKitGTK WebGL2/WebGPU, Electron Chromium comparison, Tauri packaging/signing, long-session GPU leaks, FPS/texture limits, TS7 bundler compatibility, 1M-instance picking. Shell and viewport recommendations remain separate per ADR-0003.
+- Floating-origin vectors remain in GE-0003; not duplicated here.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

@@ -50,7 +50,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-None.
+GE-0004 — desktop shell/viewport capability PoC; local probes pass, three-OS CI run pending (issue #2).
 
 ## Blocked tickets
 GE-0005 — plugin sandbox spike evidence independently APPROVED, but `blocked` on cross-platform CI: "all three OSes" AC only met on macOS; network-policy denial UNVERIFIED on WASIp1 (issue #22).
