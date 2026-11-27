@@ -78,14 +78,14 @@ Do not create anything before explicit approval.
 ## Verification evidence
 
 GitHub issue: **#6** — https://github.com/Jasowills/genesis-engine/issues/6
-- `git init -b main`, `git add -A` (81 files), Conventional Commit `aa728fd9a9aa5e0bf2ca05b94006434816be973d`.
+- `git init -b main`, `git add -A` (81 files), Conventional Commit `aa728fd9a9aa5e0bf2ca05b94006434816be973d`; follow-up bookkeeping commit `5fb68abba2f1ec801d2c887f63b4c30f4360f545`.
 - `gh repo create Jasowills/genesis-engine --public --description ... --source=. --remote=origin --push` → `https://github.com/Jasowills/genesis-engine`, branch `main` pushed and tracking `origin/main`.
 - `gh repo view` → `Jasowills/genesis-engine PUBLIC https://github.com/Jasowills/genesis-engine main`.
 - `git status --short --branch` → `## main...origin/main` (clean).
 - 30 project labels created (40 total incl. defaults); 6 milestones M0–M5; 32 issues created in dependency order; `gh issue list` → 32.
 - Native blocking links verified: `gh api repos/Jasowills/genesis-engine/issues/2/timeline` → event `blocked_by_added` with `blocked_by.number = 1` (GE-0004 blocked by GE-0003).
 - Secret-pattern grep across docs/templates: no matches. Branch protection intentionally not enabled (not owner-approved; recorded in `DECISIONS.md` §3a).
-- Independent reviewer: final verdict `APPROVED` on the Phase 7 plan (session `ses_de59f7bffffeZu5LcI2JsshkFy`). Post-execution verification pending.
+- Independent reviewer: final verdict `APPROVED` on the Phase 7 plan (session `ses_de59f7bffffeZu5LcI2JsshkFy`). Independent post-execution verification (session `ses_de4145469ffeKBsqxgIp2ZjXjX`) confirmed all GitHub-side gates and requested local documentation corrections; those are applied in commit `5fb68ab` plus this follow-up.
 
 ## Changelog
 - 2026-11-27: Owner approved public repository (D-027); setup staged pending reviewer re-check. Status set to in-progress for the approved Phase 7 action.

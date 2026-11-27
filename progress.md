@@ -10,10 +10,10 @@ M0 — Research, architecture and approval. Research and planning complete; repo
 Create the approved public GitHub repository with a small verified documentation-only commit, labels, milestones and issues from the 32 approved tickets with native blocking links; report exact URL/branch/hash/issue count. Then run the unblocked M0 spikes with independent review. No product implementation.
 
 ## Overall status
-Pre-implementation. All research, architecture, ADRs, PRD, roadmap and tickets are complete. Owner approved seven ADRs, Apache-2.0 core, a public repository and a hard source deny-list. No product code, crates, UI, datasets or CI exist. No commits or issues yet. An independent reviewer returned `CHANGES_REQUESTED` on governance records; the findings are being resolved before repository publication.
+Pre-implementation. All research, architecture, ADRs, PRD, roadmap and tickets are complete. Owner approved seven ADRs, Apache-2.0 core, a public repository and a hard source deny-list. No product code, crates, UI, datasets or CI exist. The public repository now has 2 documentation-only commits, 40 labels, 6 milestones and 32 issues with native blocking links. Independent review of the governance records ended `APPROVED`; post-execution verification of GitHub setup returned `CHANGES_REQUESTED` only for stale local documentation (being corrected here).
 
 ## Last updated
-2026-11-27 (Phase 8 approvals recorded; reviewer findings being closed).
+2026-11-27 (Phase 8 approvals recorded; GitHub setup executed; post-execution documentation reconciliation).
 
 ## Approved product decisions
 D-001 engine + platform progressively; D-002 desktop-first Studio; D-003 local-first, cloud optional; D-004 bundled open models + optional external providers; D-005 game developers and technical artists equally; D-006 Windows/macOS/Linux (spec Part III). **Owner-approved 2026-11-27:** D-025 seven ADRs; D-026 Apache-2.0 **core only**; D-027 public `Jasowills/genesis-engine`; D-028 hard source deny. See `DECISIONS.md`.
@@ -27,7 +27,7 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 ## Current repository state
 - Repository URL: **https://github.com/Jasowills/genesis-engine** (PUBLIC, verified via `gh repo view`)
 - Branch: `main`, tracking `origin/main`
-- Latest commit: `aa728fd9a9aa5e0bf2ca05b94006434816be973d` — `docs: add Genesis Engine specification, research and approved plan` (81 files, documentation only)
+- Latest commit: `5fb68abba2f1ec801d2c887f63b4c30f4360f545` — `docs: link 32 GitHub issues to local tickets and record setup evidence`; previous commit `aa728fd9a9aa5e0bf2ca05b94006434816be973d` — `docs: add Genesis Engine specification, research and approved plan` (81 files, documentation only)
 - Working tree: clean (`## main...origin/main`); 40 labels, 6 milestones, **32 issues** created in dependency order with native `--blocked-by` links (verified on issue #2: `blocked_by_added` → issue #1). Local tickets and the index carry issue links. No product code.
 - Toolchain: macOS 26.5.2 x86_64; Rust 1.98.1; Node 24.16.0; Python 3.15.2; Go 1.27.1; Docker 29.8.2; git 2.50.1; gh 2.97.0 (auth: `Jasowills`)
 - Platforms tested: macOS/x86_64 only. Windows, Linux, ARM64, Apple Silicon, CUDA untested.
@@ -36,7 +36,7 @@ D-007 platform boundaries; D-008 CLI timing; D-009 first engine/DCC integration;
 None. No ticket has passed independent review/evidence requirements.
 
 ## In-progress tickets
-GE-0008 (GitHub repository and issue setup) — approved by D-027, staged pending reviewer findings closure.
+GE-0008 (GitHub repository and issue setup) — executed under D-027; independent post-execution verification confirmed the repository, labels, milestones, 32 issues and blocking links, and requested local documentation corrections (applied here).
 
 ## Blocked tickets
 GE-0007 (approve ADR set and decision register) — blocked on remaining owner answers and reviewer result. GE-0008 is `in-progress` under the explicit owner authorisation D-027; the lifecycle exception is recorded in `DECISIONS.md` §3a (Phase 7 checklist), not waived.
@@ -78,7 +78,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-Confirm all 32 GitHub issues were created with native `--blocked-by` links, record the issue count in this file and GE-0008's verification evidence, commit the small bookkeeping update, and report URL/branch/hash/issue count to the owner. Then begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of each code-changing ticket.
+Commit and push the post-execution documentation corrections (this file, GE-0008 evidence, issue #6 body), then have the independent verifier recheck and mark GE-0008 `verified`. After that, begin the unblocked M0 spikes (GE-0001/2/3/5/6) with independent review of every code-changing ticket. Report final URL/branch/hash/issue count to the owner.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.
