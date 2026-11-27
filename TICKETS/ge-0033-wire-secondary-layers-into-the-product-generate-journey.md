@@ -3,7 +3,7 @@ id: GE-0033
 title: Wire secondary layers into the product generate journey
 type: feature
 priority: P1
-status: ready
+status: in-review
 milestone: M4
 labels: [type:feature, priority:P1, status:ready, area:geometry]
 depends_on: [GE-0028, GE-0030, GE-0022]
@@ -42,10 +42,10 @@ A user asking for a world gets a visibly richer, source-attributed asset set wit
 Small tracer-bullet slice; keep existing versioned contracts and lawful-source gate. No proprietary or uncached visual assets.
 
 ## Acceptance criteria
-- [ ] Same inputs and seed produce an identical mesh_subject_hash
-- [ ] With Ikeja fixtures the scene reports 7 meshes and includes layers-v0.1
-- [ ] Every mesh passes verify_mesh and retains lawful provenance
-- [ ] A denied source fixture produces exit 1 with error.kind cli_error
+- [x] Same inputs and seed produce an identical mesh_subject_hash
+- [x] With Ikeja fixtures the scene reports 7 meshes and includes layers-v0.1
+- [x] Every mesh passes verify_mesh and retains lawful provenance
+- [x] A denied source fixture produces exit 1 with error.kind cli_error
 
 ## Test plan
 - Unit: CLI integration assertions; Integration: product_e2e.py harness; E2E: headless journey only
@@ -74,7 +74,11 @@ Proceed only after blockers are verified; evidence and independent review requir
 ## Verification evidence
 
 GitHub issue: **#33** — https://github.com/Jasowills/genesis-engine/issues/33
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-cli/src/main.rs` (`generate --layers`, layer source registration, World IR object registration, export source list), `crates/genesis-core/src/layers.rs` (`apply_run_metadata`), `crates/genesis-core/src/lib.rs`, `crates/genesis-cli/tests/cli.rs`, `tools/product_e2e.py`, `docs/product/evidence/studio-layers.png`.
+- `cargo test --workspace --locked` → **135 passed, 0 failed** (10 CLI tests incl. 2 new layer tests: 7 meshes with layers and denied-source failure without payload overwrite). `cargo clippy --workspace --locked --all-targets -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- Product harness on the shipped CLI: 7 meshes / 30 triangles, 0 degenerate, 0 downward, all finite; GLB parses with 7 meshes / 30 triangles and `genesis` extras; `deterministic_regeneration: true`; scene reports 7 selectable nodes including terrain and vegetation.
+- Layer sources are persisted in `metadata/layer_sources.json` and registered in World IR, so export accepts them and Studio makes layer nodes selectable.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-28: Ticket created from the product visual-fidelity review and owner approval to proceed.

@@ -8,6 +8,15 @@ const BOUNDARY: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../fixtures/ikeja-boundary.geojson"
 );
+const SOURCE_ARGS: [&str; 6] = [
+    "--source-id",
+    "osm:fixture:ikeja",
+    "--licence",
+    "odbl",
+    "--attribution",
+    "© OpenStreetMap contributors",
+];
+
 const OSM: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../fixtures/ikeja-small.geojson"
@@ -23,6 +32,12 @@ fn command_for<'a>(args: &[&'a str]) -> &'a str {
         "job-cancel" => "job_cancel",
         other => other,
     }
+}
+
+fn run_with_source(base: &[&str]) -> Value {
+    let mut args = base.to_vec();
+    args.extend_from_slice(&SOURCE_ARGS);
+    run(&args)
 }
 
 fn run(args: &[&str]) -> Value {
@@ -327,5 +342,103 @@ fn features_only_project_uses_a_feature_derived_frame() {
     assert_ne!(origin[1].as_f64(), Some(0.0));
     let east = meshes[0]["vertices"][0][0].as_f64().unwrap();
     assert!(east.abs() < 1_000.0, "local metres expected, got {east}");
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+fn prepare_layers(root: &std::path::Path) -> std::path::PathBuf {
+    let dir = root.join("layers");
+    std::fs::create_dir_all(&dir).unwrap();
+    let fixtures = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("fixtures");
+    for (from, to) in [
+        ("ikeja-dem.json", "dem.json"),
+        ("ikeja-markings.geojson", "markings.geojson"),
+        ("ikeja-sidewalks.geojson", "sidewalks.geojson"),
+        ("ikeja-vegetation.geojson", "vegetation.geojson"),
+    ] {
+        std::fs::copy(fixtures.join(from), dir.join(to)).unwrap();
+    }
+    dir
+}
+
+#[test]
+fn generate_with_layers_emits_seven_attributed_meshes() {
+    let root = std::env::temp_dir().join(format!("genesis-cli-layers-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&root).unwrap();
+    let layers = prepare_layers(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "Layer journey"]);
+    run_with_source(&["boundary", project_s, BOUNDARY, "Ikeja"]);
+    run_with_source(&["features", project_s, OSM]);
+    let generated = run(&[
+        "generate",
+        project_s,
+        "42",
+        "--layers",
+        layers.to_str().unwrap(),
+    ]);
+    assert_eq!(generated["data"]["mesh_count"], 7);
+    assert_eq!(generated["data"]["layer_generators"], true);
+    let scene = run(&["scene", project_s]);
+    assert_eq!(scene["data"]["mesh_count"], 7);
+    let versions = scene["data"]["reproducibility"]["generator_versions"]
+        .as_array()
+        .unwrap();
+    assert!(versions.iter().any(|v| v.as_str() == Some("layers-v0.1")));
+    let meshes: Value =
+        serde_json::from_slice(&std::fs::read(project.join("payloads/meshes.json")).unwrap())
+            .unwrap();
+    assert!(
+        meshes
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|m| m["generation_seed"] == 42)
+    );
+    let _ = std::fs::remove_dir_all(&root);
+}
+
+#[test]
+fn denied_layer_source_fails_without_overwriting_payloads() {
+    let root =
+        std::env::temp_dir().join(format!("genesis-cli-denied-layer-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&root).unwrap();
+    let layers = prepare_layers(&root);
+    let project = root.join("project");
+    let project_s = project.to_str().unwrap();
+    run(&["project", project_s, "Denied layer"]);
+    run_with_source(&["boundary", project_s, BOUNDARY, "Ikeja"]);
+    run_with_source(&["features", project_s, OSM]);
+    run(&["generate", project_s, "42"]);
+    let before = std::fs::read(project.join("payloads/meshes.json")).unwrap();
+    std::fs::write(
+        layers.join("markings.geojson"),
+        r#"{"type":"FeatureCollection","attribution":"Google Maps","features":[]}"#,
+    )
+    .unwrap();
+    let failed = Command::new(env!("CARGO_BIN_EXE_genesis"))
+        .args([
+            "generate",
+            project_s,
+            "42",
+            "--layers",
+            layers.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(!failed.status.success());
+    let error: Value = serde_json::from_slice(&failed.stderr).unwrap();
+    assert_eq!(error["error"]["kind"], "cli_error");
+    assert_eq!(
+        std::fs::read(project.join("payloads/meshes.json")).unwrap(),
+        before
+    );
     let _ = std::fs::remove_dir_all(&root);
 }

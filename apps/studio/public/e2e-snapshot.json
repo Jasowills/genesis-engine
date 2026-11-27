@@ -92,6 +92,331 @@
       }
     },
     {
+      "id": "id-76c7cce720e7ec7804ca5835e9726299eb742ee5c693173baff994c4e7e14a50",
+      "label": "Terrain — unknown-feature",
+      "kind": "terrain",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.348,
+        6.5985
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            40.0
+          ],
+          [
+            387.0390691857022,
+            0.0,
+            41.5
+          ],
+          [
+            774.0781383714044,
+            0.0,
+            39.0
+          ],
+          [
+            0.0,
+            386.89,
+            42.0
+          ],
+          [
+            387.0390691857022,
+            386.89,
+            43.5
+          ],
+          [
+            774.0781383714044,
+            386.89,
+            40.5
+          ],
+          [
+            0.0,
+            773.78,
+            41.0
+          ],
+          [
+            387.0390691857022,
+            773.78,
+            42.0
+          ],
+          [
+            774.0781383714044,
+            773.78,
+            38.5
+          ]
+        ],
+        "indices": [
+          0,
+          1,
+          3,
+          1,
+          4,
+          3,
+          1,
+          2,
+          4,
+          2,
+          5,
+          4,
+          3,
+          4,
+          6,
+          4,
+          7,
+          6,
+          4,
+          5,
+          7,
+          5,
+          8,
+          7
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "layers-v0.1:terrain",
+      "provenance": {
+        "source_id": "local:fixture:dem",
+        "licence_elected": "synthetic-demo",
+        "attribution": "Synthetic demonstration grid; not a surveyed DEM. No high-resolution claim.",
+        "publisher": "Genesis layer fixture",
+        "url": "local-fixture",
+        "version": "2026-11-28",
+        "licence_url": null,
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [],
+        "derivation_chain": [
+          "layer:procedural"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
+      "id": "id-7ddea897794f30fb6efdf3e4a5e5cc9aee5848d1a0c39682620c7d57f9e567a4",
+      "label": "Road surface — way/102",
+      "kind": "road_surface",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.3485,
+        6.599
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            -3.0401863454530105,
+            3.649625595170149,
+            0.01
+          ],
+          [
+            -4.00024519138554,
+            4.802138941013355,
+            0.01
+          ],
+          [
+            659.4946321760505,
+            557.5021389410016,
+            0.01
+          ],
+          [
+            660.454691021983,
+            556.3496255951584,
+            0.01
+          ]
+        ],
+        "indices": [
+          1,
+          0,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "layers-v0.1:road_surface",
+      "provenance": {
+        "source_id": "osm:fixture:ikeja",
+        "licence_elected": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "publisher": "user-provided",
+        "url": "local-file",
+        "version": "n/a",
+        "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "way/102"
+        ],
+        "derivation_chain": [
+          "layer:procedural"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
+      "id": "id-976c13576079def04cec4efa603c35b400026b59db5409861ab09d6e923b7956",
+      "label": "Vegetation — tree/1",
+      "kind": "vegetation",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.349,
+        6.6
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0,
+            5.0
+          ],
+          [
+            -1.0,
+            0.0,
+            5.0
+          ]
+        ],
+        "indices": [
+          1,
+          0,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "layers-v0.1:vegetation",
+      "provenance": {
+        "source_id": "local:fixture:vegetation",
+        "licence_elected": "synthetic-demo",
+        "attribution": "Synthetic demonstration trees; procedural proxy geometry, not surveyed.",
+        "publisher": "Genesis layer fixture",
+        "url": "local-fixture",
+        "version": "2026-11-28",
+        "licence_url": null,
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "tree/1"
+        ],
+        "derivation_chain": [
+          "layer:procedural"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
+      "id": "id-c128921023edb9c6da2add7ec235d19d8d17c7f946442d6d1ce525c622bf3f12",
+      "label": "Road surface — way/102",
+      "kind": "road_surface",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.3485,
+        6.599
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            4.00024519138554,
+            -4.802138941013355,
+            0.01
+          ],
+          [
+            3.0401863454530105,
+            -3.649625595170149,
+            0.01
+          ],
+          [
+            666.5350637128889,
+            549.0503744048181,
+            0.01
+          ],
+          [
+            667.4951225588214,
+            547.8978610589749,
+            0.01
+          ]
+        ],
+        "indices": [
+          1,
+          0,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "layers-v0.1:road_surface",
+      "provenance": {
+        "source_id": "osm:fixture:ikeja",
+        "licence_elected": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "publisher": "user-provided",
+        "url": "local-file",
+        "version": "n/a",
+        "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "way/102"
+        ],
+        "derivation_chain": [
+          "layer:procedural"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
       "id": "id-d825a19b29843ee1258453102f74c97a4c4d5df17c7d01cf1abb69ae83e5900f",
       "label": "Building — way/101",
       "kind": "building_volume",
@@ -199,6 +524,77 @@
         ],
         "derivation_chain": [
           "procedural-v0.1:seed=42:chacha8"
+        ],
+        "derivative_database_status": null,
+        "display_obligations": [],
+        "third_party_terms": [],
+        "recorded_at_unix": null
+      }
+    },
+    {
+      "id": "id-ef424a2050b2d0941cb668099593716160540d440ccda8346cb1771c035b5f57",
+      "label": "Road surface — marking/1",
+      "kind": "road_surface",
+      "selectable": true,
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "origin_lon_lat": [
+        3.3485,
+        6.599
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            0.09600588459325296,
+            -0.11525133458432048,
+            0.01
+          ],
+          [
+            -0.09600588459325296,
+            0.11525133458432048,
+            0.01
+          ],
+          [
+            663.3988714828427,
+            552.8152513345725,
+            0.01
+          ],
+          [
+            663.5908832520292,
+            552.5847486654039,
+            0.01
+          ]
+        ],
+        "indices": [
+          1,
+          0,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "evidence": "inferred_by_rule",
+      "method": "layers-v0.1:road_surface",
+      "provenance": {
+        "source_id": "local:fixture:markings",
+        "licence_elected": "synthetic-demo",
+        "attribution": "Synthetic demonstration markings; inferred from OSM centreline, not observed.",
+        "publisher": "Genesis layer fixture",
+        "url": "local-fixture",
+        "version": "2026-11-28",
+        "licence_url": null,
+        "vintage": null,
+        "filters": [],
+        "checksum": null,
+        "source_feature_ids": [
+          "marking/1"
+        ],
+        "derivation_chain": [
+          "layer:procedural"
         ],
         "derivative_database_status": null,
         "display_obligations": [],

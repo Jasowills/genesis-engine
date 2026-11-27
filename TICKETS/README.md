@@ -74,7 +74,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0030 | [#26](https://github.com/Jasowills/genesis-engine/issues/26) | LOD, collision and texture compression | feature | P3 | M4 | verified | [GE-0029] |
 | GE-0031 | [#32](https://github.com/Jasowills/genesis-engine/issues/32) | Target engine export fixtures | integration | P3 | M4 | deferred | [GE-0030] |
 | GE-0032 | [#21](https://github.com/Jasowills/genesis-engine/issues/21) | Signed release and auto-update pipeline | release | P3 | M5 | declined | [GE-0008, GE-0009] |
-| GE-0033 | [#33](https://github.com/Jasowills/genesis-engine/issues/33) | Wire secondary layers into the product generate journey | feature | P1 | M4 | ready | [GE-0028, GE-0030, GE-0022] |
+| GE-0033 | [#33](https://github.com/Jasowills/genesis-engine/issues/33) | Wire secondary layers into the product generate journey | feature | P1 | M4 | in-review | [GE-0028, GE-0030, GE-0022] |
 | GE-0034 | [#34](https://github.com/Jasowills/genesis-engine/issues/34) | Per-kind viewport materials | feature | P2 | M4 | ready | [GE-0016] |
 | GE-0035 | [#35](https://github.com/Jasowills/genesis-engine/issues/35) | Simple roof forms from OSM tags with honest inference | feature | P2 | M4 | ready | [GE-0015] |
 | GE-0036 | [#36](https://github.com/Jasowills/genesis-engine/issues/36) | Fit viewport camera to generated scene bounds | feature | P2 | M4 | ready | [GE-0016, GE-0033] |

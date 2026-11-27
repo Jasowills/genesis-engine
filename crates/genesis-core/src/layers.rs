@@ -479,3 +479,12 @@ pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<Ge
         },
     )
 }
+
+/// Stamp a run's seed and generator version onto layer meshes. Layer fixtures
+/// are otherwise unchanged; callers must apply this before persisting payloads.
+pub fn apply_run_metadata(meshes: &mut [GeneratedGeometry], seed: u64, generator_version: &str) {
+    for mesh in meshes {
+        mesh.generation_seed = seed;
+        mesh.generator_version = generator_version.to_string();
+    }
+}

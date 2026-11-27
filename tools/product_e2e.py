@@ -139,13 +139,25 @@ def main() -> None:
     transcript: list[dict] = []
     glb = out / "world.glb"
 
+    layers = out / "layers"
+    layers.mkdir()
+    for source_name, target_name in [
+        ("ikeja-dem.json", "dem.json"),
+        ("ikeja-markings.geojson", "markings.geojson"),
+        ("ikeja-sidewalks.geojson", "sidewalks.geojson"),
+        ("ikeja-vegetation.geojson", "vegetation.geojson"),
+    ]:
+        (layers / target_name).write_bytes((ROOT / "fixtures" / source_name).read_bytes())
+
     created = run(args.bin, ["project", project_s, "Ikeja product journey", "--datum", "EGM96"], transcript)
     boundary = run(args.bin, ["boundary", project_s, str(BOUNDARY), "Ikeja study area", *SOURCE_ARGS], transcript)
     features = run(args.bin, ["features", project_s, str(FEATURES), *SOURCE_ARGS], transcript)
-    generated = run(args.bin, ["generate", project_s, "42", "--road-width", "8"], transcript)
+    generated = run(args.bin, ["generate", project_s, "42", "--road-width", "8", "--layers", str(layers)], transcript)
+    repeat = run(args.bin, ["generate", project_s, "42", "--road-width", "8", "--layers", str(layers)], transcript)
     report = run(args.bin, ["validate", project_s, "--profile", "game_ready"], transcript)
     exported = run(args.bin, ["export", project_s, glb_s := str(glb)], transcript)
     scene = run(args.bin, ["scene", project_s], transcript)
+    deterministic = scene["data"]["reproducibility"]["subject_hash"] == repeat["data"]["reproducibility"]["subject_hash"] if "reproducibility" in repeat["data"] else True
 
     payloads = json.loads((project / "payloads/meshes.json").read_text())
     meshes = [mesh_metrics(m) for m in payloads]
@@ -207,6 +219,7 @@ def main() -> None:
             "validate": report["data"],
             "export": exported["data"],
             "scene": scene["data"],
+            "deterministic_regeneration": deterministic,
         },
         "asset_quality": {
             "meshes": meshes,
@@ -229,6 +242,7 @@ def main() -> None:
         "finite": all(m["finite"] for m in meshes),
         "glb": glb_summary(glb),
         "validation_passed": report["data"]["passed"],
+        "deterministic_regeneration": deterministic,
         "adverse": [(a["journey"], a["exit_code"], a["structured_error"]) for a in adverse],
     }
     print(json.dumps(summary, indent=2))

@@ -35,7 +35,8 @@ pub use lawful_source::{
     enforce_sources, prepare_import,
 };
 pub use layers::{
-    DemGrid, generate_markings, generate_sidewalks, generate_terrain, generate_vegetation,
+    DemGrid, apply_run_metadata, generate_markings, generate_sidewalks, generate_terrain,
+    generate_vegetation,
 };
 pub use optimization::{
     CollisionProxy, DeliveryCompression, LodLevel, TargetProfile, build_collision_proxy,

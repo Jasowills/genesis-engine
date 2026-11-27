@@ -5,10 +5,11 @@
 use clap::{Parser, Subcommand};
 use genesis_core::{
     CURRENT_SCHEMA_VERSION, CrsMetadata, GeneratedGeometry, LicenceElection, LocalFrame,
-    QualityProfile, SourceDescriptor, WorldIr, WorldLayer, check_export_ready, create_project,
-    derive_id, export_glb, generate_building_volumes_with_origin,
-    generate_road_surfaces_with_origin, import_geojson, import_glb, import_osm_geojson,
-    to_world_objects, validate_world,
+    Provenance, QualityProfile, SourceDescriptor, WorldIr, WorldLayer, WorldObject,
+    apply_run_metadata, check_export_ready, create_project, derive_id, export_glb,
+    generate_building_volumes_with_origin, generate_markings, generate_road_surfaces_with_origin,
+    generate_sidewalks, generate_terrain, generate_vegetation, import_geojson, import_glb,
+    import_osm_geojson, to_world_objects, validate_world,
 };
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
@@ -65,6 +66,9 @@ enum Command {
         seed: u64,
         #[arg(long, default_value_t = 8.0)]
         road_width: f64,
+        /// Directory containing dem.json, markings.geojson, sidewalks.geojson and vegetation.geojson
+        #[arg(long)]
+        layers: Option<PathBuf>,
     },
     #[command(name = "validate")]
     Validate {
@@ -105,6 +109,153 @@ fn source_from_args(
             .unwrap_or_else(|| "User-provided data; no licence elected".to_string()),
         ..Default::default()
     }
+}
+
+/// Build a source descriptor for a bundled layer fixture. The fixture's own
+/// attribution and licence text travel with the generated mesh.
+fn layer_source(id: &str, attribution: &str, licence: Option<&str>) -> SourceDescriptor {
+    SourceDescriptor {
+        id: id.to_string(),
+        publisher: "Genesis layer fixture".to_string(),
+        url: "local-fixture".to_string(),
+        version: "2026-11-28".to_string(),
+        licence: licence
+            .map(str::to_string)
+            .map(LicenceElection::Other)
+            .unwrap_or_default(),
+        attribution: attribution.to_string(),
+        ..Default::default()
+    }
+}
+
+fn fixture_attribution(bytes: &[u8]) -> Result<String, String> {
+    let value: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
+    value
+        .get("attribution")
+        .and_then(Value::as_str)
+        .map(str::to_string)
+        .ok_or_else(|| "layer fixture has no attribution".to_string())
+}
+
+/// Generate secondary layers from an explicit fixture directory. Every source
+/// passes the lawful-source gate inside Core before any geometry is emitted.
+fn load_layers(
+    dir: &Path,
+    project: &Path,
+    project_source: &SourceDescriptor,
+    seed: u64,
+) -> Result<(Vec<GeneratedGeometry>, Vec<SourceDescriptor>), String> {
+    let mut registered_sources = vec![project_source.clone()];
+
+    let dem_bytes = std::fs::read(dir.join("dem.json")).map_err(|e| e.to_string())?;
+    let dem = genesis_core::DemGrid::from_bytes(&dem_bytes).map_err(|e| e.to_string())?;
+    let dem_source = layer_source(
+        "local:fixture:dem",
+        &dem.attribution,
+        Some("synthetic-demo"),
+    );
+    registered_sources.push(dem_source.clone());
+    let mut meshes = vec![generate_terrain(&dem, &dem_source).map_err(|e| e.to_string())?];
+
+    let markings_bytes = std::fs::read(dir.join("markings.geojson")).map_err(|e| e.to_string())?;
+    let markings_source = layer_source(
+        "local:fixture:markings",
+        &fixture_attribution(&markings_bytes)?,
+        Some("synthetic-demo"),
+    );
+    registered_sources.push(markings_source.clone());
+    meshes.extend(generate_markings(&markings_bytes, &markings_source).map_err(|e| e.to_string())?);
+
+    let sidewalks_bytes =
+        std::fs::read(dir.join("sidewalks.geojson")).map_err(|e| e.to_string())?;
+    meshes.extend(generate_sidewalks(&sidewalks_bytes, project_source).map_err(|e| e.to_string())?);
+
+    let vegetation_bytes =
+        std::fs::read(dir.join("vegetation.geojson")).map_err(|e| e.to_string())?;
+    let vegetation_source = layer_source(
+        "local:fixture:vegetation",
+        &fixture_attribution(&vegetation_bytes)?,
+        Some("synthetic-demo"),
+    );
+    registered_sources.push(vegetation_source.clone());
+    meshes.push(
+        generate_vegetation(&vegetation_bytes, &vegetation_source).map_err(|e| e.to_string())?,
+    );
+
+    let metadata = project.join("metadata");
+    std::fs::create_dir_all(&metadata).map_err(|e| e.to_string())?;
+    std::fs::write(
+        metadata.join("layer_sources.json"),
+        serde_json::to_vec_pretty(&registered_sources).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    apply_run_metadata(&mut meshes, seed, "layers-v0.1");
+    Ok((meshes, registered_sources))
+}
+
+/// Register layer meshes as World IR objects so Studio can select them and
+/// export can verify their provenance against registered sources.
+fn register_layer_objects(
+    project: &Path,
+    meshes: &mut [GeneratedGeometry],
+    sources: &[SourceDescriptor],
+) -> Result<(), String> {
+    let path = project.join("worlds/world.json");
+    let mut world = load_ir(project)?;
+    let existing: BTreeSet<String> = world
+        .layers
+        .iter()
+        .flat_map(|layer| layer.objects.iter())
+        .map(|object| object.id.to_string())
+        .collect();
+    let by_id: std::collections::BTreeMap<String, &SourceDescriptor> = sources
+        .iter()
+        .map(|source| (source.id.clone(), source))
+        .collect();
+    let mut added = 0;
+    for mesh in meshes.iter_mut() {
+        let id = mesh.asset_id.to_string();
+        if existing.contains(&id) {
+            mesh.source_object_ids = vec![mesh.asset_id.clone()];
+            continue;
+        }
+        let source = by_id
+            .get(mesh.provenance.source_id.as_str())
+            .ok_or_else(|| {
+                format!(
+                    "layer mesh {id} has unregistered source {}",
+                    mesh.provenance.source_id
+                )
+            })?;
+        let mut provenance = Provenance::from(*source);
+        provenance.source_feature_ids = mesh.provenance.source_feature_ids.clone();
+        mesh.source_object_ids = vec![mesh.asset_id.clone()];
+        let object = WorldObject {
+            id: mesh.asset_id.clone(),
+            object_type: format!("layer:{:?}", mesh.kind),
+            geographic_position: [mesh.origin_lon_lat[0], mesh.origin_lon_lat[1], 0.0],
+            local_position: [0.0, 0.0, 0.0],
+            evidence: mesh.evidence,
+            provenance,
+            dimensions: Default::default(),
+            generation_seed: Some(mesh.generation_seed),
+            dependencies: Vec::new(),
+            validation_state: Default::default(),
+            payloads: Vec::new(),
+        };
+        if let Some(layer) = world.layers.first_mut() {
+            layer.objects.push(object);
+            added += 1;
+        }
+    }
+    if added > 0 {
+        std::fs::write(
+            &path,
+            serde_json::to_vec_pretty(&world).map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 fn metadata_path(project: &Path) -> PathBuf {
@@ -315,6 +466,7 @@ fn run(cli: Cli) -> Result<Value, String> {
             project,
             seed,
             road_width,
+            layers,
         } => {
             let source = load_source(&project)?;
             let crs = load_crs(&project)?;
@@ -336,6 +488,13 @@ fn run(cli: Cli) -> Result<Value, String> {
                 )
                 .map_err(|e| e.to_string())?,
             );
+            let layers_enabled = layers.is_some();
+            if let Some(directory) = layers {
+                let (mut layer_meshes, layer_sources) =
+                    load_layers(&directory, &project, &source, seed)?;
+                register_layer_objects(&project, &mut layer_meshes, &layer_sources)?;
+                meshes.extend(layer_meshes);
+            }
             std::fs::create_dir_all(project.join("payloads")).map_err(|e| e.to_string())?;
             std::fs::write(
                 project.join("payloads/meshes.json"),
@@ -344,7 +503,7 @@ fn run(cli: Cli) -> Result<Value, String> {
             .map_err(|e| e.to_string())?;
             Ok(ok(
                 "generate",
-                json!({"mesh_count": meshes.len(), "seed": seed, "generator_version": "procedural-v0.1"}),
+                json!({"mesh_count": meshes.len(), "seed": seed, "generator_version": "procedural-v0.1", "layer_generators": layers_enabled}),
             ))
         }
         Command::Validate {
@@ -372,8 +531,14 @@ fn run(cli: Cli) -> Result<Value, String> {
             let report: genesis_core::ValidationReport =
                 read_json(&project.join("validation/report.json"))?;
             check_export_ready(&report).map_err(|e| e.to_string())?;
-            let exported = export_glb(&meshes, &world, &[load_source(&project)?], &report)
-                .map_err(|e| e.to_string())?;
+            let mut sources = vec![load_source(&project)?];
+            let layer_sources_path = project.join("metadata/layer_sources.json");
+            if layer_sources_path.exists() {
+                let extra: Vec<SourceDescriptor> = read_json(&layer_sources_path)?;
+                sources.extend(extra);
+            }
+            let exported =
+                export_glb(&meshes, &world, &sources, &report).map_err(|e| e.to_string())?;
             std::fs::write(&output, &exported.bytes).map_err(|e| e.to_string())?;
             std::fs::write(
                 output.with_extension("attribution.json"),
