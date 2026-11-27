@@ -3,7 +3,7 @@ id: GE-0009
 title: Cross-platform CI skeleton
 type: engineering
 priority: P0
-status: proposed
+status: in-progress
 milestone: M0
 labels: [area:infra, type:engineering]
 depends_on: [GE-0008]

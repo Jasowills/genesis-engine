@@ -77,7 +77,10 @@ fn main() {
     let global = 10_000_000.0_f64;
     let offset = 0.01_f64;
     let naive = ((global as f32 + offset as f32) as f64) - global;
-    println!("naive_f32_add_error({global:.0} + {offset}) = {:.6} m (wanted {offset})", naive - offset);
+    println!(
+        "naive_f32_add_error({global:.0} + {offset}) = {:.6} m (wanted {offset})",
+        naive - offset
+    );
 
     // Local-frame strategy: authoritative f64 origin, f32 local ENU delta.
     let (lat0, lon0, h0) = (6.6_f64, 3.3_f64, 40.0_f64);
@@ -103,19 +106,30 @@ fn main() {
     let err = ((reconstructed.0 - exact.0).powi(2)
         + (reconstructed.1 - exact.1).powi(2)
         + (reconstructed.2 - exact.2).powi(2))
-        .sqrt();
+    .sqrt();
     println!("local_frame_f32_storage_error = {:.9} m", err);
 
     // ECEF -> ENU -> ECEF round trip, exact f64, with a second nearby point.
     let target = geodetic_to_ecef(6.601_f64, 3.301_f64, 47.0);
-    let delta = (target.0 - origin.0, target.1 - origin.1, target.2 - origin.2);
+    let delta = (
+        target.0 - origin.0,
+        target.1 - origin.1,
+        target.2 - origin.2,
+    );
     let enu = ecef_delta_to_enu(lat0, lon0, delta);
     let back = enu_to_ecef_delta(lat0, lon0, enu);
-    let rt = ((back.0 - delta.0).powi(2) + (back.1 - delta.1).powi(2) + (back.2 - delta.2).powi(2)).sqrt();
+    let rt = ((back.0 - delta.0).powi(2) + (back.1 - delta.1).powi(2) + (back.2 - delta.2).powi(2))
+        .sqrt();
     println!("enu_round_trip_error_f64 = {:.12} m", rt);
 
-    for seg in [cut_antimeridian(179.999, -179.999), cut_antimeridian(-179.9, 179.9)] {
-        println!("antimeridian_cut = [{:.3},{:.3}] [{:.3},{:.3}]", seg[0].0, seg[0].1, seg[1].0, seg[1].1);
+    for seg in [
+        cut_antimeridian(179.999, -179.999),
+        cut_antimeridian(-179.9, 179.9),
+    ] {
+        println!(
+            "antimeridian_cut = [{:.3},{:.3}] [{:.3},{:.3}]",
+            seg[0].0, seg[0].1, seg[1].0, seg[1].1
+        );
     }
 }
 
@@ -166,9 +180,20 @@ mod tests {
     fn local_frame_f32_storage_is_sub_millimetre() {
         let (lat0, lon0) = (6.6_f64, 3.3_f64);
         let enu = (123.456_f64, -45.678, 12.345);
-        let stored = enu_to_ecef_delta(lat0, lon0, (enu.0 as f32 as f64, enu.1 as f32 as f64, enu.2 as f32 as f64));
+        let stored = enu_to_ecef_delta(
+            lat0,
+            lon0,
+            (
+                enu.0 as f32 as f64,
+                enu.1 as f32 as f64,
+                enu.2 as f32 as f64,
+            ),
+        );
         let exact = enu_to_ecef_delta(lat0, lon0, enu);
-        let err = ((stored.0 - exact.0).powi(2) + (stored.1 - exact.1).powi(2) + (stored.2 - exact.2).powi(2)).sqrt();
+        let err = ((stored.0 - exact.0).powi(2)
+            + (stored.1 - exact.1).powi(2)
+            + (stored.2 - exact.2).powi(2))
+        .sqrt();
         assert!(err < 1e-3, "local-frame error {} m", err);
     }
 
@@ -177,7 +202,11 @@ mod tests {
         let (lat0, lon0, h0) = (6.6_f64, 3.3_f64, 40.0);
         let origin = geodetic_to_ecef(lat0, lon0, h0);
         let target = geodetic_to_ecef(6.601, 3.301, 47.0);
-        let d = (target.0 - origin.0, target.1 - origin.1, target.2 - origin.2);
+        let d = (
+            target.0 - origin.0,
+            target.1 - origin.1,
+            target.2 - origin.2,
+        );
         let back = enu_to_ecef_delta(lat0, lon0, ecef_delta_to_enu(lat0, lon0, d));
         let err = ((back.0 - d.0).powi(2) + (back.1 - d.1).powi(2) + (back.2 - d.2).powi(2)).sqrt();
         assert!(err < 1e-9, "round-trip error {} m", err);
@@ -185,8 +214,14 @@ mod tests {
 
     #[test]
     fn antimeridian_golden_vectors() {
-        assert_eq!(cut_antimeridian(179.999, -179.999), vec![(179.999, 180.0), (-180.0, -179.999)]);
-        assert_eq!(cut_antimeridian(-179.9, 179.9), vec![(-179.9, -180.0), (180.0, 179.9)]);
+        assert_eq!(
+            cut_antimeridian(179.999, -179.999),
+            vec![(179.999, 180.0), (-180.0, -179.999)]
+        );
+        assert_eq!(
+            cut_antimeridian(-179.9, 179.9),
+            vec![(-179.9, -180.0), (180.0, 179.9)]
+        );
         assert_eq!(cut_antimeridian(3.3, 3.301), vec![(3.3, 3.301)]);
     }
 }

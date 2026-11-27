@@ -10,9 +10,17 @@ fn main() {
     report(10 + env_count as i32);
 
     // 20 => no preopened root; 21 => root unexpectedly readable.
-    report(if std::fs::read_dir("/").is_err() { 20 } else { 21 });
+    report(if std::fs::read_dir("/").is_err() {
+        20
+    } else {
+        21
+    });
     // 30 => no preopened current directory; 31 => cwd unexpectedly readable.
-    report(if std::fs::read_dir(".").is_err() { 30 } else { 31 });
+    report(if std::fs::read_dir(".").is_err() {
+        30
+    } else {
+        31
+    });
 
     // The host binds a real loopback listener on an ephemeral port and passes
     // it here, so failure cannot be blamed on "no listener". 39 => no port
@@ -21,13 +29,11 @@ fn main() {
     if port <= 0 {
         report(39);
     } else {
-        report(
-            if TcpStream::connect(("127.0.0.1", port as u16)).is_ok() {
-                41
-            } else {
-                40
-            },
-        );
+        report(if TcpStream::connect(("127.0.0.1", port as u16)).is_ok() {
+            41
+        } else {
+            40
+        });
     }
 
     // 50 => name lookup failed/empty, 51 => resolved. Note: WASI preview1 has

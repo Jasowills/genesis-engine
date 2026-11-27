@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# All third-party actions are pinned to full commit SHAs (supply-chain policy).
+# Public standard runners are free; macOS minutes are the most expensive — keep
+# heavy work on Linux where possible. No GPU runners in public CI (cost).
+
+jobs:
+  docs:
+    name: Documentation baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+      - name: Required documents present
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in README.md LICENSE NOTICE CONTRIBUTING.md CODE_OF_CONDUCT.md \
+                   SECURITY.md CHANGELOG.md DECISIONS.md PRD.md ARCHITECTURE.md \
+                   ROADMAP.md progress.md GENESIS_ENGINE_SPEC.md \
+                   engineering/TEST_STRATEGY.md engineering/SECURITY_MODEL.md \
+                   engineering/PERFORMANCE_BUDGETS.md engineering/RELEASE_PROCESS.md \
+                   research/RESEARCH_REGISTER.md TICKETS/README.md; do
+            test -s "$f" || { echo "missing or empty: $f"; exit 1; }
+          done
+          test "$(find TICKETS -name 'ge-*.md' | wc -l)" -eq 32
+          echo "documentation baseline OK"
+
+  prototype-tests:
+    name: Prototype tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a # v4
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@df2a88e9fe4098bad09cb42c3dec7187f15861fc
+        with:
+          toolchain: stable
+          targets: wasm32-wasip1
+      - name: Cache cargo artefacts
+        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca # v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            prototype/precision-crs/target
+            prototype/plugin-sandbox/target
+            prototype/plugin-sandbox/guest/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('prototype/**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Formatting check
+        shell: bash
+        run: |
+          cargo fmt --manifest-path prototype/precision-crs/Cargo.toml -- --check
+          cargo fmt --manifest-path prototype/plugin-sandbox/Cargo.toml -- --check
+          cargo fmt --manifest-path prototype/plugin-sandbox/guest/Cargo.toml -- --check
+      - name: Build WASM fixtures
+        run: cargo build --target wasm32-wasip1 --release --manifest-path prototype/plugin-sandbox/guest/Cargo.toml
+      - name: Precision/CRS golden vectors
+        run: cargo test --manifest-path prototype/precision-crs/Cargo.toml
+      - name: Plugin sandbox feasibility
+        run: cargo test --manifest-path prototype/plugin-sandbox/Cargo.toml
+
+  # GPU lanes and signed release builds are intentionally absent: they require
+  # paid larger runners/identities and explicit owner approval (D-022).

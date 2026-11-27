@@ -99,7 +99,9 @@ async fn memory_growth_traps_when_configured_to() {
         ..RunConfig::default()
     };
 
-    let outcome = run_module(&engine, &linker, &module, &config).await.unwrap();
+    let outcome = run_module(&engine, &linker, &module, &config)
+        .await
+        .unwrap();
 
     println!(
         "memory_grow (trap_on_grow_failure): elapsed={:?} error={:?}",

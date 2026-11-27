@@ -152,9 +152,11 @@ pub fn build_linker(engine: &Engine) -> Result<Linker<PluginState>> {
             }
         },
     )?;
-    linker.func_wrap("genesis_probe", "port", |caller: Caller<'_, PluginState>| {
-        caller.data().probe_port.unwrap_or(0) as i32
-    })?;
+    linker.func_wrap(
+        "genesis_probe",
+        "port",
+        |caller: Caller<'_, PluginState>| caller.data().probe_port.unwrap_or(0) as i32,
+    )?;
     Ok(linker)
 }
 
