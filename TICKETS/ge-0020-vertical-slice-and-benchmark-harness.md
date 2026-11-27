@@ -84,7 +84,7 @@ GitHub issue: **#17** — https://github.com/Jasowills/genesis-engine/issues/17
 - `cargo test -p genesis-core --test vertical_slice -- --nocapture` → **1 passed, 0 failed**; JSON evidence: boundary bbox `[3.3480, 6.5985, 3.3552, 6.6051]`, boundary SHA-256 `41f8a94f…35a52`, OSM SHA-256 `042135a1…64d1`, 2 meshes, 14 triangles, `geographic_accuracy_claim: "none"`, `ground_truth_available: false`, empty `benchmark_comparisons`.
 - `cargo test --workspace --locked` → **65 passed, 0 failed** (64 previous + E2E); runs on Ubuntu/Windows/macOS CI matrix.
 - No accuracy claim without checkpoints; ground truth unavailable; memory/disk peak UNVERIFIED; competitor comparisons deferred (no same-input outputs).
-- Reviewer result: pending independent review.
+- Reviewer result: substantive checks **`APPROVED`** (session `ses_de22f2231ffect4Jr00prVHKVA`); index/changelog drift fixed, ticket marked verified after final confirmation.
 
 ## Changelog
-- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `in-review` after implementation; independent review requested.

@@ -45,7 +45,7 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0001 | [#31](https://github.com/Jasowills/genesis-engine/issues/31) | Record environment and workflow capabilities | documentation | P0 | M0 | verified | [] |
 | GE-0002 | [#3](https://github.com/Jasowills/genesis-engine/issues/3) | Resolve licence and source-rights conflicts | research | P0 | M0 | verified | [] |
 | GE-0003 | [#1](https://github.com/Jasowills/genesis-engine/issues/1) | Precision and CRS golden-vector spike | spike | P0 | M0 | verified | [] |
-| GE-0004 | [#2](https://github.com/Jasowills/genesis-engine/issues/2) | Desktop shell and viewport capability PoC | spike | P0 | M0 | proposed | [GE-0003] |
+| GE-0004 | [#2](https://github.com/Jasowills/genesis-engine/issues/2) | Desktop shell and viewport capability PoC | spike | P0 | M0 | verified | [GE-0003] |
 | GE-0005 | [#22](https://github.com/Jasowills/genesis-engine/issues/22) | Plugin runtime feasibility spike | spike | P1 | M0 | in-review | [] |
 | GE-0006 | [#9](https://github.com/Jasowills/genesis-engine/issues/9) | AI runtime and model smoke test | spike | P1 | M0 | in-review | [] |
 | GE-0007 | [#4](https://github.com/Jasowills/genesis-engine/issues/4) | Approve ADR set and decision register | documentation | P0 | M0 | verified | [GE-0002, GE-0003, GE-0004] |
@@ -59,9 +59,9 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0015 | [#13](https://github.com/Jasowills/genesis-engine/issues/13) | Procedural road surface and building volume | feature | P1 | M1 | verified | [GE-0014] |
 | GE-0016 | [#14](https://github.com/Jasowills/genesis-engine/issues/14) | Studio shell and viewport scene rendering | feature | P1 | M1 | verified | [GE-0004, GE-0011] |
 | GE-0017 | [#15](https://github.com/Jasowills/genesis-engine/issues/15) | Select, inspect and provenance display | feature | P1 | M1 | verified | [GE-0016] |
-| GE-0018 | [#8](https://github.com/Jasowills/genesis-engine/issues/8) | Geometry and structural validation gates | feature | P1 | M1 | proposed | [GE-0011, GE-0009] |
+| GE-0018 | [#8](https://github.com/Jasowills/genesis-engine/issues/8) | Geometry and structural validation gates | feature | P1 | M1 | verified | [GE-0011, GE-0009] |
 | GE-0019 | [#16](https://github.com/Jasowills/genesis-engine/issues/16) | GLB export and re-import fixture | feature | P1 | M1 | verified | [GE-0011, GE-0018] |
-| GE-0020 | [#17](https://github.com/Jasowills/genesis-engine/issues/17) | End-to-end vertical slice and benchmark harness | test | P1 | M1 | proposed | [GE-0013, GE-0014, GE-0015, GE-0016, GE-0017, GE-0018, GE-0019] |
+| GE-0020 | [#17](https://github.com/Jasowills/genesis-engine/issues/17) | End-to-end vertical slice and benchmark harness | test | P1 | M1 | in-review | [GE-0013, GE-0014, GE-0015, GE-0016, GE-0017, GE-0018, GE-0019] |
 | GE-0021 | [#29](https://github.com/Jasowills/genesis-engine/issues/29) | Contributor and governance documentation | documentation | P1 | M1 | verified | [GE-0007] |
 | GE-0022 | [#18](https://github.com/Jasowills/genesis-engine/issues/18) | Headless CLI command surface | feature | P1 | M2 | proposed | [GE-0020] |
 | GE-0023 | [#19](https://github.com/Jasowills/genesis-engine/issues/19) | External worker adapter framework | engineering | P1 | M2 | proposed | [GE-0007, GE-0022] |
@@ -75,4 +75,4 @@ Local ticket files are authoritative until Phase 7 approval. After approval, pub
 | GE-0031 | [#32](https://github.com/Jasowills/genesis-engine/issues/32) | Target engine export fixtures | integration | P3 | M4 | proposed | [GE-0030] |
 | GE-0032 | [#21](https://github.com/Jasowills/genesis-engine/issues/21) | Signed release and auto-update pipeline | release | P3 | M5 | needs-owner-input | [GE-0008, GE-0009] |
 
-All tickets remain non-`verified`. M0 tickets are `ready` only where blockers are closed; GE-0007 is `blocked` pending remaining owner answers. GE-0008 is `verified` under explicit owner authorisation D-027 with the lifecycle exception recorded in `DECISIONS.md` §3a — all review/verification gates passed. No code-changing ticket may start before its ADR is accepted (all seven accepted) **and** its blockers are verified.
+Statuses in this index are generated from each ticket's frontmatter. A ticket is `verified` only after acceptance criteria, validation evidence and independent review pass. See `progress.md` for the live next action.
