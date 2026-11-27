@@ -19,6 +19,8 @@ pub const SNAPSHOT_SCHEMA_VERSION: u32 = 1;
 pub enum SceneNodeKind {
     BuildingVolume,
     RoadSurface,
+    Terrain,
+    Vegetation,
 }
 
 impl SceneNodeKind {
@@ -26,6 +28,8 @@ impl SceneNodeKind {
         match self {
             Self::BuildingVolume => "building_volume",
             Self::RoadSurface => "road_surface",
+            Self::Terrain => "terrain",
+            Self::Vegetation => "vegetation",
         }
     }
 }
@@ -149,6 +153,8 @@ fn node_for_mesh(
     let kind = match mesh.kind {
         GeneratedKind::BuildingVolume => SceneNodeKind::BuildingVolume,
         GeneratedKind::RoadSurface => SceneNodeKind::RoadSurface,
+        GeneratedKind::Terrain => SceneNodeKind::Terrain,
+        GeneratedKind::Vegetation => SceneNodeKind::Vegetation,
     };
     let feature = mesh
         .provenance
@@ -160,6 +166,8 @@ fn node_for_mesh(
         match kind {
             SceneNodeKind::BuildingVolume => "Building",
             SceneNodeKind::RoadSurface => "Road surface",
+            SceneNodeKind::Terrain => "Terrain",
+            SceneNodeKind::Vegetation => "Vegetation",
         }
     );
 

@@ -8,6 +8,7 @@ pub mod geojson_boundary;
 pub mod incremental;
 pub mod jobs;
 pub mod lawful_source;
+pub mod layers;
 pub mod osm_ingest;
 pub mod procedural;
 pub mod validation;
@@ -18,10 +19,14 @@ pub use geojson_boundary::{Boundary, boundary_payload_path, import_geojson, vali
 pub use incremental::{GenerationRecord, RegenerationPlan, missing_objects, plan_regeneration};
 pub use jobs::{
     JOB_RECORD_SCHEMA_VERSION, JobEvent, JobRecord, JobState, Supervisor, Worker, WorkerDescriptor,
+    redact,
 };
 pub use lawful_source::{
     LicenceElection, SourceDescriptor, SourcePurpose, attribution_sidecar, check_source,
     enforce_sources, prepare_import,
+};
+pub use layers::{
+    DemGrid, generate_markings, generate_sidewalks, generate_terrain, generate_vegetation,
 };
 pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_objects};
 pub use procedural::{

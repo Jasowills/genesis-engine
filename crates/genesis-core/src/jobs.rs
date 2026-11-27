@@ -11,18 +11,18 @@ use std::{collections::BTreeMap, time::Instant};
 
 pub const JOB_RECORD_SCHEMA_VERSION: u32 = 1;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JobState {
     Proposed,
     Queued,
-    Running { stage: String, progress: u32 },
+    Running { stage: String, progress: f32 },
     Completed,
     Failed { code: String },
     Cancelled,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JobEvent {
     StageStarted {
@@ -31,7 +31,7 @@ pub enum JobEvent {
     },
     Progress {
         stage: String,
-        progress: u32,
+        progress: f32,
         units: String,
     },
     Log {
@@ -78,6 +78,14 @@ impl WorkerDescriptor {
         if !self.environment.is_empty() {
             return Err(CoreError::InvalidManifest(
                 "worker environment must be empty (no inherited credentials)".to_string(),
+            ));
+        }
+        if self.working_directory.is_empty()
+            || self.working_directory.starts_with('/')
+            || self.working_directory.contains("..")
+        {
+            return Err(CoreError::InvalidManifest(
+                "worker working directory must be a safe project-relative path".to_string(),
             ));
         }
         if self.memory_limit_bytes == 0 || self.timeout_ms == 0 {
@@ -130,6 +138,24 @@ impl JobRecord {
     }
 }
 
+/// Remove obvious credential values from provider text before persisting it.
+/// This is a bounded best-effort helper, not a guarantee against all secrets.
+pub fn redact(text: &str) -> String {
+    let mut out = String::with_capacity(text.len().min(512));
+    for word in text.split_whitespace().take(64) {
+        let key = word
+            .trim_matches(|c: char| !c.is_ascii_alphanumeric())
+            .to_ascii_lowercase();
+        if ["token", "key", "secret", "password", "apikey"].contains(&key.as_str()) {
+            out.push_str("[REDACTED] ");
+        } else {
+            out.push_str(word);
+            out.push(' ');
+        }
+    }
+    out.trim_end().to_string()
+}
+
 /// Minimal worker interface. Implementations must not own domain rules.
 pub trait Worker {
     fn descriptor(&self) -> &WorkerDescriptor;
@@ -167,6 +193,14 @@ impl Supervisor {
     /// cancellation and timeout all produce deterministic terminal states.
     pub fn execute<W: Worker>(&self, job: &mut JobRecord, worker: &W) -> Result<(), CoreError> {
         worker.descriptor().validate()?;
+        if matches!(
+            job.state,
+            JobState::Completed | JobState::Failed { .. } | JobState::Cancelled
+        ) {
+            return Err(CoreError::InvalidManifest(
+                "terminal job cannot be re-executed".to_string(),
+            ));
+        }
         let stages = worker.stages();
         job.state = JobState::Queued;
         let started = Instant::now();
@@ -182,16 +216,20 @@ impl Supervisor {
             }
             job.state = JobState::Running {
                 stage: stage.clone(),
-                progress: index as u32,
+                progress: index as f32 / stages.len() as f32,
             };
             job.events.push(JobEvent::StageStarted {
                 id: stage.clone(),
                 expected_steps: stages.len() as u32,
             });
+            job.events.push(JobEvent::Log {
+                level: "info".to_string(),
+                message: redact(&format!("stage {stage} started")),
+            });
             job.events.push(JobEvent::Progress {
                 stage: stage.clone(),
-                progress: index as u32,
-                units: "stages".to_string(),
+                progress: index as f32 / stages.len() as f32,
+                units: "fraction_of_stages".to_string(),
             });
 
             match worker.run_stage(stage) {
@@ -205,7 +243,7 @@ impl Supervisor {
                     };
                     job.events.push(JobEvent::Error {
                         code: "WorkerStageFailed".to_string(),
-                        provider_error,
+                        provider_error: redact(&provider_error),
                     });
                     return Ok(());
                 }

@@ -127,3 +127,91 @@ fn descriptors_reject_shell_or_environment_leakage() {
     w.descriptor.timeout_ms = 0;
     assert!(w.descriptor().validate().is_err());
 }
+
+struct SleepingWorker {
+    descriptor: WorkerDescriptor,
+    sleep_ms: u64,
+}
+
+impl Worker for SleepingWorker {
+    fn descriptor(&self) -> &WorkerDescriptor {
+        &self.descriptor
+    }
+    fn stages(&self) -> Vec<String> {
+        vec!["slow".to_string()]
+    }
+    fn run_stage(&self, _stage: &str) -> Result<String, String> {
+        std::thread::sleep(std::time::Duration::from_millis(self.sleep_ms));
+        Ok("slow-checkpoint".to_string())
+    }
+}
+
+#[test]
+fn slow_stage_maps_to_timeout_error() -> CoreResult<()> {
+    let descriptor = WorkerDescriptor {
+        name: "slow".to_string(),
+        version: "1.0".to_string(),
+        argv: vec!["slow-worker".to_string()],
+        working_directory: "jobs/slow".to_string(),
+        environment: Default::default(),
+        memory_limit_bytes: 1024,
+        timeout_ms: 1,
+    };
+    let worker = SleepingWorker {
+        descriptor,
+        sleep_ms: 15,
+    };
+    let mut job = JobRecord::new("slow", "1.0", 7, worker.descriptor().clone())?;
+    Supervisor::new().execute(&mut job, &worker)?;
+    assert_eq!(
+        job.state,
+        JobState::Failed {
+            code: "TimedOut".to_string()
+        }
+    );
+    assert!(matches!(job.events.last(), Some(JobEvent::Error { code, .. }) if code == "TimedOut"));
+    assert!(
+        !job.events
+            .iter()
+            .any(|e| matches!(e, JobEvent::Done { .. }))
+    );
+    Ok(())
+}
+
+#[test]
+fn terminal_jobs_cannot_be_reexecuted() -> CoreResult<()> {
+    let w = worker(&["fetch"]);
+    let mut job = record(&w);
+    let supervisor = Supervisor::new();
+    supervisor.execute(&mut job, &w)?;
+    assert_eq!(job.state, JobState::Completed);
+    assert!(matches!(
+        supervisor.execute(&mut job, &w),
+        Err(genesis_core::CoreError::InvalidManifest(message)) if message.contains("terminal job")
+    ));
+    Ok(())
+}
+
+#[test]
+fn redaction_replaces_credential_like_words() {
+    assert_eq!(
+        genesis_core::redact("worker token abc123 failed"),
+        "worker [REDACTED] abc123 failed"
+    );
+}
+
+#[test]
+fn descriptor_validation_covers_identity_and_path() {
+    let mut w = worker(&["fetch"]);
+    w.descriptor.name.clear();
+    assert!(w.descriptor().validate().is_err());
+    let mut w = worker(&["fetch"]);
+    w.descriptor.version.clear();
+    assert!(w.descriptor().validate().is_err());
+    let mut w = worker(&["fetch"]);
+    w.descriptor.argv.clear();
+    assert!(w.descriptor().validate().is_err());
+    let mut w = worker(&["fetch"]);
+    w.descriptor.working_directory = "../outside".to_string();
+    assert!(w.descriptor().validate().is_err());
+}

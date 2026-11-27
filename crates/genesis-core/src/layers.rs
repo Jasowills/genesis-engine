@@ -5,11 +5,11 @@
 //! or hydrology modelling here.
 
 use crate::{
-    check_source, derive_id, verify_mesh, world_ir::EvidenceKind, CoreError, GeneratedGeometry,
-    GeneratedKind, Result, SourceDescriptor,
+    CoreError, GeneratedGeometry, GeneratedKind, Result, SourceDescriptor, check_source, derive_id,
+    verify_mesh, world_ir::EvidenceKind,
 };
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{Value, json};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DemGrid {
@@ -36,7 +36,10 @@ impl DemGrid {
             || grid.source_resolution_m <= 0.0
             || grid.vertical_accuracy_m <= 0.0
             || grid.elevations_m.len() < 2
-            || grid.elevations_m.iter().any(|row| row.len() != grid.elevations_m[0].len() || row.len() < 2)
+            || grid
+                .elevations_m
+                .iter()
+                .any(|row| row.len() != grid.elevations_m[0].len() || row.len() < 2)
             || grid.elevations_m.iter().flatten().any(|v| !v.is_finite())
         {
             return Err(CoreError::InvalidManifest("invalid DEM grid".to_string()));
@@ -106,12 +109,21 @@ pub fn generate_terrain(grid: &DemGrid, source: &SourceDescriptor) -> Result<Gen
         }
     }
     let mut parameters = std::collections::BTreeMap::new();
-    parameters.insert("source_resolution_m".to_string(), grid.source_resolution_m.to_string());
-    parameters.insert("vertical_accuracy_m".to_string(), grid.vertical_accuracy_m.to_string());
+    parameters.insert(
+        "source_resolution_m".to_string(),
+        grid.source_resolution_m.to_string(),
+    );
+    parameters.insert(
+        "vertical_accuracy_m".to_string(),
+        grid.vertical_accuracy_m.to_string(),
+    );
     parameters.insert("vertical_datum".to_string(), grid.vertical_datum.clone());
-    parameters.insert("resolution_claim".to_string(), "source-resolution only; no upsampling".to_string());
+    parameters.insert(
+        "resolution_claim".to_string(),
+        "source-resolution only; no upsampling".to_string(),
+    );
     mesh(
-        GeneratedKind::BuildingVolume, // generic mesh kind until a Terrain variant is added
+        GeneratedKind::Terrain,
         &format!("terrain:{}", grid.name),
         vertices,
         indices,
@@ -129,36 +141,69 @@ fn line_points(geometry: &Value) -> Result<Vec<[f64; 2]>> {
     array
         .iter()
         .map(|p| {
-            let a = p.as_array().ok_or_else(|| CoreError::InvalidManifest("bad position".to_string()))?;
+            let a = p
+                .as_array()
+                .ok_or_else(|| CoreError::InvalidManifest("bad position".to_string()))?;
             let lon = a.first().and_then(Value::as_f64).unwrap_or(f64::NAN);
             let lat = a.get(1).and_then(Value::as_f64).unwrap_or(f64::NAN);
             if !lon.is_finite() || !lat.is_finite() {
-                return Err(CoreError::InvalidManifest("non-finite position".to_string()));
+                return Err(CoreError::InvalidManifest(
+                    "non-finite position".to_string(),
+                ));
             }
             Ok([lon, lat])
         })
         .collect()
 }
 
-fn strip(line: &[[f64; 2]], offset: f64, half_width: f64, origin: [f64; 2]) -> (Vec<[f64; 3]>, Vec<u32>) {
+fn strip(
+    line: &[[f64; 2]],
+    offset: f64,
+    half_width: f64,
+    origin: [f64; 2],
+) -> (Vec<[f64; 3]>, Vec<u32>) {
     let east_scale = 111_320.0 * origin[1].to_radians().cos();
     let north_scale = 110_540.0;
     let mut vertices = Vec::new();
     let mut indices = Vec::new();
     for pair in line.windows(2) {
-        let a = [(pair[0][0] - origin[0]) * east_scale, (pair[0][1] - origin[1]) * north_scale];
-        let b = [(pair[1][0] - origin[0]) * east_scale, (pair[1][1] - origin[1]) * north_scale];
+        let a = [
+            (pair[0][0] - origin[0]) * east_scale,
+            (pair[0][1] - origin[1]) * north_scale,
+        ];
+        let b = [
+            (pair[1][0] - origin[0]) * east_scale,
+            (pair[1][1] - origin[1]) * north_scale,
+        ];
         let dx = b[0] - a[0];
         let dy = b[1] - a[1];
         let length = (dx * dx + dy * dy).sqrt();
-        if length <= 0.0 { continue; }
+        if length <= 0.0 {
+            continue;
+        }
         let nx = -dy / length;
         let ny = dx / length;
         let base = vertices.len() as u32;
-        vertices.push([a[0] + nx * (offset - half_width), a[1] + ny * (offset - half_width), 0.01]);
-        vertices.push([a[0] + nx * (offset + half_width), a[1] + ny * (offset + half_width), 0.01]);
-        vertices.push([b[0] + nx * (offset + half_width), b[1] + ny * (offset + half_width), 0.01]);
-        vertices.push([b[0] + nx * (offset - half_width), b[1] + ny * (offset - half_width), 0.01]);
+        vertices.push([
+            a[0] + nx * (offset - half_width),
+            a[1] + ny * (offset - half_width),
+            0.01,
+        ]);
+        vertices.push([
+            a[0] + nx * (offset + half_width),
+            a[1] + ny * (offset + half_width),
+            0.01,
+        ]);
+        vertices.push([
+            b[0] + nx * (offset + half_width),
+            b[1] + ny * (offset + half_width),
+            0.01,
+        ]);
+        vertices.push([
+            b[0] + nx * (offset - half_width),
+            b[1] + ny * (offset - half_width),
+            0.01,
+        ]);
         indices.extend_from_slice(&[base, base + 1, base + 2, base, base + 2, base + 3]);
     }
     (vertices, indices)
@@ -166,31 +211,56 @@ fn strip(line: &[[f64; 2]], offset: f64, half_width: f64, origin: [f64; 2]) -> (
 
 /// Road markings from a documented GeoJSON fixture; geometry is inferred from
 /// the centreline unless the source explicitly records observed markings.
-pub fn generate_markings(bytes: &[u8], source: &SourceDescriptor) -> Result<Vec<GeneratedGeometry>> {
+pub fn generate_markings(
+    bytes: &[u8],
+    source: &SourceDescriptor,
+) -> Result<Vec<GeneratedGeometry>> {
     check_source(source)?;
     let root: Value = serde_json::from_slice(bytes)?;
-    let features = root.get("features").and_then(Value::as_array).ok_or_else(|| {
-        CoreError::InvalidManifest("marking fixture must be a FeatureCollection".to_string())
-    })?;
+    let features = root
+        .get("features")
+        .and_then(Value::as_array)
+        .ok_or_else(|| {
+            CoreError::InvalidManifest("marking fixture must be a FeatureCollection".to_string())
+        })?;
     let mut out = Vec::new();
     for (index, feature) in features.iter().enumerate() {
-        let geometry = feature.get("geometry").ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
+        let geometry = feature
+            .get("geometry")
+            .ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
         if geometry.get("type").and_then(Value::as_str) != Some("LineString") {
-            return Err(CoreError::InvalidManifest("marking needs LineString".to_string()));
+            return Err(CoreError::InvalidManifest(
+                "marking needs LineString".to_string(),
+            ));
         }
         let line = line_points(geometry)?;
-        if line.len() < 2 { return Err(CoreError::InvalidManifest("marking needs two positions".to_string())); }
+        if line.len() < 2 {
+            return Err(CoreError::InvalidManifest(
+                "marking needs two positions".to_string(),
+            ));
+        }
         let origin = line[0];
         let (vertices, indices) = strip(&line, 0.0, 0.15, origin);
-        let observed = feature.get("properties").and_then(|p| p.get("observed")).and_then(Value::as_bool).unwrap_or(false);
+        let observed = feature
+            .get("properties")
+            .and_then(|p| p.get("observed"))
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
         let mut parameters = std::collections::BTreeMap::new();
         parameters.insert("width_m".to_string(), "0.3".to_string());
         out.push(mesh(
             GeneratedKind::RoadSurface,
-            &format!("marking:{index}:{}", feature.get("id").and_then(Value::as_str).unwrap_or("none")),
+            &format!(
+                "marking:{index}:{}",
+                feature.get("id").and_then(Value::as_str).unwrap_or("none")
+            ),
             vertices,
             indices,
-            if observed { EvidenceKind::Measured } else { EvidenceKind::InferredByRule },
+            if observed {
+                EvidenceKind::Measured
+            } else {
+                EvidenceKind::InferredByRule
+            },
             source,
             parameters,
         )?);
@@ -199,20 +269,34 @@ pub fn generate_markings(bytes: &[u8], source: &SourceDescriptor) -> Result<Vec<
 }
 
 /// Sidewalks and curbs as thin strips offset from road centrelines.
-pub fn generate_sidewalks(bytes: &[u8], source: &SourceDescriptor) -> Result<Vec<GeneratedGeometry>> {
+pub fn generate_sidewalks(
+    bytes: &[u8],
+    source: &SourceDescriptor,
+) -> Result<Vec<GeneratedGeometry>> {
     check_source(source)?;
     let root: Value = serde_json::from_slice(bytes)?;
-    let features = root.get("features").and_then(Value::as_array).ok_or_else(|| {
-        CoreError::InvalidManifest("road fixture must be a FeatureCollection".to_string())
-    })?;
+    let features = root
+        .get("features")
+        .and_then(Value::as_array)
+        .ok_or_else(|| {
+            CoreError::InvalidManifest("road fixture must be a FeatureCollection".to_string())
+        })?;
     let mut out = Vec::new();
     for (index, feature) in features.iter().enumerate() {
         let props = feature.get("properties").and_then(Value::as_object);
-        if props.and_then(|p| p.get("highway")).is_none() { continue; }
-        let geometry = feature.get("geometry").ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
-        if geometry.get("type").and_then(Value::as_str) != Some("LineString") { continue; }
+        if props.and_then(|p| p.get("highway")).is_none() {
+            continue;
+        }
+        let geometry = feature
+            .get("geometry")
+            .ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
+        if geometry.get("type").and_then(Value::as_str) != Some("LineString") {
+            continue;
+        }
         let line = line_points(geometry)?;
-        if line.len() < 2 { continue; }
+        if line.len() < 2 {
+            continue;
+        }
         let origin = line[0];
         for (side, offset) in [("left", -5.5), ("right", 5.5)] {
             let (vertices, indices) = strip(&line, offset, 0.75, origin);
@@ -237,32 +321,47 @@ pub fn generate_sidewalks(bytes: &[u8], source: &SourceDescriptor) -> Result<Vec
 pub fn generate_vegetation(bytes: &[u8], source: &SourceDescriptor) -> Result<GeneratedGeometry> {
     check_source(source)?;
     let root: Value = serde_json::from_slice(bytes)?;
-    let features = root.get("features").and_then(Value::as_array).ok_or_else(|| {
-        CoreError::InvalidManifest("vegetation fixture must be a FeatureCollection".to_string())
-    })?;
+    let features = root
+        .get("features")
+        .and_then(Value::as_array)
+        .ok_or_else(|| {
+            CoreError::InvalidManifest("vegetation fixture must be a FeatureCollection".to_string())
+        })?;
     let mut vertices = Vec::new();
     let mut indices = Vec::new();
     let origin = [3.3480_f64, 6.5985_f64];
     let east_scale = 111_320.0 * origin[1].to_radians().cos();
     let north_scale = 110_540.0;
     for feature in features {
-        let geometry = feature.get("geometry").ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
+        let geometry = feature
+            .get("geometry")
+            .ok_or_else(|| CoreError::InvalidManifest("missing geometry".to_string()))?;
         if geometry.get("type").and_then(Value::as_str) != Some("Point") {
-            return Err(CoreError::InvalidManifest("vegetation needs Point".to_string()));
+            return Err(CoreError::InvalidManifest(
+                "vegetation needs Point".to_string(),
+            ));
         }
-        let point = line_points(&json!({"coordinates": [geometry.get("coordinates").cloned().ok_or_else(|| CoreError::InvalidManifest("missing point".to_string()))?]}))?;
+        let point = line_points(
+            &json!({"coordinates": [geometry.get("coordinates").cloned().ok_or_else(|| CoreError::InvalidManifest("missing point".to_string()))?]}),
+        )?;
         let x = (point[0][0] - origin[0]) * east_scale;
         let y = (point[0][1] - origin[1]) * north_scale;
         let base = vertices.len() as u32;
         vertices.extend_from_slice(&[
-            [x - 1.0, y, 0.0], [x + 1.0, y, 0.0], [x + 1.0, y, 5.0], [x - 1.0, y, 5.0],
+            [x - 1.0, y, 0.0],
+            [x + 1.0, y, 0.0],
+            [x + 1.0, y, 5.0],
+            [x - 1.0, y, 5.0],
         ]);
         indices.extend_from_slice(&[base, base + 1, base + 2, base, base + 2, base + 3]);
     }
     let mut parameters = std::collections::BTreeMap::new();
-    parameters.insert("proxy".to_string(), "single crossed quad per tree".to_string());
+    parameters.insert(
+        "proxy".to_string(),
+        "single crossed quad per tree".to_string(),
+    );
     mesh(
-        GeneratedKind::BuildingVolume,
+        GeneratedKind::Vegetation,
         "vegetation:proxy",
         vertices,
         indices,

@@ -22,6 +22,8 @@ const INFERRED_HEIGHTS_M: [f64; 3] = [6.0, 9.0, 12.0];
 pub enum GeneratedKind {
     RoadSurface,
     BuildingVolume,
+    Terrain,
+    Vegetation,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

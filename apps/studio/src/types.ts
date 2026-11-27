@@ -7,7 +7,7 @@ export type Evidence =
   | 'inferred_by_rule'
   | 'unknown';
 
-export type SceneNodeKind = 'building_volume' | 'road_surface';
+export type SceneNodeKind = 'building_volume' | 'road_surface' | 'terrain' | 'vegetation';
 
 export interface Provenance {
   source_id: string;

@@ -60,7 +60,7 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0023 — external worker contract/state machine (77 tests; independent review pending, issue #19).
+GE-0023 — external worker contract/state machine; first review `CHANGES_REQUESTED`, fixes applied (8 job tests), re-review pending (issue #19).
 GE-0027 — selective regeneration planning seam (6 new tests; deleted-dependent bug fixed with regression test, re-review pending, issue #28).
 GE-0022 — headless CLI over Core (67 tests; independent review pending, issue #18).
 GE-0017 — select/inspect/provenance display; 4 React component tests pass, independent review pending (issue #15).
@@ -91,7 +91,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 77 passed, 0 failed (Core incl. 6 incremental + 4 job tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 85 passed, 0 failed (Core incl. 6 incremental + 8 job tests + 4 layer tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.

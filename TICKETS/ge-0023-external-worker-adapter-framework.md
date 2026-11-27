@@ -43,10 +43,10 @@ Spec §29 requires this for every non-Rust worker; licence boundaries depend on 
 Implement the seam first, then one permissive worker adapter.
 
 ## Acceptance criteria
-- [x] Fake worker proves progress/cancel/timeout/error mapping
+- [ ] Fake worker proves progress/cancel/timeout/error mapping — **PARTIAL:** progress, pre-start cancellation, provider failure and *post-stage* timeout mapping are proven; intra-stage preemption is NOT MET (follow-up)
 - [ ] Process tree killed on timeout on all three OSes — NOT MET: process spawning/kill-tree is follow-up; contract tests use a fake worker
-- [x] Structured logs contain no secrets
-- [ ] Tests and documentation updated
+- [x] Structured logs contain no secrets (bounded redaction helper + test; provider errors redacted before persistence)
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Adapter unit tests
@@ -79,10 +79,10 @@ No cancellation API exists in surveyed tools; process supervision is the portabl
 
 GitHub issue: **#19** — https://github.com/Jasowills/genesis-engine/issues/19
 - Files: `crates/genesis-core/src/jobs.rs`, `tests/jobs.rs`, `docs/developer/jobs.md`, lib.rs re-exports.
-- `cargo test --workspace --locked` → **77 passed, 0 failed** (4 new job tests: completion with checkpoints/JSON round-trip, cancellation, provider-failure mapping, descriptor validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- `cargo test --workspace --locked` → **85 passed, 0 failed** (8 job tests: completion with checkpoints/JSON round-trip, cancellation, provider-failure mapping, descriptor validation, post-stage timeout mapping, terminal-state guard, redaction). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - WorkerDescriptor rejects non-empty environments, zero memory cap and zero timeout; argv-only contract. Supervisor emits normalised events and canonical errors; no shell invocation.
-- NOT IMPLEMENTED: OS process spawning, kill-tree termination, per-OS sandbox profiles, real worker version probes. This ticket delivers the contract and fake-worker validation only.
-- Reviewer result: pending independent review.
+- NOT IMPLEMENTED: OS process spawning, argv execution, kill-tree termination, per-OS sandbox profiles, CPU caps, real worker version probes, checkpoint resume, intra-stage timeout preemption. This ticket delivers the supervision contract and fake-worker state machine only. This ticket delivers the contract and fake-worker validation only.
+- Reviewer result: first pass `CHANGES_REQUESTED` (unmet ACs checked, stale index, terminal-state corruption, progress semantics, redaction); code and claims fixed, re-review pending.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
