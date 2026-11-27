@@ -3,7 +3,7 @@ id: GE-0024
 title: Quality profiles and preflight estimates
 type: feature
 priority: P1
-status: proposed
+status: in-review
 milestone: M2
 labels: [type:feature, area:quality]
 depends_on: [GE-0018, GE-0006]
@@ -43,10 +43,10 @@ Spec §26/§51 requires explicit profiles and cost/resource warnings.
 Profile policy is project-defined; all numbers labelled estimates until measured.
 
 ## Acceptance criteria
-- [ ] Profiles map to explicit gates
-- [ ] Preflight never emits a single guaranteed number
-- [ ] Paid operations require confirmation
-- [ ] Tests and documentation updated
+- [x] Profiles map to explicit gates
+- [x] Preflight never emits a single guaranteed number
+- [x] Paid operations require confirmation
+- [x] Tests and documentation updated
 
 ## Test plan
 - Unit: Policy tests
@@ -78,7 +78,10 @@ Calibrate after fixtures exist.
 ## Verification evidence
 
 GitHub issue: **#30** — https://github.com/Jasowills/genesis-engine/issues/30
-Commands, output summaries, fixture references and reviewer result to be recorded here when the ticket is implemented. No claim of completion without an independent reviewer.
+- Files: `crates/genesis-core/src/profiles.rs`, `tests/profiles.rs`, `docs/developer/profiles.md`, lib.rs re-exports.
+- `cargo test --workspace --locked` → **91 passed, 0 failed** (5 new profile tests: gate mapping across all four profiles with evidence-tier rejection, range-only preflight output, declared-not-probed capability reporting, paid consent gating, estimate bound validation). `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
+- NOT IMPLEMENTED: calibrated benchmarks, measured performance, hardware probing, payment provider integration. Estimates are explicitly labelled `low-uncalibrated` and cost consent returns a token only.
+- Reviewer result: pending independent review.
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.

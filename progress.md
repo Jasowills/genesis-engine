@@ -49,10 +49,10 @@ GE-0021 — contributor/governance documentation sweep (independent review `APPR
 GE-0022 — headless CLI over Core (72 tests; final independent confirmation `APPROVED`).
 GE-0027 — selective regeneration planner (planning seam only; independent confirmation `APPROVED`).
 GE-0023 — external worker supervision contract (contract only; independent re-review `APPROVED`).
+GE-0028 — terrain/secondary layer generators (5 layer tests; independent re-review `APPROVED`).
 GE-0016 — Core-backed Studio snapshot + React shell (64 tests; independent review `APPROVED`).
 GE-0017 — select/inspect/provenance display (6 component tests; independent re-review `APPROVED`).
 GE-0020 — E2E vertical slice + frozen benchmark harness (65 tests; independent review `APPROVED`).
-GE-0016 — Studio Core-backed scene snapshot + React shell (64 Core+Studio tests; independent review pending).
 GE-0003 — precision/CRS golden-vector spike (7 tests pass; independent re-review `APPROVED`).
 GE-0002 — resolve eight evidence conflicts (7 resolved, 1 partial; independent re-review `APPROVED`).
 GE-0001 — environment/workflow records (re-verified commands, skill provenance; independent re-review `APPROVED`).
@@ -61,30 +61,27 @@ GE-0001 — environment/workflow records (re-verified commands, skill provenance
 None.
 
 ## In-review tickets
-GE-0028 — terrain/secondary layer generators; first review `CHANGES_REQUESTED` (winding/frame origin/attribution), fixes applied (5 layer tests), re-review pending (issue #24).
-GE-0023 — external worker contract/state machine; first review `CHANGES_REQUESTED`, fixes applied (8 job tests), re-review pending (issue #19).
-GE-0027 — selective regeneration planning seam (6 new tests; deleted-dependent bug fixed with regression test, re-review pending, issue #28).
-GE-0022 — headless CLI over Core (67 tests; independent review pending, issue #18).
-GE-0017 — select/inspect/provenance display; 4 React component tests pass, independent review pending (issue #15).
-GE-0006 — ORT 1.32.0 CI evidence recorded; named-model gap explicit (issue #9).
-GE-0016 — Studio shell/viewport scene snapshot + React UI; 64 tests pass, independent review pending (issue #14).
-GE-0019 — GLB export + re-import fixture; glTF-Validator reports 0 errors, independent review pending (issue #16).
-None.
+GE-0024 — quality profiles and preflight estimates (5 profile tests; independent review pending, issue #30).
 
 ## Blocked tickets
-GE-0005 — plugin sandbox spike: cross-platform CI green (6/6 on each OS), independent re-review previously APPROVED; in-review for final bookkeeping (issue #22).
+GE-0005 — plugin sandbox spike: deliverable evidence independently `APPROVED`, cross-platform CI green (6/6 per OS); WASIp1 network-policy denial remains UNVERIFIED (no sockets in wasm32-wasip1 std). Not marked `verified` (issue #22).
+GE-0006 — ORT 1.32.0 smoke test passes in CI; named model weights (SAM/YOLOX/Depth Anything) not loaded — requires owner cost/licence decision (issue #9).
+GE-0026 — AI segmentation/depth adapters: blocked on named model weights (GE-0006) and worker execution (GE-0023 contract only).
+GE-0029 — Blender round-trip: Blender not installed locally; no CI provisioning decision (issue #25).
+GE-0030 / GE-0031 — LOD/collision/texture compression and engine export fixtures: blocked on GE-0029.
+GE-0032 — signed release/auto-update: signing identities and budget require owner approval (D-022, issue #21).
 
 ## Ready next tickets
-GE-0020 (E2E vertical slice + benchmark harness) — now ready. GE-0005 in-review after cross-platform CI; GE-0006 in-review with a documented named-model gap.
+GE-0025 (WIT/WASI plugin SDK PoC) is dependency-ready. GE-0024 is in review.
 
 ## Current architecture snapshot
-Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), no worker/AI adapters, plugin runtime or game-engine integration yet.
+Accepted Core-centric shape: 12 components (C1–C12) and seams S1–S12 in `ARCHITECTURE.md`. Implemented so far: Rust workspace with three crates — `crates/genesis-core`, `crates/genesis-cli` (portable project model, versioned World IR with stable IDs/provenance/f64 local frames/v1↔v2 migrations, lawful-source gate, geospatial import, procedural geometry, structural validation, GLB export) and `crates/genesis-studio` (Core-backed scene snapshots, optional Tauri command wrappers) plus the React shell in `apps/studio`. No Tauri window has been visually verified; a headless CLI (`crates/genesis-cli`), a worker supervision contract (no process execution), no AI adapters, plugin runtime or game-engine integration yet.
 
 ## Important module boundaries
 UI owns presentation only; domain truth behind Core versioned commands/events/contracts. A capability must be headlessly drivable to be a Core capability. No crate layout prescribed (spec §42).
 
 ## Key data contracts and schema versions
-World IR schema v2 with v1 migrations is implemented and verified (GE-0011); provenance/metric records are implemented in `crates/genesis-core`. Job records, AI adapter contract and worker payloads remain requirements in `ARCHITECTURE.md` §2 and `engineering/ARCHITECTURE_DISCOVERY.md` §2.1, not yet shipped.
+World IR schema v2 with v1 migrations is implemented and verified (GE-0011); provenance/metric records and versioned job records (GE-0023) are implemented in `crates/genesis-core`. AI adapter contract and real worker payload execution remain requirements in `ARCHITECTURE.md` §2 and `engineering/ARCHITECTURE_DISCOVERY.md` §2.1, not yet shipped.
 
 ## Research completed
 All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md`, `COMPETITIVE_ANALYSIS.md`, `LICENCE_AND_DATA_RIGHTS.md`, `FORMAT_AND_STANDARDS.md`, `RESEARCH_REGISTER.md`), 8 logged conflicts.
@@ -93,7 +90,7 @@ All 8 primary-source briefs, 5 consolidated deliverables (`ECOSYSTEM_RESEARCH.md
 Close the 8 conflicts via their linked tickets; obtain owner answers to open questions; legal review of ODbL §4.6 and AGPL worker boundaries; D-021 benchmark boundary; measured performance (all current figures are estimates).
 
 ## Tests and verification
-- Last full test run: `cargo test --workspace --locked` → 86 passed, 0 failed (Core incl. 6 incremental + 8 job tests + 5 layer tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
+- Last full test run: `cargo test --workspace --locked` → 91 passed, 0 failed (Core incl. 6 incremental + 8 job + 5 layer + 5 profile tests, Studio, CLI; macOS/x86_64, rustc 1.98.1).
 - Platform coverage: environment discovery commands only; host macOS/x86_64.
 - Known failures: CI runs `45979438978` (commit `5626277`) and `45979776607` (commit `be8d359`) failed in the formatting step because the newly added root workspace made throwaway prototype crates believe they were members. Fixed in commit `4a78f0e` by adding explicit `exclude` entries; verification run `45980065945` **completed / success** (all jobs green). Regression recorded in `TICKETS/ge-0009-ci-skeleton.md`. No product-code test failures were reported.
 - Commands: version checks, `git status`/`rev-parse`, `gh auth status`/`api user`/`repo list`, `gh issue create --help`, skill hash comparison, `shasum`, file listings, secret-pattern grep.
@@ -111,7 +108,7 @@ Local host is Intel macOS only; cross-platform claims need CI evidence. Wasmtime
 4. `engineering/WORKFLOW.md`, `ENVIRONMENT_REPORT.md`, `SECURITY_MODEL.md`
 
 ## Exact next action
-Advance remaining M1 tickets in dependency order (GE-0017, GE-0020), then M2 onward as owner priorities allow. Every code-changing ticket needs tests, lint, formatting and independent review before `verified`. GitHub: https://github.com/Jasowills/genesis-engine, branch `main`, 32 issues.
+Advance dependency-ready M2 tickets (GE-0024, GE-0025) and finish GE-0028 review; blocked tickets require owner/tooling decisions. Every code-changing ticket needs tests, lint, formatting and independent review before `verified`. GitHub: https://github.com/Jasowills/genesis-engine, branch `main`, 32 issues.
 
 ## Session handoff notes
 Server restarted on 2026-11-27 during research; two subagent sessions were resumed and all durable files survived. Do not start product implementation. Do not create further public artefacts beyond D-027. Never print tokens or commit secrets, restricted data or large model weights. Maintain this file and ticket states after every verified unit of work.

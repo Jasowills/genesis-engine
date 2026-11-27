@@ -11,6 +11,7 @@ pub mod lawful_source;
 pub mod layers;
 pub mod osm_ingest;
 pub mod procedural;
+pub mod profiles;
 pub mod validation;
 pub mod world_ir;
 
@@ -32,6 +33,10 @@ pub use osm_ingest::{OsmFeature, OsmFeatureKind, import_osm_geojson, to_world_ob
 pub use procedural::{
     GENERATOR_VERSION, GeneratedGeometry, GeneratedKind, generate_building_volumes,
     generate_road_surfaces, verify_mesh,
+};
+pub use profiles::{
+    CapabilityReport, EstimateRange, EvidenceTier, HostCapabilities, PreflightReport,
+    ProfilePolicy, authorize_paid_operation, paid_operation, preflight,
 };
 pub use validation::{
     MetricRecord, QualityProfile, ValidationReport, check_export_ready, mesh_subject_hash,

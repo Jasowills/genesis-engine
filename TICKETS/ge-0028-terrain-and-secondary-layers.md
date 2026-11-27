@@ -3,7 +3,7 @@ id: GE-0028
 title: Terrain and secondary layers
 type: feature
 priority: P2
-status: in-review
+status: verified
 milestone: M3
 labels: [type:feature, area:geometry]
 depends_on: [GE-0020]
@@ -81,7 +81,8 @@ GitHub issue: **#24** — https://github.com/Jasowills/genesis-engine/issues/24
 - `cargo test --workspace --locked` → **86 passed, 0 failed** (5 layer tests: 3×3 DEM → 9 vertices/24 indices with recorded 30 m resolution and 12 m accuracy, invalid DEM rejection, markings/sidewalks/vegetation with separate fixtures and evidence, source-gate enforcement, +Z winding and true frame origins across all layers, observed-marking evidence branch and OSM attribution retention).
 - `cargo clippy --workspace --locked -- -D warnings` clean; `cargo fmt --all -- --check` clean.
 - No high-resolution or survey claim; resolution/claim recorded as parameters; all layer evidence is observed/derived/inferred explicitly.
-- Reviewer result: first pass `CHANGES_REQUESTED` (inverted winding, false frame origins, misattributed commit, hardcoded vegetation origin, overstated fixture/attribution claims); fixes applied, re-review pending.
+- Reviewer result: first pass `CHANGES_REQUESTED` (inverted winding, false frame origins, hard-coded vegetation origin, overstated fixture/attribution claims); fixes applied; re-review **`APPROVED`** (session `ses_de1fb1c88ffeekj6t7Qcs5QMc7`).
 
 ## Changelog
 - 2026-11-27: Ticket created from the proposed research/architecture programme; current status: `proposed`. Pending owner approval of scope and independent review where required.
+- 2026-11-27: Independent re-review APPROVED; ticket marked verified.
